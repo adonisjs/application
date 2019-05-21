@@ -1,0 +1,30 @@
+{
+  "name": "adonisjs",
+  "directories": {
+    "config": "config",
+    "public": "public",
+    "database": "database",
+    "migrations": "database/migrations",
+    "seeds": "database/seeds",
+    "resources": "resources",
+    "views": "resources/views"
+  },
+  "exceptionHandlerNamespace": "App/Exceptions/Handler",
+  "preloads": [
+    {
+      "file": "start/routes"
+    },
+    {
+      "file": "start/kernel"
+    }
+  ],
+  "autoloads": {
+    "App": "./app",
+    "Contracts": "./contracts"
+  },
+  "copyToBuild": [
+    ".env",
+    "package.json",
+    ".adonisrc.json"
+  ]
+}
