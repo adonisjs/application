@@ -27,6 +27,7 @@ test.group('Application', () => {
       migrations: 'database/migrations',
       resources: 'resources',
       views: 'resources/views',
+      start: 'start',
     })))
 
     assert.deepEqual(app.autoloadsMap, new Map(Object.entries({})))
@@ -48,5 +49,6 @@ test.group('Application', () => {
     assert.equal(app.seedsPath(), join(__dirname, 'database/seeds'))
     assert.equal(app.resourcesPath(), join(__dirname, 'resources'))
     assert.equal(app.viewsPath(), join(__dirname, 'resources/views'))
+    assert.equal(app.startPath('app'), join(__dirname, 'start/app'))
   })
 })

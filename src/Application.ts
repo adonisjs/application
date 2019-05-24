@@ -108,4 +108,11 @@ export class Application implements ApplicationContract {
   public viewsPath (...paths: string[]): string {
     return this.makePath(this.directoriesMap.get('views')!, ...paths)
   }
+
+  /**
+   * Makes path to the start directory
+   */
+  public startPath (...paths: string[]): string {
+    return this.makePath(this.directoriesMap.get('start')!, ...paths)
+  }
 }

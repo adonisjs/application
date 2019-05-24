@@ -49,5 +49,6 @@ declare module '@poppinss/application/contracts' {
     seedsPath (...paths: string[]): string
     resourcesPath (...paths: string[]): string
     viewsPath (...paths: string[]): string
+    startPath (...paths: string[]): string
   }
 }

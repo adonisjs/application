@@ -23,6 +23,7 @@ const DEFAULT_DIRECTORIES = {
   seeds: 'database/seeds',
   resources: 'resources',
   views: 'resources/views',
+  start: 'start',
 }
 
 export function parse (contents: any): RcFile {

@@ -42,6 +42,7 @@ The main application instance to know about the environment, filesystem in which
 * [publicPath](_application_.application.md#publicpath)
 * [resourcesPath](_application_.application.md#resourcespath)
 * [seedsPath](_application_.application.md#seedspath)
+* [startPath](_application_.application.md#startpath)
 * [viewsPath](_application_.application.md#viewspath)
 
 ---
@@ -265,6 +266,23 @@ ___
 ▸ **seedsPath**(...paths: *`string`[]*): `string`
 
 Make path to a file or directory relative from the seeds path
+
+**Parameters:**
+
+| Name | Type |
+| ------ | ------ |
+| `Rest` paths | `string`[] |
+
+**Returns:** `string`
+
+___
+<a id="startpath"></a>
+
+###  startPath
+
+▸ **startPath**(...paths: *`string`[]*): `string`
+
+Makes path to the start directory
 
 **Parameters:**
 
