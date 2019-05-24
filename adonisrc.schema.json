@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "Application name",
+      "type": "string"
+    },
+    "exceptionHandlerNamespace": {
+      "description": "Http server exception handler namespace",
+      "type": "string"
+    },
+    "preloads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": { "type": "string" },
+          "environment": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["web", "console", "test"]
+            }
+          },
+          "optional": {
+            "type": "boolean"
+          }
+        },
+        "required": ["file"],
+        "additionalProperties": false
+      }
+    },
+    "copyToBuild": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "autoloads": {
+      "type": "object"
+    },
+    "directories": {
+      "type": "object"
+    }
+  },
+  "required": [ "exceptionHandlerNamespace", "name" ]
+}

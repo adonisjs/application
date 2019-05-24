@@ -12,15 +12,16 @@
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "preloads": [
     {
-      "file": "start/routes"
+      "file": "start/routes",
+      "environment": ["console", "test"]
     },
     {
       "file": "start/kernel"
     }
   ],
   "autoloads": {
-    "App": "./app",
-    "Contracts": "./contracts"
+    "App": "app",
+    "Contracts": "contracts"
   },
   "copyToBuild": [
     ".env",
