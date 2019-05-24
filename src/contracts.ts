@@ -12,7 +12,8 @@ declare module '@poppinss/application/contracts' {
 
   type PreloadNode = {
     file: string,
-    intent?: 'ace' | 'http',
+    environment: ('web' | 'console' | 'test')[],
+    optional: boolean,
   }
 
   type RcFile = {

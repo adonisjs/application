@@ -77,7 +77,8 @@ test.group('Rc Parser', () => {
       },
       preloads: [{
         file: 'foo',
-        intent: undefined,
+        environment: ['web', 'console', 'test'],
+        optional: false,
       }],
       autoloads: {},
       copyToBuild: [],

@@ -40,11 +40,15 @@ export function parse (contents: any): RcFile {
     name: contents.name,
     directories: Object.assign({}, DEFAULT_DIRECTORIES, contents.directories),
     exceptionHandlerNamespace: contents.exceptionHandlerNamespace,
-    preloads: contents.preloads.map(({ file, intent }, index: number) => {
+    preloads: contents.preloads.map(({ file, optional, environment }, index: number) => {
       if (!file) {
         throw new Exception(`Invalid value for preloads[${index}]`, 500, 'E_PRELOAD_MISSING_FILE_PROPERTY')
       }
-      return { file, intent }
+      return {
+        file,
+        optional: optional === undefined ? false : optional,
+        environment: environment === undefined ? ['web', 'console', 'test'] : environment,
+      }
     }),
     autoloads: contents.autoloads,
     copyToBuild: contents.copyToBuild,
