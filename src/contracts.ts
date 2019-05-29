@@ -19,8 +19,17 @@ export type PreloadNode = {
   optional: boolean,
 }
 
+export type SemverNode = {
+  major: number,
+  minor: number,
+  patch: number,
+  prerelease: readonly (string | number)[],
+  version: string,
+}
+
 export type RcFile = {
   name: string,
+  version: string,
   exceptionHandlerNamespace: string,
   preloads: PreloadNode[],
   copyToBuild: string[],
@@ -33,13 +42,14 @@ export type RcFile = {
 }
 
 export interface ApplicationContract {
-  container: IocContract,
-  version: string
-  environment: 'web' | 'console' | 'test' | 'unknown'
-  appRoot: string
-  appName: string
-  ready: boolean
+  readonly appRoot: string
+  readonly appName: string
   exceptionHandlerNamespace: string
+  container: IocContract
+  adonisVersion?: SemverNode
+  version: SemverNode
+  environment: 'web' | 'console' | 'test' | 'unknown'
+  ready: boolean
   preloads: PreloadNode[]
   inProduction: boolean
   inDev: boolean

@@ -32,6 +32,7 @@ const DEFAULT_DIRECTORIES = {
 export function parse (contents: any): RcFile {
   contents = Object.assign({
     name: 'adonis-app',
+    version: '0.0.0',
     directories: {},
     exceptionHandlerNamespace: 'App/Exceptions/Handler',
     preloads: [],
@@ -41,6 +42,7 @@ export function parse (contents: any): RcFile {
 
   return {
     name: contents.name,
+    version: contents.version,
     directories: Object.assign({}, DEFAULT_DIRECTORIES, contents.directories),
     exceptionHandlerNamespace: contents.exceptionHandlerNamespace,
     preloads: contents.preloads.map(({ file, optional, environment }, index: number) => {

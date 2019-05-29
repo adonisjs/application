@@ -13,8 +13,9 @@
 
 import { join } from 'path'
 import { IocContract } from '@adonisjs/fold'
-import { PreloadNode, ApplicationContract } from './contracts'
+import { PreloadNode, ApplicationContract, SemverNode } from './contracts'
 import { parse } from './rcParser'
+import { parse as parseVersion } from 'semver'
 
 /**
  * The main application instance to know about the environment, filesystem
@@ -31,19 +32,56 @@ export class Application implements ApplicationContract {
   public preloads: PreloadNode[] = []
   public directoriesMap: Map<(string), string> = new Map()
   public autoloadsMap: Map<string, string> = new Map()
+  public version: SemverNode
+  public adonisVersion?: SemverNode
 
   constructor (
-    public readonly version: string,
     public readonly appRoot: string,
     public container: IocContract,
     rcContents: any,
+    adonisVersion: string,
   ) {
     const parsed = parse(rcContents)
     this.appName = parsed.name
+
+    this.version = this._parseVersion(parsed.version)
+    this.adonisVersion = adonisVersion ? this._parseVersion(adonisVersion) : undefined
+
     this.exceptionHandlerNamespace = parsed.exceptionHandlerNamespace
     this.preloads = parsed.preloads
     this.directoriesMap = new Map(Object.entries(parsed.directories))
     this.autoloadsMap = new Map(Object.entries(parsed.autoloads))
+
+    this._setEnvVars()
+    this._bindToContainer()
+  }
+
+  /**
+   * Parses version string to an object.
+   */
+  private _parseVersion (version: string): SemverNode {
+    const parsed = parseVersion(version, { includePrerelease: true, loose: false })!
+    return {
+      major: parsed.major,
+      minor: parsed.minor,
+      patch: parsed.patch,
+      prerelease: parsed.prerelease,
+      version: parsed.version,
+    }
+  }
+
+  /**
+   * Sets env variables based upon the provided application info.
+   */
+  private _setEnvVars () {
+    process.env.APP_NAME = this.appName
+    process.env.APP_VERSION = this.version.version
+  }
+
+  /**
+   * Binds self to the AdonisJs IoC container
+   */
+  private _bindToContainer () {
     this.container.singleton('Application', () => this)
   }
 

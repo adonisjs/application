@@ -14,6 +14,7 @@ test.group('Rc Parser', () => {
   test('parse empty object to rc file node', (assert) => {
     assert.deepEqual(parse({}), {
       name: 'adonis-app',
+      version: '0.0.0',
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -37,6 +38,7 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
       name: 'relay-app',
+      version: '0.0.0',
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -64,6 +66,7 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
       name: 'relay-app',
+      version: '0.0.0',
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -94,6 +97,7 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
       name: 'relay-app',
+      version: '0.0.0',
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'myconfig',
@@ -120,6 +124,7 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
       name: 'relay-app',
+      version: '0.0.0',
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'myconfig',

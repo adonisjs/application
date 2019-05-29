@@ -14,9 +14,10 @@ import { join } from 'path'
 
 test.group('Application', () => {
   test('setup application', (assert) => {
-    const app = new Application('1.0.0', __dirname, new Ioc(), {})
+    const app = new Application(__dirname, new Ioc(), {}, '1.0.0')
     assert.equal(app.appName, 'adonis-app')
-    assert.equal(app.version, '1.0.0')
+    assert.equal(app.adonisVersion!.major, 1)
+    assert.equal(app.version.major, 0)
     assert.equal(app.appRoot, __dirname)
 
     assert.deepEqual(app.directoriesMap, new Map(Object.entries({
@@ -39,7 +40,7 @@ test.group('Application', () => {
   })
 
   test('make paths to pre-configured directories', (assert) => {
-    const app = new Application('1.0.0', __dirname, new Ioc(), {})
+    const app = new Application(__dirname, new Ioc(), {}, '1.0.0')
 
     assert.equal(app.makePath('app'), join(__dirname, 'app'))
     assert.equal(app.configPath(), join(__dirname, 'config'))

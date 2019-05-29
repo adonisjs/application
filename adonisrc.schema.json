@@ -6,6 +6,10 @@
       "description": "Application name",
       "type": "string"
     },
+    "version": {
+      "description": "Application version",
+      "type": "string"
+    },
     "exceptionHandlerNamespace": {
       "description": "Http server exception handler namespace",
       "type": "string"
@@ -44,5 +48,5 @@
       "type": "object"
     }
   },
-  "required": [ "exceptionHandlerNamespace", "name" ]
+  "required": [ "exceptionHandlerNamespace", "name", "version" ]
 }
