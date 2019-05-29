@@ -23,7 +23,7 @@ export type SemverNode = {
   major: number,
   minor: number,
   patch: number,
-  prerelease: readonly (string | number)[],
+  prerelease: (string | number)[],
   version: string,
 }
 

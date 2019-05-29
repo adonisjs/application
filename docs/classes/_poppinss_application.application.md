@@ -20,6 +20,7 @@ The main application instance to know about the environment, filesystem in which
 
 ### Properties
 
+* [adonisVersion](_poppinss_application.application.md#adonisversion)
 * [appName](_poppinss_application.application.md#appname)
 * [appRoot](_poppinss_application.application.md#approot)
 * [autoloadsMap](_poppinss_application.application.md#autoloadsmap)
@@ -53,16 +54,16 @@ The main application instance to know about the environment, filesystem in which
 
 ###  constructor
 
-⊕ **new Application**(version: *`string`*, appRoot: *`string`*, container: *`IocContract`*, rcContents: *`any`*): [Application](_poppinss_application.application.md)
+⊕ **new Application**(appRoot: *`string`*, container: *`IocContract`*, rcContents: *`any`*, adonisVersion: *`string`*): [Application](_poppinss_application.application.md)
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| version | `string` |
 | appRoot | `string` |
 | container | `IocContract` |
 | rcContents | `any` |
+| adonisVersion | `string` |
 
 **Returns:** [Application](_poppinss_application.application.md)
 
@@ -70,6 +71,13 @@ ___
 
 ## Properties
 
+<a id="adonisversion"></a>
+
+### `<Optional>` adonisVersion
+
+**● adonisVersion**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+
+___
 <a id="appname"></a>
 
 ###  appName
@@ -151,7 +159,7 @@ ___
 
 ###  version
 
-**● version**: *`string`*
+**● version**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
 
 ___
 

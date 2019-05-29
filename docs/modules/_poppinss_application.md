@@ -16,6 +16,7 @@
 
 * [PreloadNode](_poppinss_application.md#preloadnode)
 * [RcFile](_poppinss_application.md#rcfile)
+* [SemverNode](_poppinss_application.md#semvernode)
 
 ### Functions
 
@@ -39,6 +40,15 @@ ___
 ###  RcFile
 
 **Ƭ RcFile**: *`object`*
+
+#### Type declaration
+
+___
+<a id="semvernode"></a>
+
+###  SemverNode
+
+**Ƭ SemverNode**: *`object`*
 
 #### Type declaration
 

@@ -65,7 +65,7 @@ export class Application implements ApplicationContract {
       major: parsed.major,
       minor: parsed.minor,
       patch: parsed.patch,
-      prerelease: parsed.prerelease,
+      prerelease: parsed.prerelease.map((release) => release),
       version: parsed.version,
     }
   }
