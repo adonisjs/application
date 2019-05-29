@@ -1,4 +1,4 @@
-[@poppinss/application](../README.md) > ["Application"](../modules/_application_.md) > [Application](../classes/_application_.application.md)
+[@poppinss/application](../README.md) > [@poppinss/application](../modules/_poppinss_application.md) > [Application](../classes/_poppinss_application.application.md)
 
 # Class: Application
 
@@ -10,40 +10,40 @@ The main application instance to know about the environment, filesystem in which
 
 ## Implements
 
-* `ApplicationContract`
+* [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)
 
 ## Index
 
 ### Constructors
 
-* [constructor](_application_.application.md#constructor)
+* [constructor](_poppinss_application.application.md#constructor)
 
 ### Properties
 
-* [appName](_application_.application.md#appname)
-* [appRoot](_application_.application.md#approot)
-* [autoloadsMap](_application_.application.md#autoloadsmap)
-* [container](_application_.application.md#container)
-* [directoriesMap](_application_.application.md#directoriesmap)
-* [environment](_application_.application.md#environment)
-* [exceptionHandlerNamespace](_application_.application.md#exceptionhandlernamespace)
-* [inDev](_application_.application.md#indev)
-* [inProduction](_application_.application.md#inproduction)
-* [preloads](_application_.application.md#preloads)
-* [ready](_application_.application.md#ready)
-* [version](_application_.application.md#version)
+* [appName](_poppinss_application.application.md#appname)
+* [appRoot](_poppinss_application.application.md#approot)
+* [autoloadsMap](_poppinss_application.application.md#autoloadsmap)
+* [container](_poppinss_application.application.md#container)
+* [directoriesMap](_poppinss_application.application.md#directoriesmap)
+* [environment](_poppinss_application.application.md#environment)
+* [exceptionHandlerNamespace](_poppinss_application.application.md#exceptionhandlernamespace)
+* [inDev](_poppinss_application.application.md#indev)
+* [inProduction](_poppinss_application.application.md#inproduction)
+* [preloads](_poppinss_application.application.md#preloads)
+* [ready](_poppinss_application.application.md#ready)
+* [version](_poppinss_application.application.md#version)
 
 ### Methods
 
-* [configPath](_application_.application.md#configpath)
-* [databasePath](_application_.application.md#databasepath)
-* [makePath](_application_.application.md#makepath)
-* [migrationsPath](_application_.application.md#migrationspath)
-* [publicPath](_application_.application.md#publicpath)
-* [resourcesPath](_application_.application.md#resourcespath)
-* [seedsPath](_application_.application.md#seedspath)
-* [startPath](_application_.application.md#startpath)
-* [viewsPath](_application_.application.md#viewspath)
+* [configPath](_poppinss_application.application.md#configpath)
+* [databasePath](_poppinss_application.application.md#databasepath)
+* [makePath](_poppinss_application.application.md#makepath)
+* [migrationsPath](_poppinss_application.application.md#migrationspath)
+* [publicPath](_poppinss_application.application.md#publicpath)
+* [resourcesPath](_poppinss_application.application.md#resourcespath)
+* [seedsPath](_poppinss_application.application.md#seedspath)
+* [startPath](_poppinss_application.application.md#startpath)
+* [viewsPath](_poppinss_application.application.md#viewspath)
 
 ---
 
@@ -53,7 +53,7 @@ The main application instance to know about the environment, filesystem in which
 
 ###  constructor
 
-⊕ **new Application**(version: *`string`*, appRoot: *`string`*, container: *`IocContract`*, rcContents: *`any`*): [Application](_application_.application.md)
+⊕ **new Application**(version: *`string`*, appRoot: *`string`*, container: *`IocContract`*, rcContents: *`any`*): [Application](_poppinss_application.application.md)
 
 **Parameters:**
 
@@ -64,7 +64,7 @@ The main application instance to know about the environment, filesystem in which
 | container | `IocContract` |
 | rcContents | `any` |
 
-**Returns:** [Application](_application_.application.md)
+**Returns:** [Application](_poppinss_application.application.md)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 ###  preloads
 
-**● preloads**: *`PreloadNode`[]* =  []
+**● preloads**: *[PreloadNode](../modules/_poppinss_application.md#preloadnode)[]* =  []
 
 ___
 <a id="ready"></a>

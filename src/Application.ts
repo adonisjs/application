@@ -1,3 +1,7 @@
+/**
+ * @module @poppinss/application
+ */
+
 /*
 * @poppinss/application
 *
@@ -7,11 +11,9 @@
 * file that was distributed with this source code.
 */
 
-/// <reference path="./contracts.ts" />
-
 import { join } from 'path'
 import { IocContract } from '@adonisjs/fold'
-import { PreloadNode, ApplicationContract } from '@poppinss/application/contracts'
+import { PreloadNode, ApplicationContract } from './contracts'
 import { parse } from './rcParser'
 
 /**

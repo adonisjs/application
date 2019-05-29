@@ -4,7 +4,6 @@
   "description": "AdonisJs application class to read app related data",
   "main": "build/index.js",
   "files": [
-    "build/adonis-typings/index.d.ts",
     "build/src",
     "build/index.d.ts",
     "build/index.js"

@@ -1,3 +1,7 @@
+/**
+ * @module @poppinss/application
+ */
+
 /*
 * @poppinss/application
 *
@@ -7,49 +11,47 @@
 * file that was distributed with this source code.
 */
 
-declare module '@poppinss/application/contracts' {
-  import { IocContract } from '@adonisjs/fold'
+import { IocContract } from '@adonisjs/fold'
 
-  type PreloadNode = {
-    file: string,
-    environment: ('web' | 'console' | 'test')[],
-    optional: boolean,
-  }
+export type PreloadNode = {
+  file: string,
+  environment: ('web' | 'console' | 'test')[],
+  optional: boolean,
+}
 
-  type RcFile = {
-    name: string,
-    exceptionHandlerNamespace: string,
-    preloads: PreloadNode[],
-    copyToBuild: string[],
-    directories: {
-      [key: string]: string,
-    }
-    autoloads: {
-      [key: string]: string,
-    },
+export type RcFile = {
+  name: string,
+  exceptionHandlerNamespace: string,
+  preloads: PreloadNode[],
+  copyToBuild: string[],
+  directories: {
+    [key: string]: string,
   }
+  autoloads: {
+    [key: string]: string,
+  },
+}
 
-  interface ApplicationContract {
-    container: IocContract,
-    version: string
-    environment: 'web' | 'console' | 'test' | 'unknown'
-    appRoot: string
-    appName: string
-    ready: boolean
-    exceptionHandlerNamespace: string
-    preloads: PreloadNode[]
-    inProduction: boolean
-    inDev: boolean
-    directoriesMap: Map<string, string>
-    autoloadsMap: Map<string, string>
-    makePath (...paths: string[]): string
-    configPath (...paths: string[]): string
-    publicPath (...paths: string[]): string
-    databasePath (...paths: string[]): string
-    migrationsPath (...paths: string[]): string
-    seedsPath (...paths: string[]): string
-    resourcesPath (...paths: string[]): string
-    viewsPath (...paths: string[]): string
-    startPath (...paths: string[]): string
-  }
+export interface ApplicationContract {
+  container: IocContract,
+  version: string
+  environment: 'web' | 'console' | 'test' | 'unknown'
+  appRoot: string
+  appName: string
+  ready: boolean
+  exceptionHandlerNamespace: string
+  preloads: PreloadNode[]
+  inProduction: boolean
+  inDev: boolean
+  directoriesMap: Map<string, string>
+  autoloadsMap: Map<string, string>
+  makePath (...paths: string[]): string
+  configPath (...paths: string[]): string
+  publicPath (...paths: string[]): string
+  databasePath (...paths: string[]): string
+  migrationsPath (...paths: string[]): string
+  seedsPath (...paths: string[]): string
+  resourcesPath (...paths: string[]): string
+  viewsPath (...paths: string[]): string
+  startPath (...paths: string[]): string
 }

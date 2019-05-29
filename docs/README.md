@@ -5,8 +5,7 @@
 
 ### External modules
 
-* ["Application"](modules/_application_.md)
-* ["rcParser"](modules/_rcparser_.md)
+* [@poppinss/application](modules/_poppinss_application.md)
 
 ---
 

@@ -1,3 +1,7 @@
+/**
+ * @module @poppinss/application
+ */
+
 /*
 * @poppinss/application
 *
@@ -6,10 +10,9 @@
 * For the full copyright and license information, please view the LICENSE
 * file that was distributed with this source code.
 */
-/// <reference path="./contracts.ts" />
 
 import { Exception } from '@poppinss/utils'
-import { RcFile } from '@poppinss/application/contracts'
+import { RcFile } from './contracts'
 
 /**
  * Default set of directories for AdonisJs

@@ -1,3 +1,7 @@
+/**
+ * @module @poppinss/application
+ */
+
 /*
 * @poppinss/application
 *
@@ -7,9 +11,7 @@
 * file that was distributed with this source code.
 */
 
-/// <reference path="./src/contracts.ts" />
-
-export { ApplicationContract } from '@poppinss/application/contracts'
+export { ApplicationContract } from './src/contracts'
 export { Application } from './src/Application'
 import * as rcParser from './src/rcParser'
 export { rcParser }
