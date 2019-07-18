@@ -1,10 +1,12 @@
-[@poppinss/application](../README.md) > [@poppinss/application](../modules/_poppinss_application.md) > [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)
+> **[@poppinss/application](../README.md)**
+
+[Globals](../README.md) / [@poppinss/application](../modules/_poppinss_application.md) / [ApplicationContract](_poppinss_application.applicationcontract.md) /
 
 # Interface: ApplicationContract
 
 ## Hierarchy
 
-**ApplicationContract**
+* **ApplicationContract**
 
 ## Implemented by
 
@@ -14,7 +16,7 @@
 
 ### Properties
 
-* [adonisVersion](_poppinss_application.applicationcontract.md#adonisversion)
+* [adonisVersion](_poppinss_application.applicationcontract.md#optional-adonisversion)
 * [appName](_poppinss_application.applicationcontract.md#appname)
 * [appRoot](_poppinss_application.applicationcontract.md#approot)
 * [autoloadsMap](_poppinss_application.applicationcontract.md#autoloadsmap)
@@ -40,237 +42,206 @@
 * [startPath](_poppinss_application.applicationcontract.md#startpath)
 * [viewsPath](_poppinss_application.applicationcontract.md#viewspath)
 
----
-
 ## Properties
 
-<a id="adonisversion"></a>
+### `Optional` adonisVersion
 
-### `<Optional>` adonisVersion
-
-**● adonisVersion**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+• **adonisVersion**? : *[SemverNode](../modules/_poppinss_application.md#semvernode)*
 
 ___
-<a id="appname"></a>
 
 ###  appName
 
-**● appName**: *`string`*
+• **appName**: *string*
 
 ___
-<a id="approot"></a>
 
 ###  appRoot
 
-**● appRoot**: *`string`*
+• **appRoot**: *string*
 
 ___
-<a id="autoloadsmap"></a>
 
 ###  autoloadsMap
 
-**● autoloadsMap**: *`Map`<`string`, `string`>*
+• **autoloadsMap**: *`Map<string, string>`*
 
 ___
-<a id="container"></a>
 
 ###  container
 
-**● container**: *`IocContract`*
+• **container**: *`IocContract`*
 
 ___
-<a id="directoriesmap"></a>
 
 ###  directoriesMap
 
-**● directoriesMap**: *`Map`<`string`, `string`>*
+• **directoriesMap**: *`Map<string, string>`*
 
 ___
-<a id="environment"></a>
 
 ###  environment
 
-**● environment**: *"web" \| "console" \| "test" \| "unknown"*
+• **environment**: *"web" | "console" | "test" | "unknown"*
 
 ___
-<a id="exceptionhandlernamespace"></a>
 
 ###  exceptionHandlerNamespace
 
-**● exceptionHandlerNamespace**: *`string`*
+• **exceptionHandlerNamespace**: *string*
 
 ___
-<a id="indev"></a>
 
 ###  inDev
 
-**● inDev**: *`boolean`*
+• **inDev**: *boolean*
 
 ___
-<a id="inproduction"></a>
 
 ###  inProduction
 
-**● inProduction**: *`boolean`*
+• **inProduction**: *boolean*
 
 ___
-<a id="preloads"></a>
 
 ###  preloads
 
-**● preloads**: *[PreloadNode](../modules/_poppinss_application.md#preloadnode)[]*
+• **preloads**: *[PreloadNode](../modules/_poppinss_application.md#preloadnode)[]*
 
 ___
-<a id="ready"></a>
 
 ###  ready
 
-**● ready**: *`boolean`*
+• **ready**: *boolean*
 
 ___
-<a id="version"></a>
 
 ###  version
 
-**● version**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
-
-___
+• **version**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
 
 ## Methods
 
-<a id="configpath"></a>
-
 ###  configPath
 
-▸ **configPath**(...paths: *`string`[]*): `string`
+▸ **configPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="databasepath"></a>
 
 ###  databasePath
 
-▸ **databasePath**(...paths: *`string`[]*): `string`
+▸ **databasePath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="makepath"></a>
 
 ###  makePath
 
-▸ **makePath**(...paths: *`string`[]*): `string`
+▸ **makePath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="migrationspath"></a>
 
 ###  migrationsPath
 
-▸ **migrationsPath**(...paths: *`string`[]*): `string`
+▸ **migrationsPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="publicpath"></a>
 
 ###  publicPath
 
-▸ **publicPath**(...paths: *`string`[]*): `string`
+▸ **publicPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="resourcespath"></a>
 
 ###  resourcesPath
 
-▸ **resourcesPath**(...paths: *`string`[]*): `string`
+▸ **resourcesPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="seedspath"></a>
 
 ###  seedsPath
 
-▸ **seedsPath**(...paths: *`string`[]*): `string`
+▸ **seedsPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="startpath"></a>
 
 ###  startPath
 
-▸ **startPath**(...paths: *`string`[]*): `string`
+▸ **startPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="viewspath"></a>
 
 ###  viewsPath
 
-▸ **viewsPath**(...paths: *`string`[]*): `string`
+▸ **viewsPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
-
-___
-
+**Returns:** *string*

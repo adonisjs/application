@@ -1,11 +1,9 @@
+> **[@poppinss/application](README.md)**
 
-#  @poppinss/application
+[Globals](README.md) /
 
 ## Index
 
 ### External modules
 
 * [@poppinss/application](modules/_poppinss_application.md)
-
----
-

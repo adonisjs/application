@@ -1,12 +1,15 @@
-[@poppinss/application](../README.md) > [@poppinss/application](../modules/_poppinss_application.md) > [Application](../classes/_poppinss_application.application.md)
+> **[@poppinss/application](../README.md)**
+
+[Globals](../README.md) / [@poppinss/application](../modules/_poppinss_application.md) / [Application](_poppinss_application.application.md) /
 
 # Class: Application
 
-The main application instance to know about the environment, filesystem in which your AdonisJs app is running
+The main application instance to know about the environment, filesystem
+in which your AdonisJs app is running
 
 ## Hierarchy
 
-**Application**
+* **Application**
 
 ## Implements
 
@@ -20,7 +23,7 @@ The main application instance to know about the environment, filesystem in which
 
 ### Properties
 
-* [adonisVersion](_poppinss_application.application.md#adonisversion)
+* [adonisVersion](_poppinss_application.application.md#optional-adonisversion)
 * [appName](_poppinss_application.application.md#appname)
 * [appRoot](_poppinss_application.application.md#approot)
 * [autoloadsMap](_poppinss_application.application.md#autoloadsmap)
@@ -46,276 +49,293 @@ The main application instance to know about the environment, filesystem in which
 * [startPath](_poppinss_application.application.md#startpath)
 * [viewsPath](_poppinss_application.application.md#viewspath)
 
----
-
 ## Constructors
-
-<a id="constructor"></a>
 
 ###  constructor
 
-⊕ **new Application**(appRoot: *`string`*, container: *`IocContract`*, rcContents: *`any`*, adonisVersion: *`string`*): [Application](_poppinss_application.application.md)
+\+ **new Application**(`appRoot`: string, `container`: `IocContract`, `rcContents`: any, `adonisVersion`: string): *[Application](_poppinss_application.application.md)*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| appRoot | `string` |
-| container | `IocContract` |
-| rcContents | `any` |
-| adonisVersion | `string` |
+Name | Type |
+------ | ------ |
+`appRoot` | string |
+`container` | `IocContract` |
+`rcContents` | any |
+`adonisVersion` | string |
 
-**Returns:** [Application](_poppinss_application.application.md)
-
-___
+**Returns:** *[Application](_poppinss_application.application.md)*
 
 ## Properties
 
-<a id="adonisversion"></a>
+### `Optional` adonisVersion
 
-### `<Optional>` adonisVersion
+• **adonisVersion**? : *[SemverNode](../modules/_poppinss_application.md#semvernode)*
 
-**● adonisVersion**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[adonisVersion](../interfaces/_poppinss_application.applicationcontract.md#optional-adonisversion)*
 
 ___
-<a id="appname"></a>
 
 ###  appName
 
-**● appName**: *`string`*
+• **appName**: *string*
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[appName](../interfaces/_poppinss_application.applicationcontract.md#appname)*
 
 ___
-<a id="approot"></a>
 
 ###  appRoot
 
-**● appRoot**: *`string`*
+• **appRoot**: *string*
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[appRoot](../interfaces/_poppinss_application.applicationcontract.md#approot)*
 
 ___
-<a id="autoloadsmap"></a>
 
 ###  autoloadsMap
 
-**● autoloadsMap**: *`Map`<`string`, `string`>* =  new Map()
+• **autoloadsMap**: *`Map<string, string>`* =  new Map()
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[autoloadsMap](../interfaces/_poppinss_application.applicationcontract.md#autoloadsmap)*
 
 ___
-<a id="container"></a>
 
 ###  container
 
-**● container**: *`IocContract`*
+• **container**: *`IocContract`*
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[container](../interfaces/_poppinss_application.applicationcontract.md#container)*
 
 ___
-<a id="directoriesmap"></a>
 
 ###  directoriesMap
 
-**● directoriesMap**: *`Map`<`string`, `string`>* =  new Map()
+• **directoriesMap**: *`Map<string, string>`* =  new Map()
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[directoriesMap](../interfaces/_poppinss_application.applicationcontract.md#directoriesmap)*
 
 ___
-<a id="environment"></a>
 
 ###  environment
 
-**● environment**: *"web" \| "console" \| "test" \| "unknown"* = "unknown"
+• **environment**: *"web" | "console" | "test" | "unknown"* = "unknown"
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[environment](../interfaces/_poppinss_application.applicationcontract.md#environment)*
 
 ___
-<a id="exceptionhandlernamespace"></a>
 
 ###  exceptionHandlerNamespace
 
-**● exceptionHandlerNamespace**: *`string`*
+• **exceptionHandlerNamespace**: *string*
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[exceptionHandlerNamespace](../interfaces/_poppinss_application.applicationcontract.md#exceptionhandlernamespace)*
 
 ___
-<a id="indev"></a>
 
 ###  inDev
 
-**● inDev**: *`boolean`* =  !this.inProduction
+• **inDev**: *boolean* =  !this.inProduction
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[inDev](../interfaces/_poppinss_application.applicationcontract.md#indev)*
 
 ___
-<a id="inproduction"></a>
 
 ###  inProduction
 
-**● inProduction**: *`boolean`* =  process.env.NODE_ENV === 'production'
+• **inProduction**: *boolean* =  process.env.NODE_ENV === 'production'
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[inProduction](../interfaces/_poppinss_application.applicationcontract.md#inproduction)*
 
 ___
-<a id="preloads"></a>
 
 ###  preloads
 
-**● preloads**: *[PreloadNode](../modules/_poppinss_application.md#preloadnode)[]* =  []
+• **preloads**: *[PreloadNode](../modules/_poppinss_application.md#preloadnode)[]* =  []
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[preloads](../interfaces/_poppinss_application.applicationcontract.md#preloads)*
 
 ___
-<a id="ready"></a>
 
 ###  ready
 
-**● ready**: *`boolean`* = false
+• **ready**: *boolean* = false
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[ready](../interfaces/_poppinss_application.applicationcontract.md#ready)*
 
 ___
-<a id="version"></a>
 
 ###  version
 
-**● version**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+• **version**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
 
-___
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[version](../interfaces/_poppinss_application.applicationcontract.md#version)*
 
 ## Methods
 
-<a id="configpath"></a>
-
 ###  configPath
 
-▸ **configPath**(...paths: *`string`[]*): `string`
+▸ **configPath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the config directory
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the config directory
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="databasepath"></a>
 
 ###  databasePath
 
-▸ **databasePath**(...paths: *`string`[]*): `string`
+▸ **databasePath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the database path
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the database path
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="makepath"></a>
 
 ###  makePath
 
-▸ **makePath**(...paths: *`string`[]*): `string`
+▸ **makePath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the application path
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the application path
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="migrationspath"></a>
 
 ###  migrationsPath
 
-▸ **migrationsPath**(...paths: *`string`[]*): `string`
+▸ **migrationsPath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the migrations path
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the migrations path
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="publicpath"></a>
 
 ###  publicPath
 
-▸ **publicPath**(...paths: *`string`[]*): `string`
+▸ **publicPath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the public path
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the public path
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="resourcespath"></a>
 
 ###  resourcesPath
 
-▸ **resourcesPath**(...paths: *`string`[]*): `string`
+▸ **resourcesPath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the resources path
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the resources path
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="seedspath"></a>
 
 ###  seedsPath
 
-▸ **seedsPath**(...paths: *`string`[]*): `string`
+▸ **seedsPath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the seeds path
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the seeds path
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="startpath"></a>
 
 ###  startPath
 
-▸ **startPath**(...paths: *`string`[]*): `string`
+▸ **startPath**(...`paths`: string[]): *string*
+
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
 
 Makes path to the start directory
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
+**Returns:** *string*
 
 ___
-<a id="viewspath"></a>
 
 ###  viewsPath
 
-▸ **viewsPath**(...paths: *`string`[]*): `string`
+▸ **viewsPath**(...`paths`: string[]): *string*
 
-Make path to a file or directory relative from the views path
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md)*
+
+Make path to a file or directory relative from
+the views path
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| `Rest` paths | `string`[] |
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
 
-**Returns:** `string`
-
-___
-
+**Returns:** *string*

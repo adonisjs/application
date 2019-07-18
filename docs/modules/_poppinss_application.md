@@ -1,4 +1,6 @@
-[@poppinss/application](../README.md) > [@poppinss/application](../modules/_poppinss_application.md)
+> **[@poppinss/application](../README.md)**
+
+[Globals](../README.md) / [@poppinss/application](_poppinss_application.md) /
 
 # External module: @poppinss/application
 
@@ -22,53 +24,40 @@
 
 * [parse](_poppinss_application.md#parse)
 
----
-
 ## Type aliases
-
-<a id="preloadnode"></a>
 
 ###  PreloadNode
 
-**Ƭ PreloadNode**: *`object`*
+Ƭ **PreloadNode**: *object*
 
-#### Type declaration
+#### Type declaration:
 
 ___
-<a id="rcfile"></a>
 
 ###  RcFile
 
-**Ƭ RcFile**: *`object`*
+Ƭ **RcFile**: *object*
 
-#### Type declaration
+#### Type declaration:
 
 ___
-<a id="semvernode"></a>
 
 ###  SemverNode
 
-**Ƭ SemverNode**: *`object`*
+Ƭ **SemverNode**: *object*
 
-#### Type declaration
-
-___
+#### Type declaration:
 
 ## Functions
 
-<a id="parse"></a>
-
 ###  parse
 
-▸ **parse**(contents: *`any`*): [RcFile](_poppinss_application.md#rcfile)
+▸ **parse**(`contents`: any): *[RcFile](_poppinss_application.md#rcfile)*
 
 **Parameters:**
 
-| Name | Type |
-| ------ | ------ |
-| contents | `any` |
+Name | Type |
+------ | ------ |
+`contents` | any |
 
-**Returns:** [RcFile](_poppinss_application.md#rcfile)
-
-___
-
+**Returns:** *[RcFile](_poppinss_application.md#rcfile)*
