@@ -86,9 +86,9 @@ export class Application implements ApplicationContract {
     adonisVersion: string,
   ) {
     const parsed = parse(rcContents)
-    this.appName = parsed.name
+    this.appName = 'adonis-app'
 
-    this.version = this._parseVersion(parsed.version)
+    this.version = this._parseVersion('0.0.0')
     this.adonisVersion = adonisVersion ? this._parseVersion(adonisVersion) : undefined
 
     this.exceptionHandlerNamespace = parsed.exceptionHandlerNamespace

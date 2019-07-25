@@ -28,8 +28,6 @@ export type SemverNode = {
 }
 
 export type RcFile = {
-  name: string,
-  version: string,
   exceptionHandlerNamespace: string,
   preloads: PreloadNode[],
   copyToBuild: string[],

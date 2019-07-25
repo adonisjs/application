@@ -29,10 +29,12 @@ const DEFAULT_DIRECTORIES = {
   start: 'start',
 }
 
+/**
+ * Parses the contents of `.adonisrc.json` file and merges it with the
+ * defaults
+ */
 export function parse (contents: any): RcFile {
   contents = Object.assign({
-    name: 'adonis-app',
-    version: '0.0.0',
     directories: {},
     exceptionHandlerNamespace: 'App/Exceptions/Handler',
     preloads: [],
@@ -41,8 +43,6 @@ export function parse (contents: any): RcFile {
   }, contents)
 
   return {
-    name: contents.name,
-    version: contents.version,
     directories: Object.assign({}, DEFAULT_DIRECTORIES, contents.directories),
     exceptionHandlerNamespace: contents.exceptionHandlerNamespace,
     preloads: contents.preloads.map(({ file, optional, environment }, index: number) => {
