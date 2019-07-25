@@ -14,10 +14,10 @@ import { join } from 'path'
 
 test.group('Application', () => {
   test('setup application', (assert) => {
-    const app = new Application(__dirname, new Ioc(), {}, '1.0.0')
+    const app = new Application(__dirname, new Ioc(), {}, {})
     assert.equal(app.appName, 'adonis-app')
-    assert.equal(app.adonisVersion!.major, 1)
-    assert.equal(app.version.major, 0)
+    assert.isNull(app.adonisVersion)
+    assert.equal(app.version!.major, 0)
     assert.equal(app.appRoot, __dirname)
 
     assert.deepEqual(app.directoriesMap, new Map(Object.entries({
@@ -40,7 +40,7 @@ test.group('Application', () => {
   })
 
   test('make paths to pre-configured directories', (assert) => {
-    const app = new Application(__dirname, new Ioc(), {}, '1.0.0')
+    const app = new Application(__dirname, new Ioc(), {}, {})
 
     assert.equal(app.makePath('app'), join(__dirname, 'app'))
     assert.equal(app.configPath(), join(__dirname, 'config'))
@@ -51,5 +51,26 @@ test.group('Application', () => {
     assert.equal(app.resourcesPath(), join(__dirname, 'resources'))
     assert.equal(app.viewsPath(), join(__dirname, 'resources/views'))
     assert.equal(app.startPath('app'), join(__dirname, 'start/app'))
+  })
+
+  test('pull name and version from pkgFile contents', (assert) => {
+    const app = new Application(__dirname, new Ioc(), {}, {
+      name: 'relay-app',
+      version: '1.0.0',
+      dependencies: {},
+    })
+
+    assert.equal(app.appName, 'relay-app')
+    assert.equal(app.version!.major, 1)
+  })
+
+  test('pull adonis version from pkgFile contents', (assert) => {
+    const app = new Application(__dirname, new Ioc(), {}, {
+      dependencies: {
+        '@adonisjs/core': '^5.0.0',
+      },
+    })
+
+    assert.equal(app.adonisVersion!.major, 5)
   })
 })

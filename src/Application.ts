@@ -13,7 +13,7 @@
 
 import { join } from 'path'
 import { IocContract } from '@adonisjs/fold'
-import { parse as parseVersion } from 'semver'
+import { coerce } from 'semver'
 
 import { parse } from './rcParser'
 import { PreloadNode, ApplicationContract, SemverNode } from './contracts'
@@ -72,25 +72,33 @@ export class Application implements ApplicationContract {
   /**
    * The application version. Again picked from `.adonisrc.json` file
    */
-  public version: SemverNode
+  public readonly version: SemverNode | null
 
   /**
    * `@adonisjs/core` version
    */
-  public adonisVersion?: SemverNode
+  public readonly adonisVersion: SemverNode | null
 
   constructor (
     public readonly appRoot: string,
     public container: IocContract,
     rcContents: any,
-    adonisVersion: string,
+    pkgFile: Partial<{ name: string, version: string, dependencies: any } & { [key: string]: any }>,
   ) {
     const parsed = parse(rcContents)
-    this.appName = 'adonis-app'
 
-    this.version = this._parseVersion('0.0.0')
-    this.adonisVersion = adonisVersion ? this._parseVersion(adonisVersion) : undefined
+    /**
+     * Fetching following info from the package file
+     */
+    this.appName = pkgFile.name || 'adonis-app'
+    this.version = this._parseVersion(pkgFile.version || '0.0.0')
+    this.adonisVersion = (pkgFile.dependencies && pkgFile.dependencies['@adonisjs/core'])
+      ? this._parseVersion(pkgFile.dependencies['@adonisjs/core'])
+      : null
 
+    /**
+     * Fetching following info from the `.adonisrc.json` file.
+     */
     this.exceptionHandlerNamespace = parsed.exceptionHandlerNamespace
     this.preloads = parsed.preloads
     this.directoriesMap = new Map(Object.entries(parsed.directories))
@@ -103,8 +111,12 @@ export class Application implements ApplicationContract {
   /**
    * Parses version string to an object.
    */
-  private _parseVersion (version: string): SemverNode {
-    const parsed = parseVersion(version, { includePrerelease: true, loose: false })!
+  private _parseVersion (version: string): SemverNode | null {
+    const parsed = coerce(version)
+    if (!parsed) {
+      return null
+    }
+
     return {
       major: parsed.major,
       minor: parsed.minor,
@@ -119,7 +131,9 @@ export class Application implements ApplicationContract {
    */
   private _setEnvVars () {
     process.env.APP_NAME = this.appName
-    process.env.APP_VERSION = this.version.version
+    if (this.version) {
+      process.env.APP_VERSION = this.version.version
+    }
   }
 
   /**

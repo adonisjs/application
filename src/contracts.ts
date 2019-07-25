@@ -42,10 +42,10 @@ export type RcFile = {
 export interface ApplicationContract {
   readonly appRoot: string
   readonly appName: string
+  readonly adonisVersion: SemverNode | null
+  readonly version: SemverNode | null
   exceptionHandlerNamespace: string
   container: IocContract
-  adonisVersion?: SemverNode
-  version: SemverNode
   environment: 'web' | 'console' | 'test' | 'unknown'
   ready: boolean
   preloads: PreloadNode[]
