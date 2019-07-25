@@ -76,5 +76,17 @@
   "np": {
     "contents": ".",
     "anyBranch": false
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poppinss/application.git"
+  },
+  "bugs": {
+    "url": "https://github.com/poppinss/application/issues"
+  },
+  "homepage": "https://github.com/poppinss/application#readme"
 }
