@@ -13,26 +13,70 @@
 
 import { join } from 'path'
 import { IocContract } from '@adonisjs/fold'
-import { PreloadNode, ApplicationContract, SemverNode } from './contracts'
-import { parse } from './rcParser'
 import { parse as parseVersion } from 'semver'
+
+import { parse } from './rcParser'
+import { PreloadNode, ApplicationContract, SemverNode } from './contracts'
 
 /**
  * The main application instance to know about the environment, filesystem
  * in which your AdonisJs app is running
  */
 export class Application implements ApplicationContract {
+  /**
+   * A boolean to know if application has bootstrapped successfully
+   */
   public ready: boolean = false
+
+  /**
+   * Is current environment production.
+   */
   public inProduction: boolean = process.env.NODE_ENV === 'production'
+
+  /**
+   * Inverse of `inProduction`
+   */
   public inDev: boolean = !this.inProduction
+
+  /**
+   * The environment in which application is running
+   */
   public environment: 'web' | 'console' | 'test' | 'unknown' = 'unknown'
 
+  /**
+   * The name of the application picked from `.adonisrc.json` file. This can
+   * be used to prefix logs.
+   */
   public readonly appName: string
+
+  /**
+   * The namespace of exception handler that will handle exceptions
+   */
   public exceptionHandlerNamespace: string
+
+  /**
+   * A array of files to be preloaded
+   */
   public preloads: PreloadNode[] = []
+
+  /**
+   * A map of pre-configured directories
+   */
   public directoriesMap: Map<(string), string> = new Map()
+
+  /**
+   * A map of directories to autoload (aka alias)
+   */
   public autoloadsMap: Map<string, string> = new Map()
+
+  /**
+   * The application version. Again picked from `.adonisrc.json` file
+   */
   public version: SemverNode
+
+  /**
+   * `@adonisjs/core` version
+   */
   public adonisVersion?: SemverNode
 
   constructor (
