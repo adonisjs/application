@@ -38,6 +38,7 @@ const app = new Application(
   __dirname,
   new Ioc(),
   require('./adonisrc.json'),
+  require('./package.json'),
 )
 ```
 
@@ -48,7 +49,7 @@ The constructor takes 4 arguments, which you can fake during tests.
 | `1 (appRoot)` | The application root |
 | `2 (ioc)` | Instance of IoC container |
 | `3 (rcContents)` | Contents of `.adonisrc.json` file. You can also provide an empty object |
-| `4 (version)` | Optionally, pass the version of `@adonisjs/core` package. |
+| `4 (pkgFile)` | Pass the contents of `package.json` file. Required to pull the app name, version and so on |
 
 ## rcParser
 The application instance will parse the contents of `.adonisrc.json` file. However, if you need the parser, you can access and use it as follows.
