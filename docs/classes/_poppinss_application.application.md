@@ -23,7 +23,7 @@ in which your AdonisJs app is running
 
 ### Properties
 
-* [adonisVersion](_poppinss_application.application.md#optional-adonisversion)
+* [adonisVersion](_poppinss_application.application.md#adonisversion)
 * [appName](_poppinss_application.application.md#appname)
 * [appRoot](_poppinss_application.application.md#approot)
 * [autoloadsMap](_poppinss_application.application.md#autoloadsmap)
@@ -53,7 +53,7 @@ in which your AdonisJs app is running
 
 ###  constructor
 
-\+ **new Application**(`appRoot`: string, `container`: `IocContract`, `rcContents`: any, `adonisVersion`: string): *[Application](_poppinss_application.application.md)*
+\+ **new Application**(`appRoot`: string, `container`: `IocContract`, `rcContents`: any, `pkgFile`: `Partial<object & object>`): *[Application](_poppinss_application.application.md)*
 
 **Parameters:**
 
@@ -62,17 +62,19 @@ Name | Type |
 `appRoot` | string |
 `container` | `IocContract` |
 `rcContents` | any |
-`adonisVersion` | string |
+`pkgFile` | `Partial<object & object>` |
 
 **Returns:** *[Application](_poppinss_application.application.md)*
 
 ## Properties
 
-### `Optional` adonisVersion
+###  adonisVersion
 
-• **adonisVersion**? : *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+• **adonisVersion**: *[SemverNode](../modules/_poppinss_application.md#semvernode) | null*
 
-*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[adonisVersion](../interfaces/_poppinss_application.applicationcontract.md#optional-adonisversion)*
+*Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[adonisVersion](../interfaces/_poppinss_application.applicationcontract.md#adonisversion)*
+
+`@adonisjs/core` version
 
 ___
 
@@ -81,6 +83,9 @@ ___
 • **appName**: *string*
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[appName](../interfaces/_poppinss_application.applicationcontract.md#appname)*
+
+The name of the application picked from `.adonisrc.json` file. This can
+be used to prefix logs.
 
 ___
 
@@ -98,6 +103,8 @@ ___
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[autoloadsMap](../interfaces/_poppinss_application.applicationcontract.md#autoloadsmap)*
 
+A map of directories to autoload (aka alias)
+
 ___
 
 ###  container
@@ -114,6 +121,8 @@ ___
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[directoriesMap](../interfaces/_poppinss_application.applicationcontract.md#directoriesmap)*
 
+A map of pre-configured directories
+
 ___
 
 ###  environment
@@ -121,6 +130,8 @@ ___
 • **environment**: *"web" | "console" | "test" | "unknown"* = "unknown"
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[environment](../interfaces/_poppinss_application.applicationcontract.md#environment)*
+
+The environment in which application is running
 
 ___
 
@@ -130,6 +141,8 @@ ___
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[exceptionHandlerNamespace](../interfaces/_poppinss_application.applicationcontract.md#exceptionhandlernamespace)*
 
+The namespace of exception handler that will handle exceptions
+
 ___
 
 ###  inDev
@@ -137,6 +150,8 @@ ___
 • **inDev**: *boolean* =  !this.inProduction
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[inDev](../interfaces/_poppinss_application.applicationcontract.md#indev)*
+
+Inverse of `inProduction`
 
 ___
 
@@ -146,6 +161,8 @@ ___
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[inProduction](../interfaces/_poppinss_application.applicationcontract.md#inproduction)*
 
+Is current environment production.
+
 ___
 
 ###  preloads
@@ -153,6 +170,8 @@ ___
 • **preloads**: *[PreloadNode](../modules/_poppinss_application.md#preloadnode)[]* =  []
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[preloads](../interfaces/_poppinss_application.applicationcontract.md#preloads)*
+
+A array of files to be preloaded
 
 ___
 
@@ -162,13 +181,17 @@ ___
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[ready](../interfaces/_poppinss_application.applicationcontract.md#ready)*
 
+A boolean to know if application has bootstrapped successfully
+
 ___
 
 ###  version
 
-• **version**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+• **version**: *[SemverNode](../modules/_poppinss_application.md#semvernode) | null*
 
 *Implementation of [ApplicationContract](../interfaces/_poppinss_application.applicationcontract.md).[version](../interfaces/_poppinss_application.applicationcontract.md#version)*
+
+The application version. Again picked from `.adonisrc.json` file
 
 ## Methods
 

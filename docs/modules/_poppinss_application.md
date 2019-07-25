@@ -54,6 +54,9 @@ ___
 
 ▸ **parse**(`contents`: any): *[RcFile](_poppinss_application.md#rcfile)*
 
+Parses the contents of `.adonisrc.json` file and merges it with the
+defaults
+
 **Parameters:**
 
 Name | Type |

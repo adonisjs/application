@@ -16,7 +16,7 @@
 
 ### Properties
 
-* [adonisVersion](_poppinss_application.applicationcontract.md#optional-adonisversion)
+* [adonisVersion](_poppinss_application.applicationcontract.md#adonisversion)
 * [appName](_poppinss_application.applicationcontract.md#appname)
 * [appRoot](_poppinss_application.applicationcontract.md#approot)
 * [autoloadsMap](_poppinss_application.applicationcontract.md#autoloadsmap)
@@ -44,9 +44,9 @@
 
 ## Properties
 
-### `Optional` adonisVersion
+###  adonisVersion
 
-• **adonisVersion**? : *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+• **adonisVersion**: *[SemverNode](../modules/_poppinss_application.md#semvernode) | null*
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 ###  version
 
-• **version**: *[SemverNode](../modules/_poppinss_application.md#semvernode)*
+• **version**: *[SemverNode](../modules/_poppinss_application.md#semvernode) | null*
 
 ## Methods
 
