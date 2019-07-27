@@ -111,7 +111,6 @@ export class Application implements ApplicationContract {
     this.autoloadsMap = new Map(Object.entries(parsed.autoloads))
 
     this._setEnvVars()
-    this._bindToContainer()
   }
 
   /**
@@ -140,13 +139,6 @@ export class Application implements ApplicationContract {
     if (this.version) {
       process.env.APP_VERSION = this.version.version
     }
-  }
-
-  /**
-   * Binds self to the AdonisJs IoC container
-   */
-  private _bindToContainer () {
-    this.container.singleton('Application', () => this)
   }
 
   /**
