@@ -46,11 +46,12 @@ export interface ApplicationContract {
   readonly version: SemverNode | null
   exceptionHandlerNamespace: string
   container: IocContract
-  environment: 'web' | 'console' | 'test' | 'unknown'
-  ready: boolean
   preloads: PreloadNode[]
+  environment: 'web' | 'console' | 'test' | 'unknown'
+  isReady: boolean
   inProduction: boolean
   inDev: boolean
+  isShuttingDown: boolean
   directoriesMap: Map<string, string>
   autoloadsMap: Map<string, string>
   makePath (...paths: string[]): string

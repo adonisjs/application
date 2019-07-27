@@ -26,7 +26,13 @@ export class Application implements ApplicationContract {
   /**
    * A boolean to know if application has bootstrapped successfully
    */
-  public ready: boolean = false
+  public isReady: boolean = false
+
+  /**
+   * A boolean to know if application has received a shutdown signal
+   * like `SIGINT` or `SIGTERM`.
+   */
+  public isShuttingDown: boolean = false
 
   /**
    * Is current environment production.

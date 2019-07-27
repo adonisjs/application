@@ -34,7 +34,7 @@ test.group('Application', () => {
     assert.deepEqual(app.autoloadsMap, new Map(Object.entries({})))
     assert.isTrue(app.inDev)
     assert.isFalse(app.inProduction)
-    assert.isFalse(app.ready)
+    assert.isFalse(app.isReady)
     assert.equal(app.exceptionHandlerNamespace, 'App/Exceptions/Handler')
     assert.deepEqual(app.preloads, [])
   })
