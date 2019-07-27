@@ -1,6 +1,6 @@
 > **[@poppinss/application](../README.md)**
 
-[Globals](../README.md) / [@poppinss/application](../modules/_poppinss_application.md) / [ApplicationContract](_poppinss_application.applicationcontract.md) /
+[Globals](../README.md) / ["contracts"](../modules/_contracts_.md) / [ApplicationContract](_contracts_.applicationcontract.md) /
 
 # Interface: ApplicationContract
 
@@ -10,43 +10,44 @@
 
 ## Implemented by
 
-* [Application](../classes/_poppinss_application.application.md)
+* [Application](../classes/_application_.application.md)
 
 ## Index
 
 ### Properties
 
-* [adonisVersion](_poppinss_application.applicationcontract.md#adonisversion)
-* [appName](_poppinss_application.applicationcontract.md#appname)
-* [appRoot](_poppinss_application.applicationcontract.md#approot)
-* [autoloadsMap](_poppinss_application.applicationcontract.md#autoloadsmap)
-* [container](_poppinss_application.applicationcontract.md#container)
-* [directoriesMap](_poppinss_application.applicationcontract.md#directoriesmap)
-* [environment](_poppinss_application.applicationcontract.md#environment)
-* [exceptionHandlerNamespace](_poppinss_application.applicationcontract.md#exceptionhandlernamespace)
-* [inDev](_poppinss_application.applicationcontract.md#indev)
-* [inProduction](_poppinss_application.applicationcontract.md#inproduction)
-* [preloads](_poppinss_application.applicationcontract.md#preloads)
-* [ready](_poppinss_application.applicationcontract.md#ready)
-* [version](_poppinss_application.applicationcontract.md#version)
+* [adonisVersion](_contracts_.applicationcontract.md#adonisversion)
+* [appName](_contracts_.applicationcontract.md#appname)
+* [appRoot](_contracts_.applicationcontract.md#approot)
+* [autoloadsMap](_contracts_.applicationcontract.md#autoloadsmap)
+* [container](_contracts_.applicationcontract.md#container)
+* [directoriesMap](_contracts_.applicationcontract.md#directoriesmap)
+* [environment](_contracts_.applicationcontract.md#environment)
+* [exceptionHandlerNamespace](_contracts_.applicationcontract.md#exceptionhandlernamespace)
+* [inDev](_contracts_.applicationcontract.md#indev)
+* [inProduction](_contracts_.applicationcontract.md#inproduction)
+* [isReady](_contracts_.applicationcontract.md#isready)
+* [isShuttingDown](_contracts_.applicationcontract.md#isshuttingdown)
+* [preloads](_contracts_.applicationcontract.md#preloads)
+* [version](_contracts_.applicationcontract.md#version)
 
 ### Methods
 
-* [configPath](_poppinss_application.applicationcontract.md#configpath)
-* [databasePath](_poppinss_application.applicationcontract.md#databasepath)
-* [makePath](_poppinss_application.applicationcontract.md#makepath)
-* [migrationsPath](_poppinss_application.applicationcontract.md#migrationspath)
-* [publicPath](_poppinss_application.applicationcontract.md#publicpath)
-* [resourcesPath](_poppinss_application.applicationcontract.md#resourcespath)
-* [seedsPath](_poppinss_application.applicationcontract.md#seedspath)
-* [startPath](_poppinss_application.applicationcontract.md#startpath)
-* [viewsPath](_poppinss_application.applicationcontract.md#viewspath)
+* [configPath](_contracts_.applicationcontract.md#configpath)
+* [databasePath](_contracts_.applicationcontract.md#databasepath)
+* [makePath](_contracts_.applicationcontract.md#makepath)
+* [migrationsPath](_contracts_.applicationcontract.md#migrationspath)
+* [publicPath](_contracts_.applicationcontract.md#publicpath)
+* [resourcesPath](_contracts_.applicationcontract.md#resourcespath)
+* [seedsPath](_contracts_.applicationcontract.md#seedspath)
+* [startPath](_contracts_.applicationcontract.md#startpath)
+* [viewsPath](_contracts_.applicationcontract.md#viewspath)
 
 ## Properties
 
 ###  adonisVersion
 
-• **adonisVersion**: *[SemverNode](../modules/_poppinss_application.md#semvernode) | null*
+• **adonisVersion**: *[SemverNode](../modules/_contracts_.md#semvernode) | null*
 
 ___
 
@@ -104,21 +105,27 @@ ___
 
 ___
 
-###  preloads
+###  isReady
 
-• **preloads**: *[PreloadNode](../modules/_poppinss_application.md#preloadnode)[]*
+• **isReady**: *boolean*
 
 ___
 
-###  ready
+###  isShuttingDown
 
-• **ready**: *boolean*
+• **isShuttingDown**: *boolean*
+
+___
+
+###  preloads
+
+• **preloads**: *[PreloadNode](../modules/_contracts_.md#preloadnode)[]*
 
 ___
 
 ###  version
 
-• **version**: *[SemverNode](../modules/_poppinss_application.md#semvernode) | null*
+• **version**: *[SemverNode](../modules/_contracts_.md#semvernode) | null*
 
 ## Methods
 
