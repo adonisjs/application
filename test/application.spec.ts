@@ -29,6 +29,7 @@ test.group('Application', () => {
       resources: 'resources',
       views: 'resources/views',
       start: 'start',
+      tmp: 'tmp',
     })))
 
     assert.deepEqual(app.autoloadsMap, new Map(Object.entries({})))

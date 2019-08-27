@@ -27,6 +27,7 @@ const DEFAULT_DIRECTORIES = {
   resources: 'resources',
   views: 'resources/views',
   start: 'start',
+  tmp: 'tmp',
 }
 
 /**

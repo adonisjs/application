@@ -226,4 +226,13 @@ export class Application implements ApplicationContract {
   public startPath (...paths: string[]): string {
     return this.makePath(this.directoriesMap.get('start')!, ...paths)
   }
+
+  /**
+   * Makes path to the tmp directory. Since the tmp path is used for
+   * writing at the runtime, we use `cwd` path to the write to the
+   * source and not the build directory.
+   */
+  public tmpPath (...paths: string[]): string {
+    return this.makePathFromCwd(this.directoriesMap.get('tmp')!, ...paths)
+  }
 }

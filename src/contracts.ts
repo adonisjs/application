@@ -65,4 +65,5 @@ export interface ApplicationContract {
   resourcesPath (...paths: string[]): string
   viewsPath (...paths: string[]): string
   startPath (...paths: string[]): string
+  tmpPath (...paths: string[]): string
 }
