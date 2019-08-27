@@ -41,6 +41,7 @@ export type RcFile = {
 
 export interface ApplicationContract {
   readonly appRoot: string
+  readonly cliCwd?: string
   readonly appName: string
   readonly adonisVersion: SemverNode | null
   readonly version: SemverNode | null
@@ -55,6 +56,7 @@ export interface ApplicationContract {
   directoriesMap: Map<string, string>
   autoloadsMap: Map<string, string>
   makePath (...paths: string[]): string
+  makePathFromCwd (...paths: string[]): string
   configPath (...paths: string[]): string
   publicPath (...paths: string[]): string
   databasePath (...paths: string[]): string

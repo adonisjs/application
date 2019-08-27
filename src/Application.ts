@@ -29,6 +29,12 @@ export class Application implements ApplicationContract {
   public isReady: boolean = false
 
   /**
+   * Current working directory for the CLI and not the build directory
+   * The `ADONIS_CLI_CWD` is set by the cli
+   */
+  public readonly cliCwd?: string = process.env.ADONIS_CLI_CWD
+
+  /**
    * A boolean to know if application has received a shutdown signal
    * like `SIGINT` or `SIGTERM`.
    */
@@ -147,6 +153,15 @@ export class Application implements ApplicationContract {
    */
   public makePath (...paths: string[]): string {
     return join(this.appRoot, ...paths)
+  }
+
+  /**
+   * Makes the path to a directory from `cliCwd` vs the `appRoot`. This is
+   * helpful when we want path inside the project root and not the
+   * build directory
+   */
+  public makePathFromCwd (...paths: string[]): string {
+    return join(this.cliCwd || this.appRoot, ...paths)
   }
 
   /**
