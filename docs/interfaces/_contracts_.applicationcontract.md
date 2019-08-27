@@ -1,6 +1,6 @@
-> **[@poppinss/application](../README.md)**
+**[@poppinss/application](../README.md)**
 
-[Globals](../README.md) / ["contracts"](../modules/_contracts_.md) / [ApplicationContract](_contracts_.applicationcontract.md) /
+[Globals](../README.md) › ["contracts"](../modules/_contracts_.md) › [ApplicationContract](_contracts_.applicationcontract.md)
 
 # Interface: ApplicationContract
 
@@ -20,6 +20,7 @@
 * [appName](_contracts_.applicationcontract.md#appname)
 * [appRoot](_contracts_.applicationcontract.md#approot)
 * [autoloadsMap](_contracts_.applicationcontract.md#autoloadsmap)
+* [cliCwd](_contracts_.applicationcontract.md#optional-clicwd)
 * [container](_contracts_.applicationcontract.md#container)
 * [directoriesMap](_contracts_.applicationcontract.md#directoriesmap)
 * [environment](_contracts_.applicationcontract.md#environment)
@@ -36,11 +37,13 @@
 * [configPath](_contracts_.applicationcontract.md#configpath)
 * [databasePath](_contracts_.applicationcontract.md#databasepath)
 * [makePath](_contracts_.applicationcontract.md#makepath)
+* [makePathFromCwd](_contracts_.applicationcontract.md#makepathfromcwd)
 * [migrationsPath](_contracts_.applicationcontract.md#migrationspath)
 * [publicPath](_contracts_.applicationcontract.md#publicpath)
 * [resourcesPath](_contracts_.applicationcontract.md#resourcespath)
 * [seedsPath](_contracts_.applicationcontract.md#seedspath)
 * [startPath](_contracts_.applicationcontract.md#startpath)
+* [tmpPath](_contracts_.applicationcontract.md#tmppath)
 * [viewsPath](_contracts_.applicationcontract.md#viewspath)
 
 ## Properties
@@ -65,19 +68,25 @@ ___
 
 ###  autoloadsMap
 
-• **autoloadsMap**: *`Map<string, string>`*
+• **autoloadsMap**: *Map‹string, string›*
+
+___
+
+### `Optional` cliCwd
+
+• **cliCwd**? : *undefined | string*
 
 ___
 
 ###  container
 
-• **container**: *`IocContract`*
+• **container**: *IocContract*
 
 ___
 
 ###  directoriesMap
 
-• **directoriesMap**: *`Map<string, string>`*
+• **directoriesMap**: *Map‹string, string›*
 
 ___
 
@@ -171,6 +180,20 @@ Name | Type |
 
 ___
 
+###  makePathFromCwd
+
+▸ **makePathFromCwd**(...`paths`: string[]): *string*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
+
+**Returns:** *string*
+
+___
+
 ###  migrationsPath
 
 ▸ **migrationsPath**(...`paths`: string[]): *string*
@@ -230,6 +253,20 @@ ___
 ###  startPath
 
 ▸ **startPath**(...`paths`: string[]): *string*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
+
+**Returns:** *string*
+
+___
+
+###  tmpPath
+
+▸ **tmpPath**(...`paths`: string[]): *string*
 
 **Parameters:**
 

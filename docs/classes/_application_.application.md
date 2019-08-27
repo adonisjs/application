@@ -1,6 +1,6 @@
-> **[@poppinss/application](../README.md)**
+**[@poppinss/application](../README.md)**
 
-[Globals](../README.md) / ["Application"](../modules/_application_.md) / [Application](_application_.application.md) /
+[Globals](../README.md) › ["Application"](../modules/_application_.md) › [Application](_application_.application.md)
 
 # Class: Application
 
@@ -27,6 +27,7 @@ in which your AdonisJs app is running
 * [appName](_application_.application.md#appname)
 * [appRoot](_application_.application.md#approot)
 * [autoloadsMap](_application_.application.md#autoloadsmap)
+* [cliCwd](_application_.application.md#optional-clicwd)
 * [container](_application_.application.md#container)
 * [directoriesMap](_application_.application.md#directoriesmap)
 * [environment](_application_.application.md#environment)
@@ -43,27 +44,29 @@ in which your AdonisJs app is running
 * [configPath](_application_.application.md#configpath)
 * [databasePath](_application_.application.md#databasepath)
 * [makePath](_application_.application.md#makepath)
+* [makePathFromCwd](_application_.application.md#makepathfromcwd)
 * [migrationsPath](_application_.application.md#migrationspath)
 * [publicPath](_application_.application.md#publicpath)
 * [resourcesPath](_application_.application.md#resourcespath)
 * [seedsPath](_application_.application.md#seedspath)
 * [startPath](_application_.application.md#startpath)
+* [tmpPath](_application_.application.md#tmppath)
 * [viewsPath](_application_.application.md#viewspath)
 
 ## Constructors
 
 ###  constructor
 
-\+ **new Application**(`appRoot`: string, `container`: `IocContract`, `rcContents`: any, `pkgFile`: `Partial<object & object>`): *[Application](_application_.application.md)*
+\+ **new Application**(`appRoot`: string, `container`: IocContract, `rcContents`: any, `pkgFile`: Partial‹object & object›): *[Application](_application_.application.md)*
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `appRoot` | string |
-`container` | `IocContract` |
+`container` | IocContract |
 `rcContents` | any |
-`pkgFile` | `Partial<object & object>` |
+`pkgFile` | Partial‹object & object› |
 
 **Returns:** *[Application](_application_.application.md)*
 
@@ -100,7 +103,7 @@ ___
 
 ###  autoloadsMap
 
-• **autoloadsMap**: *`Map<string, string>`* =  new Map()
+• **autoloadsMap**: *Map‹string, string›* =  new Map()
 
 *Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md).[autoloadsMap](../interfaces/_contracts_.applicationcontract.md#autoloadsmap)*
 
@@ -108,9 +111,20 @@ A map of directories to autoload (aka alias)
 
 ___
 
+### `Optional` cliCwd
+
+• **cliCwd**? : *undefined | string* =  process.env.ADONIS_CLI_CWD
+
+*Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md).[cliCwd](../interfaces/_contracts_.applicationcontract.md#optional-clicwd)*
+
+Current working directory for the CLI and not the build directory
+The `ADONIS_CLI_CWD` is set by the cli
+
+___
+
 ###  container
 
-• **container**: *`IocContract`*
+• **container**: *IocContract*
 
 *Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md).[container](../interfaces/_contracts_.applicationcontract.md#container)*
 
@@ -118,7 +132,7 @@ ___
 
 ###  directoriesMap
 
-• **directoriesMap**: *`Map<string, string>`* =  new Map()
+• **directoriesMap**: *Map‹string, string›* =  new Map()
 
 *Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md).[directoriesMap](../interfaces/_contracts_.applicationcontract.md#directoriesmap)*
 
@@ -264,6 +278,26 @@ Name | Type |
 
 ___
 
+###  makePathFromCwd
+
+▸ **makePathFromCwd**(...`paths`: string[]): *string*
+
+*Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md)*
+
+Makes the path to a directory from `cliCwd` vs the `appRoot`. This is
+helpful when we want path inside the project root and not the
+build directory
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
+
+**Returns:** *string*
+
+___
+
 ###  migrationsPath
 
 ▸ **migrationsPath**(...`paths`: string[]): *string*
@@ -347,6 +381,26 @@ ___
 *Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md)*
 
 Makes path to the start directory
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`...paths` | string[] |
+
+**Returns:** *string*
+
+___
+
+###  tmpPath
+
+▸ **tmpPath**(...`paths`: string[]): *string*
+
+*Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md)*
+
+Makes path to the tmp directory. Since the tmp path is used for
+writing at the runtime, we use `cwd` path to the write to the
+source and not the build directory.
 
 **Parameters:**
 

@@ -1,6 +1,6 @@
-> **[@poppinss/application](../README.md)**
+**[@poppinss/application](../README.md)**
 
-[Globals](../README.md) / ["rcParser"](_rcparser_.md) /
+[Globals](../README.md) › ["rcParser"](_rcparser_.md)
 
 # External module: "rcParser"
 
