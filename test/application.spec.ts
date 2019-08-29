@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import * as test from 'japa'
+import test from 'japa'
 import { Ioc } from '@adonisjs/fold'
 import { Application } from '../src/Application'
 import { join } from 'path'

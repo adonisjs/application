@@ -7,7 +7,7 @@
 * file that was distributed with this source code.
 */
 
-import * as test from 'japa'
+import test from 'japa'
 import { parse } from '../src/rcParser'
 
 test.group('Rc Parser', () => {
