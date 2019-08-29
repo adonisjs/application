@@ -29,7 +29,9 @@
 * [inProduction](_contracts_.applicationcontract.md#inproduction)
 * [isReady](_contracts_.applicationcontract.md#isready)
 * [isShuttingDown](_contracts_.applicationcontract.md#isshuttingdown)
+* [namespacesMap](_contracts_.applicationcontract.md#namespacesmap)
 * [preloads](_contracts_.applicationcontract.md#preloads)
+* [rcFile](_contracts_.applicationcontract.md#rcfile)
 * [version](_contracts_.applicationcontract.md#version)
 
 ### Methods
@@ -126,9 +128,21 @@ ___
 
 ___
 
+###  namespacesMap
+
+• **namespacesMap**: *Map‹string, string›*
+
+___
+
 ###  preloads
 
 • **preloads**: *[PreloadNode](../modules/_contracts_.md#preloadnode)[]*
+
+___
+
+###  rcFile
+
+• **rcFile**: *[RcFile](../modules/_contracts_.md#rcfile)*
 
 ___
 

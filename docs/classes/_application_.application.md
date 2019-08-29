@@ -36,7 +36,9 @@ in which your AdonisJs app is running
 * [inProduction](_application_.application.md#inproduction)
 * [isReady](_application_.application.md#isready)
 * [isShuttingDown](_application_.application.md#isshuttingdown)
+* [namespacesMap](_application_.application.md#namespacesmap)
 * [preloads](_application_.application.md#preloads)
+* [rcFile](_application_.application.md#rcfile)
 * [version](_application_.application.md#version)
 
 ### Methods
@@ -201,6 +203,17 @@ like `SIGINT` or `SIGTERM`.
 
 ___
 
+###  namespacesMap
+
+• **namespacesMap**: *Map‹string, string›* =  new Map()
+
+*Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md).[namespacesMap](../interfaces/_contracts_.applicationcontract.md#namespacesmap)*
+
+A map of namespaces that different parts of apps
+can use
+
+___
+
 ###  preloads
 
 • **preloads**: *[PreloadNode](../modules/_contracts_.md#preloadnode)[]* =  []
@@ -208,6 +221,16 @@ ___
 *Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md).[preloads](../interfaces/_contracts_.applicationcontract.md#preloads)*
 
 A array of files to be preloaded
+
+___
+
+###  rcFile
+
+• **rcFile**: *[RcFile](../modules/_contracts_.md#rcfile)*
+
+*Implementation of [ApplicationContract](../interfaces/_contracts_.applicationcontract.md).[rcFile](../interfaces/_contracts_.applicationcontract.md#rcfile)*
+
+Reference to fully parser rcFile
 
 ___
 

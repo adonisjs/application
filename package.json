@@ -1,6 +1,6 @@
 {
   "name": "@poppinss/application",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "AdonisJs application class to read app related data",
   "main": "build/index.js",
   "files": [
