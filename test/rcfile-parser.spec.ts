@@ -16,6 +16,8 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
         config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
         database: 'database',
         migrations: 'database/migrations',
         public: 'public',
@@ -24,6 +26,11 @@ test.group('Rc Parser', () => {
         views: 'resources/views',
         start: 'start',
         tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
       },
       preloads: [],
       autoloads: {},
@@ -38,6 +45,8 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'Relay/Handler',
       directories: {
         config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
         database: 'database',
         migrations: 'database/migrations',
         public: 'public',
@@ -46,6 +55,11 @@ test.group('Rc Parser', () => {
         views: 'resources/views',
         start: 'start',
         tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
       },
       preloads: [],
       autoloads: {},
@@ -64,6 +78,8 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
         database: 'database',
         migrations: 'database/migrations',
         public: 'public',
@@ -72,6 +88,11 @@ test.group('Rc Parser', () => {
         views: 'resources/views',
         start: 'start',
         tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
       },
       preloads: [{
         file: 'foo',
@@ -93,6 +114,8 @@ test.group('Rc Parser', () => {
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'myconfig',
+        contracts: 'contracts',
+        providers: 'providers',
         database: 'database',
         migrations: 'database/migrations',
         public: 'public',
@@ -101,6 +124,11 @@ test.group('Rc Parser', () => {
         views: 'resources/views',
         start: 'start',
         tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
       },
       preloads: [],
       autoloads: {},
@@ -117,5 +145,36 @@ test.group('Rc Parser', () => {
     })
 
     assert.throw(fn, 'E_PRELOAD_MISSING_FILE_PROPERTY: Invalid value for preloads[0]')
+  })
+
+  test('deep merge namespaces', (assert) => {
+    assert.deepEqual(parse({
+      namespaces: {
+        httpControllers: 'App/Controllers',
+      },
+    }), {
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [],
+      autoloads: {},
+      copyToBuild: [],
+    })
   })
 })

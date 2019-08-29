@@ -24,6 +24,8 @@ test.group('Application', () => {
       config: 'config',
       public: 'public',
       database: 'database',
+      contracts: 'contracts',
+      providers: 'providers',
       seeds: 'database/seeds',
       migrations: 'database/migrations',
       resources: 'resources',
@@ -38,6 +40,11 @@ test.group('Application', () => {
     assert.isFalse(app.isReady)
     assert.equal(app.exceptionHandlerNamespace, 'App/Exceptions/Handler')
     assert.deepEqual(app.preloads, [])
+    assert.deepEqual(app.namespacesMap, new Map(Object.entries({
+      httpControllers: 'App/Controllers/Http',
+      eventListeners: 'App/Listeners',
+      redisListeners: 'App/Listeners',
+    })))
   })
 
   test('make paths to pre-configured directories', (assert) => {

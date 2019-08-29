@@ -33,13 +33,17 @@ export type RcFile = {
   copyToBuild: string[],
   directories: {
     [key: string]: string,
-  }
+  },
   autoloads: {
+    [key: string]: string,
+  },
+  namespaces: {
     [key: string]: string,
   },
 }
 
 export interface ApplicationContract {
+  readonly rcFile: RcFile,
   readonly appRoot: string
   readonly cliCwd?: string
   readonly appName: string
@@ -55,6 +59,7 @@ export interface ApplicationContract {
   isShuttingDown: boolean
   directoriesMap: Map<string, string>
   autoloadsMap: Map<string, string>
+  namespacesMap: Map<string, string>
   makePath (...paths: string[]): string
   makePathFromCwd (...paths: string[]): string
   configPath (...paths: string[]): string

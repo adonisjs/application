@@ -21,6 +21,8 @@ import { RcFile } from './contracts'
 const DEFAULT_DIRECTORIES = {
   config: 'config',
   public: 'public',
+  contracts: 'contracts',
+  providers: 'providers',
   database: 'database',
   migrations: 'database/migrations',
   seeds: 'database/seeds',
@@ -31,12 +33,22 @@ const DEFAULT_DIRECTORIES = {
 }
 
 /**
+ * A list of default namespaces.
+ */
+const DEFAULT_NAMESPACES = {
+  httpControllers: 'App/Controllers/Http',
+  eventListeners: 'App/Listeners',
+  redisListeners: 'App/Listeners',
+}
+
+/**
  * Parses the contents of `.adonisrc.json` file and merges it with the
  * defaults
  */
 export function parse (contents: any): RcFile {
   contents = Object.assign({
     directories: {},
+    namespaces: {},
     exceptionHandlerNamespace: 'App/Exceptions/Handler',
     preloads: [],
     autoloads: {},
@@ -56,6 +68,7 @@ export function parse (contents: any): RcFile {
         environment: environment === undefined ? ['web', 'console', 'test'] : environment,
       }
     }),
+    namespaces: Object.assign({}, DEFAULT_NAMESPACES, contents.namespaces),
     autoloads: contents.autoloads,
     copyToBuild: contents.copyToBuild,
   }

@@ -36,6 +36,9 @@
     "autoloads": {
       "type": "object"
     },
+    "namespaces": {
+      "type": "object"
+    },
     "directories": {
       "type": "object"
     }

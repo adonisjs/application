@@ -16,7 +16,7 @@ import { IocContract } from '@adonisjs/fold'
 import { coerce } from 'semver'
 
 import { parse } from './rcParser'
-import { PreloadNode, ApplicationContract, SemverNode } from './contracts'
+import { PreloadNode, ApplicationContract, SemverNode, RcFile } from './contracts'
 
 /**
  * The main application instance to know about the environment, filesystem
@@ -82,6 +82,12 @@ export class Application implements ApplicationContract {
   public autoloadsMap: Map<string, string> = new Map()
 
   /**
+   * A map of namespaces that different parts of apps
+   * can use
+   */
+  public namespacesMap: Map<string, string> = new Map()
+
+  /**
    * The application version. Again picked from `.adonisrc.json` file
    */
   public readonly version: SemverNode | null
@@ -91,13 +97,18 @@ export class Application implements ApplicationContract {
    */
   public readonly adonisVersion: SemverNode | null
 
+  /**
+   * Reference to fully parser rcFile
+   */
+  public readonly rcFile: RcFile
+
   constructor (
     public readonly appRoot: string,
     public container: IocContract,
     rcContents: any,
     pkgFile: Partial<{ name: string, version: string, dependencies: any } & { [key: string]: any }>,
   ) {
-    const parsed = parse(rcContents)
+    this.rcFile = parse(rcContents)
 
     /**
      * Fetching following info from the package file
@@ -111,10 +122,11 @@ export class Application implements ApplicationContract {
     /**
      * Fetching following info from the `.adonisrc.json` file.
      */
-    this.exceptionHandlerNamespace = parsed.exceptionHandlerNamespace
-    this.preloads = parsed.preloads
-    this.directoriesMap = new Map(Object.entries(parsed.directories))
-    this.autoloadsMap = new Map(Object.entries(parsed.autoloads))
+    this.exceptionHandlerNamespace = this.rcFile.exceptionHandlerNamespace
+    this.preloads = this.rcFile.preloads
+    this.directoriesMap = new Map(Object.entries(this.rcFile.directories))
+    this.autoloadsMap = new Map(Object.entries(this.rcFile.autoloads))
+    this.namespacesMap = new Map(Object.entries(this.rcFile.namespaces))
 
     this._setEnvVars()
   }
