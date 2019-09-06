@@ -1,9 +1,9 @@
 /**
- * @module @poppinss/application
+ * @module @adonisjs/application
  */
 
 /*
-* @poppinss/application
+* @adonisjs/application
 *
 * (c) Harminder Virk <virk@adonisjs.com>
 *
@@ -11,12 +11,19 @@
 * file that was distributed with this source code.
 */
 
+/// <reference path="../adonis-typings/application.ts" />
+
 import { join } from 'path'
 import { IocContract } from '@adonisjs/fold'
 import { coerce } from 'semver'
 
 import { parse } from './rcParser'
-import { PreloadNode, ApplicationContract, SemverNode, RcFile } from './contracts'
+import {
+  PreloadNode,
+  ApplicationContract,
+  SemverNode,
+  RcFile,
+} from '@ioc:Adonis/Core/Application'
 
 /**
  * The main application instance to know about the environment, filesystem

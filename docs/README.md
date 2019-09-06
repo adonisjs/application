@@ -1,4 +1,4 @@
-**[@poppinss/application](README.md)**
+**[@adonisjs/application](README.md)**
 
 [Globals](README.md)
 
@@ -6,6 +6,7 @@
 
 ### External modules
 
-* ["Application"](modules/_application_.md)
-* ["contracts"](modules/_contracts_.md)
-* ["rcParser"](modules/_rcparser_.md)
+* ["adonis-typings/application"](modules/_adonis_typings_application_.md)
+* ["src/Application"](modules/_src_application_.md)
+* ["src/rcParser"](modules/_src_rcparser_.md)
+* ["standalone"](modules/_standalone_.md)

@@ -1,9 +1,9 @@
 /**
- * @module @poppinss/application
+ * @module @adonisjs/application
  */
 
 /*
-* @poppinss/application
+* @adonisjs/application
 *
 * (c) Harminder Virk <virk@adonisjs.com>
 *
@@ -11,7 +11,6 @@
 * file that was distributed with this source code.
 */
 
-export { ApplicationContract } from './src/contracts'
 export { Application } from './src/Application'
 import * as rcParser from './src/rcParser'
 export { rcParser }

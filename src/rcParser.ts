@@ -1,9 +1,9 @@
 /**
- * @module @poppinss/application
+ * @module @adonisjs/application
  */
 
 /*
-* @poppinss/application
+* @adonisjs/application
 *
 * (c) Harminder Virk <virk@adonisjs.com>
 *
@@ -11,8 +11,10 @@
 * file that was distributed with this source code.
 */
 
+/// <reference path="../adonis-typings/application.ts" />
+
 import { Exception } from '@poppinss/utils'
-import { RcFile } from './contracts'
+import { RcFile } from '@ioc:Adonis/Core/Application'
 
 /**
  * Default set of directories for AdonisJs
