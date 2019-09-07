@@ -73,4 +73,7 @@ declare module '@ioc:Adonis/Core/Application' {
     startPath (...paths: string[]): string
     tmpPath (...paths: string[]): string
   }
+
+  const Application: ApplicationContract
+  export default Application
 }
