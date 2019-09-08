@@ -34,7 +34,7 @@ test.group('Rc Parser', () => {
       },
       preloads: [],
       autoloads: {},
-      copyToBuild: [],
+      metaFiles: [],
     })
   })
 
@@ -63,7 +63,7 @@ test.group('Rc Parser', () => {
       },
       preloads: [],
       autoloads: {},
-      copyToBuild: [],
+      metaFiles: [],
     })
   })
 
@@ -100,7 +100,7 @@ test.group('Rc Parser', () => {
         optional: false,
       }],
       autoloads: {},
-      copyToBuild: [],
+      metaFiles: [],
     })
   })
 
@@ -132,7 +132,7 @@ test.group('Rc Parser', () => {
       },
       preloads: [],
       autoloads: {},
-      copyToBuild: [],
+      metaFiles: [],
     })
   })
 
@@ -174,7 +174,82 @@ test.group('Rc Parser', () => {
       },
       preloads: [],
       autoloads: {},
-      copyToBuild: [],
+      metaFiles: [],
     })
+  })
+
+  test('normalize string based meta file patterns', (assert) => {
+    assert.deepEqual(parse({
+      namespaces: {
+        httpControllers: 'App/Controllers',
+      },
+      metaFiles: ['foo.json'],
+    }), {
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [],
+      autoloads: {},
+      metaFiles: [{ pattern: 'foo.json', reloadServer: true }],
+    })
+  })
+
+  test('drop extra properties from meta file objects', (assert) => {
+    assert.deepEqual(parse({
+      namespaces: {
+        httpControllers: 'App/Controllers',
+      },
+      metaFiles: [{ pattern: 'foo.json', run: false }],
+    }), {
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [],
+      autoloads: {},
+      metaFiles: [{ pattern: 'foo.json', reloadServer: false, processor: undefined }],
+    })
+  })
+
+  test('raise exception when pattern is missing', (assert) => {
+    const fn = () => parse({
+      namespaces: {
+        httpControllers: 'App/Controllers',
+      },
+      metaFiles: [{ run: false }],
+    })
+
+    assert.throw(fn, 'E_METAFILE_MISSING_PATTERN: Invalid value for metaFiles[0]')
   })
 })

@@ -14,7 +14,7 @@
 /// <reference path="../adonis-typings/application.ts" />
 
 import { Exception } from '@poppinss/utils'
-import { RcFile } from '@ioc:Adonis/Core/Application'
+import { RcFile, MetaFileNode } from '@ioc:Adonis/Core/Application'
 
 /**
  * Default set of directories for AdonisJs
@@ -54,7 +54,7 @@ export function parse (contents: any): RcFile {
     exceptionHandlerNamespace: 'App/Exceptions/Handler',
     preloads: [],
     autoloads: {},
-    copyToBuild: [],
+    metaFiles: [],
   }, contents)
 
   return {
@@ -72,6 +72,24 @@ export function parse (contents: any): RcFile {
     }),
     namespaces: Object.assign({}, DEFAULT_NAMESPACES, contents.namespaces),
     autoloads: contents.autoloads,
-    copyToBuild: contents.copyToBuild,
+    metaFiles: contents.metaFiles.map((file: MetaFileNode | string, index) => {
+      if (typeof (file) === 'string') {
+        return {
+          pattern: file,
+          reloadServer: true,
+        }
+      }
+
+      const { pattern, reloadServer, processor } = file
+      if (!pattern) {
+        throw new Exception(`Invalid value for metaFiles[${index}]`, 500, 'E_METAFILE_MISSING_PATTERN')
+      }
+
+      return {
+        pattern,
+        reloadServer: !!reloadServer,
+        processor: processor,
+      }
+    }),
   }
 }

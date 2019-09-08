@@ -14,12 +14,18 @@
 declare module '@ioc:Adonis/Core/Application' {
   import { IocContract } from '@adonisjs/fold'
 
+  /**
+   * Shape of preload files
+   */
   export type PreloadNode = {
     file: string,
     environment: ('web' | 'console' | 'test')[],
     optional: boolean,
   }
 
+  /**
+   * Shape of semver node
+   */
   export type SemverNode = {
     major: number,
     minor: number,
@@ -28,10 +34,23 @@ declare module '@ioc:Adonis/Core/Application' {
     version: string,
   }
 
+  /**
+   * Shape of the meta file inside the `metaFiles` array inside
+   * `.adonisrc.json` file.
+   */
+  export type MetaFileNode = {
+    pattern: string,
+    reloadServer: boolean,
+    processor?: string,
+  }
+
+  /**
+   * Shape of rc file
+   */
   export type RcFile = {
     exceptionHandlerNamespace: string,
     preloads: PreloadNode[],
-    copyToBuild: string[],
+    metaFiles: MetaFileNode[],
     directories: {
       [key: string]: string,
     },

@@ -14,8 +14,8 @@
 /// <reference path="../adonis-typings/application.ts" />
 
 import { join } from 'path'
-import { IocContract } from '@adonisjs/fold'
 import { coerce } from 'semver'
+import { IocContract } from '@adonisjs/fold'
 
 import { parse } from './rcParser'
 import {
