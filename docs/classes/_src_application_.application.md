@@ -1,6 +1,6 @@
 **[@adonisjs/application](../README.md)**
 
-[Globals](../README.md) › ["src/Application"](../modules/_src_application_.md) › [Application](_src_application_.application.md)
+[Globals](../README.md) › [&quot;src/Application&quot;](../modules/_src_application_.md) › [Application](_src_application_.application.md)
 
 # Class: Application
 
