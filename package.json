@@ -27,13 +27,13 @@
   "author": "virk,adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/fold": "^6.1.6",
+    "@adonisjs/fold": "^6.1.7",
     "@adonisjs/mrm-preset": "^2.1.0",
     "@types/node": "^12.7.4",
     "@types/semver": "^6.0.2",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
-    "del-cli": "^2.0.0",
+    "del-cli": "^3.0.0",
     "doctoc": "^1.4.0",
     "husky": "^3.0.5",
     "japa": "^3.0.1",
@@ -44,7 +44,7 @@
     "tslint-eslint-rules": "^5.4.0",
     "typedoc": "^0.15.0",
     "typedoc-plugin-external-module-name": "^2.1.0",
-    "typedoc-plugin-markdown": "^2.1.10",
+    "typedoc-plugin-markdown": "^2.1.11",
     "typescript": "^3.6.2"
   },
   "nyc": {
@@ -67,7 +67,7 @@
     }
   },
   "dependencies": {
-    "@poppinss/utils": "^1.0.7",
+    "@poppinss/utils": "^2.0.0",
     "semver": "^6.3.0"
   },
   "peerDependencies": {
