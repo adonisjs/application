@@ -23,9 +23,13 @@
     "App": "app",
     "Contracts": "contracts"
   },
-  "copyToBuild": [
+  "metaFiles": [
     ".env",
     "package.json",
-    ".adonisrc.json"
+    ".adonisrc.json",
+    {
+      "pattern": "foo/*",
+      "reloadServer": true
+    }
   ]
 }

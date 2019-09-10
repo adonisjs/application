@@ -27,10 +27,21 @@
         "additionalProperties": false
       }
     },
-    "copyToBuild": {
+    "metaFiles": {
       "type": "array",
       "items": {
-        "type": "string"
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pattern": { "type": "string" },
+              "reloadServer": { "type": "boolean" }
+            }
+          }
+        ]
       }
     },
     "autoloads": {
