@@ -41,7 +41,6 @@ declare module '@ioc:Adonis/Core/Application' {
   export type MetaFileNode = {
     pattern: string,
     reloadServer: boolean,
-    processor?: string,
   }
 
   /**

@@ -238,7 +238,7 @@ test.group('Rc Parser', () => {
       },
       preloads: [],
       autoloads: {},
-      metaFiles: [{ pattern: 'foo.json', reloadServer: false, processor: undefined }],
+      metaFiles: [{ pattern: 'foo.json', reloadServer: false }],
     })
   })
 

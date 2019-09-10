@@ -80,7 +80,7 @@ export function parse (contents: any): RcFile {
         }
       }
 
-      const { pattern, reloadServer, processor } = file
+      const { pattern, reloadServer } = file
       if (!pattern) {
         throw new Exception(`Invalid value for metaFiles[${index}]`, 500, 'E_METAFILE_MISSING_PATTERN')
       }
@@ -88,7 +88,6 @@ export function parse (contents: any): RcFile {
       return {
         pattern,
         reloadServer: !!reloadServer,
-        processor: processor,
       }
     }),
   }
