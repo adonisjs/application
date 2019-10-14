@@ -1,6 +1,4 @@
-**[@adonisjs/application](../README.md)**
-
-[Globals](../README.md) › [&quot;src/Application&quot;](../modules/_src_application_.md) › [Application](_src_application_.application.md)
+[@adonisjs/application](../README.md) › ["src/Application"](../modules/_src_application_.md) › [Application](_src_application_.application.md)
 
 # Class: Application
 
@@ -39,6 +37,7 @@ in which your AdonisJs app is running
 * [namespacesMap](_src_application_.application.md#namespacesmap)
 * [preloads](_src_application_.application.md#preloads)
 * [rcFile](_src_application_.application.md#rcfile)
+* [typescript](_src_application_.application.md#typescript)
 * [version](_src_application_.application.md#version)
 
 ### Methods
@@ -199,6 +198,19 @@ ___
 • **rcFile**: *RcFile*
 
 Reference to fully parser rcFile
+
+___
+
+###  typescript
+
+• **typescript**: *boolean*
+
+The typescript flag indicates a couple of things, which can help tweak the tooling
+and runtime behavior of the application as well.
+
+1. When `typescript=true`, it means that the project is written using typescript.
+2. After compiling to Javascript, AdonisJs will set this value to `false` in the build folder.
+3. At runtime when `typescript=true`, it means the app is using ts-node to start.
 
 ___
 

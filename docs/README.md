@@ -1,6 +1,4 @@
-**[@adonisjs/application](README.md)**
-
-[Globals](README.md)
+[@adonisjs/application](README.md)
 
 # @adonisjs/application
 
