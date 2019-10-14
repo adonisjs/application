@@ -13,6 +13,7 @@ import { parse } from '../src/rcParser'
 test.group('Rc Parser', () => {
   test('parse empty object to rc file node', (assert) => {
     assert.deepEqual(parse({}), {
+      typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -42,6 +43,7 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       exceptionHandlerNamespace: 'Relay/Handler',
     }), {
+      typescript: true,
       exceptionHandlerNamespace: 'Relay/Handler',
       directories: {
         config: 'config',
@@ -75,6 +77,7 @@ test.group('Rc Parser', () => {
       }],
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
+      typescript: true,
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -111,6 +114,7 @@ test.group('Rc Parser', () => {
       },
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
+      typescript: true,
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
         config: 'myconfig',
@@ -153,6 +157,7 @@ test.group('Rc Parser', () => {
         httpControllers: 'App/Controllers',
       },
     }), {
+      typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -185,6 +190,7 @@ test.group('Rc Parser', () => {
       },
       metaFiles: ['foo.json'],
     }), {
+      typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -217,6 +223,7 @@ test.group('Rc Parser', () => {
       },
       metaFiles: [{ pattern: 'foo.json', run: false }],
     }), {
+      typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
         config: 'config',
@@ -251,5 +258,35 @@ test.group('Rc Parser', () => {
     })
 
     assert.throw(fn, 'E_METAFILE_MISSING_PATTERN: Invalid value for metaFiles[0]')
+  })
+
+  test('set typescript to false', (assert) => {
+    assert.deepEqual(parse({
+      typescript: false,
+    }), {
+      typescript: false,
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [],
+      autoloads: {},
+      metaFiles: [],
+    })
   })
 })

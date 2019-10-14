@@ -47,6 +47,7 @@ declare module '@ioc:Adonis/Core/Application' {
    * Shape of rc file
    */
   export type RcFile = {
+    typescript: boolean,
     exceptionHandlerNamespace: string,
     preloads: PreloadNode[],
     metaFiles: MetaFileNode[],
@@ -68,6 +69,7 @@ declare module '@ioc:Adonis/Core/Application' {
     readonly appName: string
     readonly adonisVersion: SemverNode | null
     readonly version: SemverNode | null
+    readonly typescript: boolean
     exceptionHandlerNamespace: string
     container: IocContract
     preloads: PreloadNode[]

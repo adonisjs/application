@@ -109,6 +109,16 @@ export class Application implements ApplicationContract {
    */
   public readonly rcFile: RcFile
 
+  /**
+   * The typescript flag indicates a couple of things, which can help tweak the tooling
+   * and runtime behavior of the application as well.
+   *
+   * 1. When `typescript=true`, it means that the project is written using typescript.
+   * 2. After compiling to Javascript, AdonisJs will set this value to `false` in the build folder.
+   * 3. At runtime when `typescript=true`, it means the app is using ts-node to start.
+   */
+  public readonly typescript: boolean
+
   constructor (
     public readonly appRoot: string,
     public container: IocContract,
@@ -116,6 +126,8 @@ export class Application implements ApplicationContract {
     pkgFile: Partial<{ name: string, version: string, dependencies: any } & { [key: string]: any }>,
   ) {
     this.rcFile = parse(rcContents)
+
+    this.typescript = this.rcFile.typescript
 
     /**
      * Fetching following info from the package file

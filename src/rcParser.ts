@@ -49,6 +49,7 @@ const DEFAULT_NAMESPACES = {
  */
 export function parse (contents: any): RcFile {
   contents = Object.assign({
+    typescript: true,
     directories: {},
     namespaces: {},
     exceptionHandlerNamespace: 'App/Exceptions/Handler',
@@ -58,6 +59,7 @@ export function parse (contents: any): RcFile {
   }, contents)
 
   return {
+    typescript: contents.typescript,
     directories: Object.assign({}, DEFAULT_DIRECTORIES, contents.directories),
     exceptionHandlerNamespace: contents.exceptionHandlerNamespace,
     preloads: contents.preloads.map(({ file, optional, environment }, index: number) => {
