@@ -123,7 +123,7 @@ export class Application implements ApplicationContract {
     public readonly appRoot: string,
     public container: IocContract,
     rcContents: any,
-    pkgFile: Partial<{ name: string, version: string, dependencies: any } & { [key: string]: any }>,
+    pkgFile: Partial<{ name: string, version: string, adonisVersion: string } & { [key: string]: any }>,
   ) {
     this.rcFile = parse(rcContents)
 
@@ -134,9 +134,7 @@ export class Application implements ApplicationContract {
      */
     this.appName = pkgFile.name || 'adonis-app'
     this.version = this._parseVersion(pkgFile.version || '0.0.0')
-    this.adonisVersion = (pkgFile.dependencies && pkgFile.dependencies['@adonisjs/core'])
-      ? this._parseVersion(pkgFile.dependencies['@adonisjs/core'])
-      : null
+    this.adonisVersion = pkgFile.adonisVersion ? this._parseVersion(pkgFile.adonisVersion) : null
 
     /**
      * Fetching following info from the `.adonisrc.json` file.

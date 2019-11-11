@@ -74,9 +74,7 @@ test.group('Application', () => {
 
   test('pull adonis version from pkgFile contents', (assert) => {
     const app = new Application(__dirname, new Ioc(), {}, {
-      dependencies: {
-        '@adonisjs/core': '^5.0.0',
-      },
+      adonisVersion: '^5.0.0',
     })
 
     assert.equal(app.adonisVersion!.major, 5)
