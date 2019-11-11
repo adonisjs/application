@@ -5,7 +5,7 @@
     "typescript": {
       "description": "Is project written in Typescript or not",
       "type": "boolean"
-    }
+    },
     "exceptionHandlerNamespace": {
       "description": "Http server exception handler namespace",
       "type": "string"
@@ -56,7 +56,13 @@
     },
     "directories": {
       "type": "object"
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
-  "required": [ "exceptionHandlerNamespace" ]
+  "required": [ "exceptionHandlerNamespace", "typescript" ]
 }
