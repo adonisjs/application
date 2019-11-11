@@ -56,6 +56,7 @@ export function parse (contents: any): RcFile {
     preloads: [],
     autoloads: {},
     metaFiles: [],
+    commands: [],
   }, contents)
 
   return {
@@ -92,5 +93,6 @@ export function parse (contents: any): RcFile {
         reloadServer: !!reloadServer,
       }
     }),
+    commands: contents.commands,
   }
 }

@@ -51,6 +51,7 @@ declare module '@ioc:Adonis/Core/Application' {
     exceptionHandlerNamespace: string,
     preloads: PreloadNode[],
     metaFiles: MetaFileNode[],
+    commands: string[],
     directories: {
       [key: string]: string,
     },
