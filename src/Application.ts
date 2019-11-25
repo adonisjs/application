@@ -39,7 +39,7 @@ export class Application implements ApplicationContract {
    * Current working directory for the CLI and not the build directory
    * The `ADONIS_CLI_CWD` is set by the cli
    */
-  public readonly cliCwd?: string = process.env.ADONIS_CLI_CWD
+  public readonly cliCwd?: string = process.env.ADONIS_ACE_CWD
 
   /**
    * A boolean to know if application has received a shutdown signal
