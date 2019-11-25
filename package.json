@@ -71,7 +71,7 @@
     "semver": "^6.3.0"
   },
   "peerDependencies": {
-    "@adonisjs/fold": "^6.x.x"
+    "@adonisjs/fold": "^6.0.0"
   },
   "np": {
     "contents": ".",
