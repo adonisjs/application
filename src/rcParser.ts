@@ -57,6 +57,8 @@ export function parse (contents: any): RcFile {
     autoloads: {},
     metaFiles: [],
     commands: [],
+    providers: [],
+    aceProviders: [],
   }, contents)
 
   return {
@@ -94,5 +96,7 @@ export function parse (contents: any): RcFile {
       }
     }),
     commands: contents.commands,
+    providers: contents.providers,
+    aceProviders: contents.aceProviders,
   }
 }

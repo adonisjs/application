@@ -37,6 +37,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -68,6 +70,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -107,6 +111,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -141,6 +147,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -185,6 +193,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -219,6 +229,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [{ pattern: 'foo.json', reloadServer: true }],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -253,6 +265,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [{ pattern: 'foo.json', reloadServer: false }],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -295,6 +309,8 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [],
       commands: [],
+      providers: [],
+      aceProviders: [],
     })
   })
 
@@ -326,6 +342,74 @@ test.group('Rc Parser', () => {
       autoloads: {},
       metaFiles: [],
       commands: ['./foo/bar'],
+      providers: [],
+      aceProviders: [],
+    })
+  })
+
+  test('define custom providers', (assert) => {
+    assert.deepEqual(parse({
+      providers: ['@adonisjs/core'],
+    }), {
+      typescript: true,
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [],
+      autoloads: {},
+      metaFiles: [],
+      commands: [],
+      providers: ['@adonisjs/core'],
+      aceProviders: [],
+    })
+  })
+
+  test('define custom commands', (assert) => {
+    assert.deepEqual(parse({
+      aceProviders: ['@adonisjs/commands'],
+    }), {
+      typescript: true,
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [],
+      autoloads: {},
+      metaFiles: [],
+      commands: [],
+      providers: [],
+      aceProviders: ['@adonisjs/commands'],
     })
   })
 })

@@ -52,6 +52,8 @@ declare module '@ioc:Adonis/Core/Application' {
     preloads: PreloadNode[],
     metaFiles: MetaFileNode[],
     commands: string[],
+    providers: string[],
+    aceProviders: string[],
     directories: {
       [key: string]: string,
     },

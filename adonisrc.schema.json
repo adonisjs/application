@@ -62,7 +62,19 @@
       "items": {
         "type": "string"
       }
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "aceProviders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
-  "required": [ "exceptionHandlerNamespace", "typescript" ]
+  "required": [ "exceptionHandlerNamespace", "typescript", "providers" ]
 }
