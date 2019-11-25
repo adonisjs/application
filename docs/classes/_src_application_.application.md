@@ -106,7 +106,7 @@ ___
 
 ### `Optional` cliCwd
 
-• **cliCwd**? : *undefined | string* =  process.env.ADONIS_CLI_CWD
+• **cliCwd**? : *undefined | string* =  process.env.ADONIS_ACE_CWD
 
 Current working directory for the CLI and not the build directory
 The `ADONIS_CLI_CWD` is set by the cli
