@@ -412,4 +412,85 @@ test.group('Rc Parser', () => {
       aceProviders: ['@adonisjs/commands'],
     })
   })
+
+  test('define preload file as a string', (assert) => {
+    assert.deepEqual(parse({
+      preloads: ['./start/routes'],
+    }), {
+      typescript: true,
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [{
+        file: './start/routes',
+        environment: ['web', 'console', 'test'],
+        optional: false,
+      }],
+      autoloads: {},
+      metaFiles: [],
+      commands: [],
+      providers: [],
+      aceProviders: [],
+    })
+  })
+
+  test('define preload files as string and object together', (assert) => {
+    assert.deepEqual(parse({
+      preloads: ['./start/routes', { file: './start/kernel', optional: true }],
+    }), {
+      typescript: true,
+      exceptionHandlerNamespace: 'App/Exceptions/Handler',
+      directories: {
+        config: 'config',
+        contracts: 'contracts',
+        providers: 'providers',
+        database: 'database',
+        migrations: 'database/migrations',
+        public: 'public',
+        resources: 'resources',
+        seeds: 'database/seeds',
+        views: 'resources/views',
+        start: 'start',
+        tmp: 'tmp',
+      },
+      namespaces: {
+        httpControllers: 'App/Controllers/Http',
+        eventListeners: 'App/Listeners',
+        redisListeners: 'App/Listeners',
+      },
+      preloads: [
+        {
+          file: './start/routes',
+          environment: ['web', 'console', 'test'],
+          optional: false,
+        },
+        {
+          file: './start/kernel',
+          environment: ['web', 'console', 'test'],
+          optional: true,
+        },
+      ],
+      autoloads: {},
+      metaFiles: [],
+      commands: [],
+      providers: [],
+      aceProviders: [],
+    })
+  })
 })

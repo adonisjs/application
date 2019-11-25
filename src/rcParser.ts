@@ -14,7 +14,7 @@
 /// <reference path="../adonis-typings/application.ts" />
 
 import { Exception } from '@poppinss/utils'
-import { RcFile, MetaFileNode } from '@ioc:Adonis/Core/Application'
+import { RcFile, MetaFileNode, PreloadNode } from '@ioc:Adonis/Core/Application'
 
 /**
  * Default set of directories for AdonisJs
@@ -65,14 +65,23 @@ export function parse (contents: any): RcFile {
     typescript: contents.typescript,
     directories: Object.assign({}, DEFAULT_DIRECTORIES, contents.directories),
     exceptionHandlerNamespace: contents.exceptionHandlerNamespace,
-    preloads: contents.preloads.map(({ file, optional, environment }, index: number) => {
-      if (!file) {
+    preloads: contents.preloads.map((preload: PreloadNode | string, index: number) => {
+      if (typeof (preload) === 'string') {
+        return {
+          file: preload,
+          optional: false,
+          environment: ['web', 'console', 'test'],
+        }
+      }
+
+      if (!preload.file) {
         throw new Exception(`Invalid value for preloads[${index}]`, 500, 'E_PRELOAD_MISSING_FILE_PROPERTY')
       }
+
       return {
-        file,
-        optional: optional === undefined ? false : optional,
-        environment: environment === undefined ? ['web', 'console', 'test'] : environment,
+        file: preload.file,
+        optional: preload.optional === undefined ? false : preload.optional,
+        environment: preload.environment === undefined ? ['web', 'console', 'test'] : preload.environment,
       }
     }),
     namespaces: Object.assign({}, DEFAULT_NAMESPACES, contents.namespaces),
