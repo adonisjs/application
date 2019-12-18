@@ -54,7 +54,7 @@ export function parse (contents: any): RcFile {
     namespaces: {},
     exceptionHandlerNamespace: 'App/Exceptions/Handler',
     preloads: [],
-    autoloads: {},
+    aliases: {},
     metaFiles: [],
     commands: [],
     providers: [],
@@ -85,7 +85,7 @@ export function parse (contents: any): RcFile {
       }
     }),
     namespaces: Object.assign({}, DEFAULT_NAMESPACES, contents.namespaces),
-    autoloads: contents.autoloads,
+    aliases: Object.assign({}, contents.autoloads, contents.aliases),
     metaFiles: contents.metaFiles.map((file: MetaFileNode | string, index) => {
       if (typeof (file) === 'string') {
         return {

@@ -48,7 +48,7 @@
         ]
       }
     },
-    "autoloads": {
+    "aliases": {
       "type": "object"
     },
     "namespaces": {

@@ -57,7 +57,7 @@ declare module '@ioc:Adonis/Core/Application' {
     directories: {
       [key: string]: string,
     },
-    autoloads: {
+    aliases: {
       [key: string]: string,
     },
     namespaces: {
@@ -82,7 +82,7 @@ declare module '@ioc:Adonis/Core/Application' {
     inDev: boolean
     isShuttingDown: boolean
     directoriesMap: Map<string, string>
-    autoloadsMap: Map<string, string>
+    aliasesMap: Map<string, string>
     namespacesMap: Map<string, string>
     makePath (...paths: string[]): string
     makePathFromCwd (...paths: string[]): string

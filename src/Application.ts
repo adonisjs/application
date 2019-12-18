@@ -84,9 +84,9 @@ export class Application implements ApplicationContract {
   public directoriesMap: Map<(string), string> = new Map()
 
   /**
-   * A map of directories to autoload (aka alias)
+   * A map of directories aliases
    */
-  public autoloadsMap: Map<string, string> = new Map()
+  public aliasesMap: Map<string, string> = new Map()
 
   /**
    * A map of namespaces that different parts of apps
@@ -142,7 +142,7 @@ export class Application implements ApplicationContract {
     this.exceptionHandlerNamespace = this.rcFile.exceptionHandlerNamespace
     this.preloads = this.rcFile.preloads
     this.directoriesMap = new Map(Object.entries(this.rcFile.directories))
-    this.autoloadsMap = new Map(Object.entries(this.rcFile.autoloads))
+    this.aliasesMap = new Map(Object.entries(this.rcFile.aliases))
     this.namespacesMap = new Map(Object.entries(this.rcFile.namespaces))
 
     this._setEnvVars()

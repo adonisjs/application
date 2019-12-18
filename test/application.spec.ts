@@ -34,7 +34,7 @@ test.group('Application', () => {
       tmp: 'tmp',
     })))
 
-    assert.deepEqual(app.autoloadsMap, new Map(Object.entries({})))
+    assert.deepEqual(app.aliasesMap, new Map(Object.entries({})))
     assert.isTrue(app.inDev)
     assert.isFalse(app.inProduction)
     assert.isFalse(app.isReady)

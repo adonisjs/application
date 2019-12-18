@@ -19,7 +19,7 @@
       "file": "start/kernel"
     }
   ],
-  "autoloads": {
+  "aliases": {
     "App": "app",
     "Contracts": "contracts"
   },
