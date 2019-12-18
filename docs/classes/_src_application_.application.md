@@ -22,9 +22,9 @@ in which your AdonisJs app is running
 ### Properties
 
 * [adonisVersion](_src_application_.application.md#adonisversion)
+* [aliasesMap](_src_application_.application.md#aliasesmap)
 * [appName](_src_application_.application.md#appname)
 * [appRoot](_src_application_.application.md#approot)
-* [autoloadsMap](_src_application_.application.md#autoloadsmap)
 * [cliCwd](_src_application_.application.md#optional-clicwd)
 * [container](_src_application_.application.md#container)
 * [directoriesMap](_src_application_.application.md#directoriesmap)
@@ -81,6 +81,14 @@ Name | Type |
 
 ___
 
+###  aliasesMap
+
+• **aliasesMap**: *Map‹string, string›* =  new Map()
+
+A map of directories aliases
+
+___
+
 ###  appName
 
 • **appName**: *string*
@@ -93,14 +101,6 @@ ___
 ###  appRoot
 
 • **appRoot**: *string*
-
-___
-
-###  autoloadsMap
-
-• **autoloadsMap**: *Map‹string, string›* =  new Map()
-
-A map of directories to autoload (aka alias)
 
 ___
 
