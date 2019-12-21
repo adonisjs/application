@@ -1,5 +1,5 @@
 /*
-* @poppinss/application
+* @adonisjs/application
 *
 * (c) Harminder Virk <virk@adonisjs.com>
 *
