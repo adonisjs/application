@@ -28,8 +28,8 @@
   "license": "MIT",
   "devDependencies": {
     "@adonisjs/fold": "^6.2.3",
-    "@adonisjs/mrm-preset": "^2.2.2",
-    "@types/node": "^12.12.20",
+    "@adonisjs/mrm-preset": "^2.2.3",
+    "@types/node": "^12.12.21",
     "@types/semver": "^6.2.0",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
@@ -45,7 +45,7 @@
     "typedoc": "^0.15.5",
     "typedoc-plugin-external-module-name": "^2.1.0",
     "typedoc-plugin-markdown": "^2.2.14",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.4"
   },
   "nyc": {
     "exclude": [
@@ -67,7 +67,7 @@
     }
   },
   "dependencies": {
-    "@poppinss/utils": "^2.1.0",
+    "@poppinss/utils": "^2.1.1",
     "semver": "^7.1.1"
   },
   "peerDependencies": {
