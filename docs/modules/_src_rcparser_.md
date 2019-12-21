@@ -12,7 +12,7 @@
 
 ###  parse
 
-▸ **parse**(`contents`: any): *RcFile*
+▸ **parse**(`contents`: DeepReadonly‹object›): *RcFile*
 
 Parses the contents of `.adonisrc.json` file and merges it with the
 defaults
@@ -21,6 +21,6 @@ defaults
 
 Name | Type |
 ------ | ------ |
-`contents` | any |
+`contents` | DeepReadonly‹object› |
 
 **Returns:** *RcFile*

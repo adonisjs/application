@@ -11,6 +11,7 @@
 
 import { join } from 'path'
 import { coerce } from 'semver'
+import { DeepReadonly } from 'ts-essentials'
 import { IocContract } from '@adonisjs/fold'
 
 import { parse } from './rcParser'
@@ -118,8 +119,8 @@ export class Application implements ApplicationContract {
   constructor (
     public readonly appRoot: string,
     public container: IocContract,
-    rcContents: any,
-    pkgFile: Partial<{ name: string, version: string, adonisVersion: string } & { [key: string]: any }>,
+    rcContents: { [key: string]: any },
+    pkgFile: Partial<DeepReadonly<{ name: string, version: string, adonisVersion: string } & { [key: string]: any }>>,
   ) {
     this.rcFile = parse(rcContents)
 

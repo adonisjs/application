@@ -58,7 +58,7 @@ in which your AdonisJs app is running
 
 ###  constructor
 
-\+ **new Application**(`appRoot`: string, `container`: IocContract, `rcContents`: any, `pkgFile`: Partial‹object & object›): *[Application](_src_application_.application.md)*
+\+ **new Application**(`appRoot`: string, `container`: IocContract, `rcContents`: object, `pkgFile`: Partial‹DeepReadonly‹object & object››): *[Application](_src_application_.application.md)*
 
 **Parameters:**
 
@@ -66,8 +66,8 @@ Name | Type |
 ------ | ------ |
 `appRoot` | string |
 `container` | IocContract |
-`rcContents` | any |
-`pkgFile` | Partial‹object & object› |
+`rcContents` | object |
+`pkgFile` | Partial‹DeepReadonly‹object & object›› |
 
 **Returns:** *[Application](_src_application_.application.md)*
 
