@@ -133,8 +133,8 @@ export class Application implements ApplicationContract {
      * Fetching following info from the package file
      */
     this.appName = pkgFile.name || 'adonis-app'
-    this.version = this._parseVersion(pkgFile.version || '0.0.0')
-    this.adonisVersion = pkgFile.adonisVersion ? this._parseVersion(pkgFile.adonisVersion) : null
+    this.version = this.parseVersion(pkgFile.version || '0.0.0')
+    this.adonisVersion = pkgFile.adonisVersion ? this.parseVersion(pkgFile.adonisVersion) : null
 
     /**
      * Fetching following info from the `.adonisrc.json` file.
@@ -145,13 +145,13 @@ export class Application implements ApplicationContract {
     this.aliasesMap = new Map(Object.entries(this.rcFile.aliases))
     this.namespacesMap = new Map(Object.entries(this.rcFile.namespaces))
 
-    this._setEnvVars()
+    this.setEnvVars()
   }
 
   /**
    * Parses version string to an object.
    */
-  private _parseVersion (version: string): SemverNode | null {
+  private parseVersion (version: string): SemverNode | null {
     const parsed = coerce(version)
     if (!parsed) {
       return null
@@ -169,7 +169,7 @@ export class Application implements ApplicationContract {
   /**
    * Sets env variables based upon the provided application info.
    */
-  private _setEnvVars () {
+  private setEnvVars () {
     process.env.APP_NAME = this.appName
     if (this.version) {
       process.env.APP_VERSION = this.version.version
