@@ -41,6 +41,7 @@ test.group('Application', () => {
     assert.equal(app.exceptionHandlerNamespace, 'App/Exceptions/Handler')
     assert.deepEqual(app.preloads, [])
     assert.deepEqual(app.namespacesMap, new Map(Object.entries({
+      models: 'App/Models',
       httpControllers: 'App/Controllers/Http',
       eventListeners: 'App/Listeners',
       redisListeners: 'App/Listeners',

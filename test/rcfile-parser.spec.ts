@@ -29,6 +29,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -62,6 +63,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -99,6 +101,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -139,6 +142,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -185,6 +189,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -221,6 +226,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -257,6 +263,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -301,6 +308,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -334,6 +342,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -367,6 +376,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -400,6 +410,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -433,6 +444,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -470,6 +482,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',
@@ -515,6 +528,7 @@ test.group('Rc Parser', () => {
         tmp: 'tmp',
       },
       namespaces: {
+        models: 'App/Models',
         httpControllers: 'App/Controllers/Http',
         eventListeners: 'App/Listeners',
         redisListeners: 'App/Listeners',

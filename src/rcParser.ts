@@ -35,6 +35,7 @@ const DEFAULT_DIRECTORIES = {
  * A list of default namespaces.
  */
 const DEFAULT_NAMESPACES = {
+  models: 'App/Models',
   httpControllers: 'App/Controllers/Http',
   eventListeners: 'App/Listeners',
   redisListeners: 'App/Listeners',
