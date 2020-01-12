@@ -13,22 +13,29 @@
     "preloads": {
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "file": { "type": "string" },
-          "environment": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["web", "console", "test"]
-            }
+        "oneOf": [
+          {
+            "type": "string"
           },
-          "optional": {
-            "type": "boolean"
+          {
+            "type": "object",
+            "properties": {
+              "file": { "type": "string" },
+              "environment": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["web", "console", "test"]
+                }
+              },
+              "optional": {
+                "type": "boolean"
+              }
+            },
+            "required": ["file"],
+            "additionalProperties": false
           }
-        },
-        "required": ["file"],
-        "additionalProperties": false
+        ]
       }
     },
     "metaFiles": {
