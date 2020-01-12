@@ -1,4 +1,4 @@
-[@adonisjs/application](../README.md) › ["src/rcParser"](_src_rcparser_.md)
+[@adonisjs/application - v1.3.3](../README.md) › ["src/rcParser"](_src_rcparser_.md)
 
 # External module: "src/rcParser"
 
