@@ -59,10 +59,65 @@
       "type": "object"
     },
     "namespaces": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "string"
+        },
+        "httpControllers": {
+          "type": "string"
+        },
+        "eventListeners": {
+          "type": "string"
+        },
+        "redisListeners": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
     },
     "directories": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "config": {
+          "type": "string"
+        },
+        "public": {
+          "type": "string"
+        },
+        "contracts": {
+          "type": "string"
+        },
+        "providers": {
+          "type": "string"
+        },
+        "database": {
+          "type": "string"
+        },
+        "migrations": {
+          "type": "string"
+        },
+        "seeds": {
+          "type": "string"
+        },
+        "resources": {
+          "type": "string"
+        },
+        "views": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "tmp": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
     },
     "commands": {
       "type": "array",
