@@ -11,6 +11,37 @@ declare module '@ioc:Adonis/Core/Application' {
   import { IocContract } from '@adonisjs/fold'
 
   /**
+   * Shape of directories object with known and unknown
+   * directories
+   */
+  export interface DirectoriesNode {
+    config: string,
+    public: string,
+    contracts: string,
+    providers: string,
+    database: string,
+    migrations: string,
+    seeds: string,
+    resources: string,
+    views: string,
+    start: string,
+    tmp: string,
+    [key: string]: string,
+  }
+
+  /**
+   * Shape of namespaces object with known and unknown
+   * directories
+   */
+  export interface NamespacesNode {
+    models: string,
+    httpControllers: string,
+    eventListeners: string,
+    redisListeners: string,
+    [key: string]: string,
+  }
+
+  /**
    * Shape of preload files
    */
   export type PreloadNode = {
@@ -50,15 +81,11 @@ declare module '@ioc:Adonis/Core/Application' {
     commands: string[],
     providers: string[],
     aceProviders: string[],
-    directories: {
-      [key: string]: string,
-    },
+    directories: DirectoriesNode,
     aliases: {
       [key: string]: string,
     },
-    namespaces: {
-      [key: string]: string,
-    },
+    namespaces: NamespacesNode,
   }
 
   export interface ApplicationContract {
