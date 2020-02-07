@@ -28,7 +28,7 @@
   "author": "virk,adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/fold": "^6.2.3",
+    "@adonisjs/fold": "^6.3.2",
     "@adonisjs/mrm-preset": "^2.2.4",
     "@types/node": "^13.7.0",
     "@types/semver": "^7.1.0",
