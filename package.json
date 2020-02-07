@@ -70,8 +70,7 @@
   },
   "dependencies": {
     "@poppinss/utils": "^2.1.2",
-    "semver": "^7.1.2",
-    "ts-essentials": "^6.0.0"
+    "semver": "^7.1.2"
   },
   "peerDependencies": {
     "@adonisjs/fold": "^6.0.0"

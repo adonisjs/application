@@ -9,18 +9,18 @@
 
 /// <reference path="../adonis-typings/application.ts" />
 
+import {
+  RcFile,
+  SemverNode,
+  PreloadNode,
+  ApplicationContract,
+} from '@ioc:Adonis/Core/Application'
+
 import { join } from 'path'
 import { coerce } from 'semver'
-import { DeepReadonly } from 'ts-essentials'
 import { IocContract } from '@adonisjs/fold'
 
 import { parse } from './rcParser'
-import {
-  PreloadNode,
-  ApplicationContract,
-  SemverNode,
-  RcFile,
-} from '@ioc:Adonis/Core/Application'
 
 /**
  * The main application instance to know about the environment, filesystem
@@ -120,7 +120,7 @@ export class Application implements ApplicationContract {
     public readonly appRoot: string,
     public container: IocContract,
     rcContents: { [key: string]: any },
-    pkgFile: Partial<DeepReadonly<{ name: string, version: string, adonisVersion: string } & { [key: string]: any }>>,
+    pkgFile: Partial<{ name: string, version: string, adonisVersion: string } & { [key: string]: any }>,
   ) {
     this.rcFile = parse(rcContents)
 

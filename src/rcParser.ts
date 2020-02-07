@@ -10,7 +10,6 @@
 /// <reference path="../adonis-typings/application.ts" />
 
 import { Exception } from '@poppinss/utils'
-import { DeepReadonly } from 'ts-essentials'
 import { RcFile, MetaFileNode, PreloadNode } from '@ioc:Adonis/Core/Application'
 
 /**
@@ -45,7 +44,7 @@ const DEFAULT_NAMESPACES = {
  * Parses the contents of `.adonisrc.json` file and merges it with the
  * defaults
  */
-export function parse (contents: DeepReadonly<{ [key: string]: any }>): RcFile {
+export function parse (contents: { [key: string]: any }): RcFile {
   contents = Object.assign({
     typescript: true,
     directories: {},
