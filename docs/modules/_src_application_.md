@@ -1,4 +1,4 @@
-[@adonisjs/application - v1.3.3](../README.md) › ["src/Application"](_src_application_.md)
+[@adonisjs/application](../README.md) › ["src/Application"](_src_application_.md)
 
 # External module: "src/Application"
 

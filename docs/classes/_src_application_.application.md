@@ -1,4 +1,4 @@
-[@adonisjs/application - v1.3.3](../README.md) › ["src/Application"](../modules/_src_application_.md) › [Application](_src_application_.application.md)
+[@adonisjs/application](../README.md) › ["src/Application"](../modules/_src_application_.md) › [Application](_src_application_.application.md)
 
 # Class: Application
 
@@ -58,7 +58,7 @@ in which your AdonisJs app is running
 
 ###  constructor
 
-\+ **new Application**(`appRoot`: string, `container`: IocContract, `rcContents`: object, `pkgFile`: Partial‹DeepReadonly‹object & object››): *[Application](_src_application_.application.md)*
+\+ **new Application**(`appRoot`: string, `container`: IocContract, `rcContents`: object, `pkgFile`: Partial‹object & object›): *[Application](_src_application_.application.md)*
 
 **Parameters:**
 
@@ -67,7 +67,7 @@ Name | Type |
 `appRoot` | string |
 `container` | IocContract |
 `rcContents` | object |
-`pkgFile` | Partial‹DeepReadonly‹object & object›› |
+`pkgFile` | Partial‹object & object› |
 
 **Returns:** *[Application](_src_application_.application.md)*
 
@@ -83,7 +83,7 @@ ___
 
 ###  aliasesMap
 
-• **aliasesMap**: *Map‹string, string›* =  new Map()
+• **aliasesMap**: *Map‹string, string›* = new Map()
 
 A map of directories aliases
 
@@ -106,7 +106,7 @@ ___
 
 ### `Optional` cliCwd
 
-• **cliCwd**? : *undefined | string* =  process.env.ADONIS_ACE_CWD
+• **cliCwd**? : *undefined | string* = process.env.ADONIS_ACE_CWD
 
 Current working directory for the CLI and not the build directory
 The `ADONIS_CLI_CWD` is set by the cli
@@ -121,7 +121,7 @@ ___
 
 ###  directoriesMap
 
-• **directoriesMap**: *Map‹string, string›* =  new Map()
+• **directoriesMap**: *Map‹string, string›* = new Map()
 
 A map of pre-configured directories
 
@@ -145,7 +145,7 @@ ___
 
 ###  inDev
 
-• **inDev**: *boolean* =  !this.inProduction
+• **inDev**: *boolean* = !this.inProduction
 
 Inverse of `inProduction`
 
@@ -153,7 +153,7 @@ ___
 
 ###  inProduction
 
-• **inProduction**: *boolean* =  process.env.NODE_ENV === 'production'
+• **inProduction**: *boolean* = process.env.NODE_ENV === 'production'
 
 Is current environment production.
 
@@ -178,7 +178,7 @@ ___
 
 ###  namespacesMap
 
-• **namespacesMap**: *Map‹string, string›* =  new Map()
+• **namespacesMap**: *Map‹string, string›* = new Map()
 
 A map of namespaces that different parts of apps
 can use
@@ -187,7 +187,7 @@ ___
 
 ###  preloads
 
-• **preloads**: *PreloadNode[]* =  []
+• **preloads**: *PreloadNode[]* = []
 
 A array of files to be preloaded
 

@@ -1,4 +1,4 @@
-[@adonisjs/application - v1.3.3](../README.md) › ["src/rcParser"](_src_rcparser_.md)
+[@adonisjs/application](../README.md) › ["src/rcParser"](_src_rcparser_.md)
 
 # External module: "src/rcParser"
 
@@ -12,7 +12,7 @@
 
 ###  parse
 
-▸ **parse**(`contents`: DeepReadonly‹object›): *RcFile*
+▸ **parse**(`contents`: object): *RcFile*
 
 Parses the contents of `.adonisrc.json` file and merges it with the
 defaults
@@ -21,6 +21,6 @@ defaults
 
 Name | Type |
 ------ | ------ |
-`contents` | DeepReadonly‹object› |
+`contents` | object |
 
 **Returns:** *RcFile*

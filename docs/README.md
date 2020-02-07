@@ -1,6 +1,6 @@
-[@adonisjs/application - v1.3.3](README.md)
+[@adonisjs/application](README.md)
 
-# @adonisjs/application - v1.3.3
+# @adonisjs/application
 
 ## Index
 
