@@ -160,6 +160,9 @@ export class Application implements ApplicationContract {
       patch: parsed.patch,
       prerelease: parsed.prerelease.map((release) => release),
       version: parsed.version,
+      toString () {
+        return this.version
+      },
     }
   }
 

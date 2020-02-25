@@ -59,6 +59,7 @@ declare module '@ioc:Adonis/Core/Application' {
     patch: number,
     prerelease: (string | number)[],
     version: string,
+    toString (): string,
   }
 
   /**
