@@ -45,7 +45,7 @@ const DEFAULT_NAMESPACES = {
  * defaults
  */
 export function parse (contents: { [key: string]: any }): RcFile {
-  contents = Object.assign({
+  const normalizedContents = Object.assign({
     typescript: true,
     directories: {},
     namespaces: {},
@@ -59,10 +59,10 @@ export function parse (contents: { [key: string]: any }): RcFile {
   }, contents)
 
   return {
-    typescript: contents.typescript,
-    directories: Object.assign({}, DEFAULT_DIRECTORIES, contents.directories),
-    exceptionHandlerNamespace: contents.exceptionHandlerNamespace,
-    preloads: contents.preloads.map((preload: PreloadNode | string, index: number) => {
+    typescript: normalizedContents.typescript,
+    directories: Object.assign({}, DEFAULT_DIRECTORIES, normalizedContents.directories),
+    exceptionHandlerNamespace: normalizedContents.exceptionHandlerNamespace,
+    preloads: normalizedContents.preloads.map((preload: PreloadNode | string, index: number) => {
       if (typeof (preload) === 'string') {
         return {
           file: preload,
@@ -81,9 +81,9 @@ export function parse (contents: { [key: string]: any }): RcFile {
         environment: preload.environment === undefined ? ['web', 'console', 'test'] : preload.environment,
       }
     }),
-    namespaces: Object.assign({}, DEFAULT_NAMESPACES, contents.namespaces),
-    aliases: Object.assign({}, contents.autoloads, contents.aliases),
-    metaFiles: contents.metaFiles.map((file: MetaFileNode | string, index) => {
+    namespaces: Object.assign({}, DEFAULT_NAMESPACES, normalizedContents.namespaces),
+    aliases: Object.assign({}, normalizedContents.autoloads, normalizedContents.aliases),
+    metaFiles: normalizedContents.metaFiles.map((file: MetaFileNode | string, index) => {
       if (typeof (file) === 'string') {
         return {
           pattern: file,
@@ -101,8 +101,9 @@ export function parse (contents: { [key: string]: any }): RcFile {
         reloadServer: !!reloadServer,
       }
     }),
-    commands: contents.commands,
-    providers: contents.providers,
-    aceProviders: contents.aceProviders,
+    commands: normalizedContents.commands,
+    providers: normalizedContents.providers,
+    aceProviders: normalizedContents.aceProviders,
+    raw: contents,
   }
 }

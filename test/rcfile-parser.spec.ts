@@ -13,6 +13,7 @@ import { parse } from '../src/rcParser'
 test.group('Rc Parser', () => {
   test('parse empty object to rc file node', (assert) => {
     assert.deepEqual(parse({}), {
+      raw: {},
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -47,6 +48,9 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       exceptionHandlerNamespace: 'Relay/Handler',
     }), {
+      raw: {
+        exceptionHandlerNamespace: 'Relay/Handler',
+      },
       typescript: true,
       exceptionHandlerNamespace: 'Relay/Handler',
       directories: {
@@ -85,6 +89,13 @@ test.group('Rc Parser', () => {
       }],
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
+      raw: {
+        preloads: [{
+          file: 'foo',
+          force: true,
+        }],
+        exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
+      },
       typescript: true,
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
@@ -126,6 +137,12 @@ test.group('Rc Parser', () => {
       },
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
     }), {
+      raw: {
+        directories: {
+          config: 'myconfig',
+        },
+        exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
+      },
       typescript: true,
       exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       directories: {
@@ -173,6 +190,11 @@ test.group('Rc Parser', () => {
         httpControllers: 'App/Controllers',
       },
     }), {
+      raw: {
+        namespaces: {
+          httpControllers: 'App/Controllers',
+        },
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -210,6 +232,12 @@ test.group('Rc Parser', () => {
       },
       metaFiles: ['foo.json'],
     }), {
+      raw: {
+        namespaces: {
+          httpControllers: 'App/Controllers',
+        },
+        metaFiles: ['foo.json'],
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -247,6 +275,12 @@ test.group('Rc Parser', () => {
       },
       metaFiles: [{ pattern: 'foo.json', run: false }],
     }), {
+      raw: {
+        namespaces: {
+          httpControllers: 'App/Controllers',
+        },
+        metaFiles: [{ pattern: 'foo.json', run: false }],
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -292,6 +326,9 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       typescript: false,
     }), {
+      raw: {
+        typescript: false,
+      },
       typescript: false,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -326,6 +363,9 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       commands: ['./foo/bar'],
     }), {
+      raw: {
+        commands: ['./foo/bar'],
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -360,6 +400,9 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       providers: ['@adonisjs/core'],
     }), {
+      raw: {
+        providers: ['@adonisjs/core'],
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -394,6 +437,9 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       aceProviders: ['@adonisjs/commands'],
     }), {
+      raw: {
+        aceProviders: ['@adonisjs/commands'],
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -428,6 +474,9 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       preloads: ['./start/routes'],
     }), {
+      raw: {
+        preloads: ['./start/routes'],
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -466,6 +515,9 @@ test.group('Rc Parser', () => {
     assert.deepEqual(parse({
       preloads: ['./start/routes', { file: './start/kernel', optional: true }],
     }), {
+      raw: {
+        preloads: ['./start/routes', { file: './start/kernel', optional: true }],
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {
@@ -512,6 +564,10 @@ test.group('Rc Parser', () => {
       autoloads: { 'app': 'App' },
       aliases: { 'test': 'Test' },
     }), {
+      raw: {
+        autoloads: { 'app': 'App' },
+        aliases: { 'test': 'Test' },
+      },
       typescript: true,
       exceptionHandlerNamespace: 'App/Exceptions/Handler',
       directories: {

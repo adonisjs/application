@@ -87,6 +87,7 @@ declare module '@ioc:Adonis/Core/Application' {
       [key: string]: string,
     },
     namespaces: NamespacesNode,
+    raw: any,
   }
 
   export interface ApplicationContract {
