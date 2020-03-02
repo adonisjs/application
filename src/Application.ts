@@ -17,7 +17,7 @@ import {
 } from '@ioc:Adonis/Core/Application'
 
 import { join } from 'path'
-import { coerce } from 'semver'
+import { parse as semverParse } from 'semver'
 import { IocContract } from '@adonisjs/fold'
 
 import { parse } from './rcParser'
@@ -149,7 +149,7 @@ export class Application implements ApplicationContract {
    * Parses version string to an object.
    */
   private parseVersion (version: string): SemverNode | null {
-    const parsed = coerce(version)
+    const parsed = semverParse(version)
     if (!parsed) {
       return null
     }
