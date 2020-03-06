@@ -48,6 +48,7 @@ in which your AdonisJs app is running
 * [makePathFromCwd](_src_application_.application.md#makepathfromcwd)
 * [migrationsPath](_src_application_.application.md#migrationspath)
 * [publicPath](_src_application_.application.md#publicpath)
+* [resolveNamespaceDirectory](_src_application_.application.md#resolvenamespacedirectory)
 * [resourcesPath](_src_application_.application.md#resourcespath)
 * [seedsPath](_src_application_.application.md#seedspath)
 * [startPath](_src_application_.application.md#startpath)
@@ -322,6 +323,23 @@ Name | Type |
 `...paths` | string[] |
 
 **Returns:** *string*
+
+___
+
+###  resolveNamespaceDirectory
+
+▸ **resolveNamespaceDirectory**(`namespaceFor`: string): *string | null*
+
+Returns path for a given namespace by replacing the base namespace
+with the defined directories map inside the rc file.
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`namespaceFor` | string |
+
+**Returns:** *string | null*
 
 ___
 
