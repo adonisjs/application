@@ -53,7 +53,7 @@ test.group('Application', () => {
       namespaces: {
         models: 'App/Models',
       },
-      autoloads: {
+      aliases: {
         App: './app',
       },
     }, {})

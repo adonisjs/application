@@ -190,6 +190,12 @@ declare module '@ioc:Adonis/Core/Application' {
     namespacesMap: Map<string, string>
 
     /**
+     * Returns path for a given namespace by replacing the base namespace
+     * with the defined directories map inside the rc file.
+     */
+    resolveNamespaceDirectory (namespaceFor: string): string | null
+
+    /**
      * Make path to a file or directory from the application root
      */
     makePath (...paths: string[]): string
