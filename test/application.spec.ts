@@ -48,6 +48,20 @@ test.group('Application', () => {
     })))
   })
 
+  test('resolve the namespace directory from rc file content', (assert) => {
+    const app = new Application(__dirname, new Ioc(), {
+      namespaces: {
+        models: 'App/Models',
+      },
+      autoloads: {
+        App: './app',
+      },
+    }, {})
+
+    assert.equal(app.resolveNamespaceDirectory('models'), join(__dirname, 'app/Models'))
+    assert.equal(app.resolveNamespaceDirectory('something'), null)
+  })
+
   test('make paths to pre-configured directories', (assert) => {
     const app = new Application(__dirname, new Ioc(), {}, {})
 

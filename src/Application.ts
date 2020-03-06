@@ -177,6 +177,34 @@ export class Application implements ApplicationContract {
   }
 
   /**
+   * Returns path for a given namespace by replacing the base namespace
+   * with the defined directories map inside the rc file.
+   */
+  public resolveNamespaceDirectory (namespaceFor: string): string | null {
+    /**
+     * Return null when rcfile doesn't have a special
+     * entry for namespaces
+    */
+    if (!this.rcFile.namespaces[namespaceFor]) {
+      return null
+    }
+
+    let output: string | null = null
+
+    Object.keys(this.rcFile.aliases).forEach((baseNamespace) => {
+      const autoloadPath = this.rcFile.aliases[baseNamespace]
+      if (
+        this.rcFile.namespaces[namespaceFor].startsWith(`${baseNamespace}/`) ||
+        this.rcFile.namespaces[namespaceFor] === baseNamespace
+      ) {
+        output = this.rcFile.namespaces[namespaceFor].replace(baseNamespace, autoloadPath)
+      }
+    })
+
+    return output ? this.makePath(output) : null
+  }
+
+  /**
    * Make path to a file or directory relative from
    * the application path
    */
