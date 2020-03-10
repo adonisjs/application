@@ -201,7 +201,7 @@ export class Application implements ApplicationContract {
       }
     })
 
-    return output ? this.makePath(output) : null
+    return output
   }
 
   /**

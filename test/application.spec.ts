@@ -58,8 +58,20 @@ test.group('Application', () => {
       },
     }, {})
 
-    assert.equal(app.resolveNamespaceDirectory('models'), join(__dirname, 'app/Models'))
+    assert.equal(app.resolveNamespaceDirectory('models'), './app/Models')
     assert.equal(app.resolveNamespaceDirectory('something'), null)
+  })
+
+  test('return null when namespace is not registered', (assert) => {
+    const app = new Application(__dirname, new Ioc(), {
+      namespaces: {
+        models: 'App/Models',
+      },
+      aliases: {
+      },
+    }, {})
+
+    assert.equal(app.resolveNamespaceDirectory('models'), null)
   })
 
   test('make paths to pre-configured directories', (assert) => {
