@@ -35,6 +35,7 @@ const DEFAULT_DIRECTORIES = {
  */
 const DEFAULT_NAMESPACES = {
   models: 'App/Models',
+  validators: 'App/Validators',
   httpControllers: 'App/Controllers/Http',
   eventListeners: 'App/Listeners',
   redisListeners: 'App/Listeners',

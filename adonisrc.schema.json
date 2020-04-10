@@ -64,6 +64,9 @@
         "models": {
           "type": "string"
         },
+        "validators": {
+          "type": "string"
+        },
         "httpControllers": {
           "type": "string"
         },

@@ -42,6 +42,7 @@ test.group('Application', () => {
     assert.deepEqual(app.preloads, [])
     assert.deepEqual(app.namespacesMap, new Map(Object.entries({
       models: 'App/Models',
+      validators: 'App/Validators',
       httpControllers: 'App/Controllers/Http',
       eventListeners: 'App/Listeners',
       redisListeners: 'App/Listeners',
