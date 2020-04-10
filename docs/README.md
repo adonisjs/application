@@ -4,7 +4,7 @@
 
 ## Index
 
-### External modules
+### Modules
 
 * ["adonis-typings/application"](modules/_adonis_typings_application_.md)
 * ["src/Application"](modules/_src_application_.md)
