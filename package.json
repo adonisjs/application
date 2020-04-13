@@ -75,6 +75,11 @@
   "peerDependencies": {
     "@adonisjs/fold": "^6.0.0"
   },
+  "peerDependenciesMeta": {
+    "@adonisjs/fold": {
+      "optional": true
+    }
+  },
   "np": {
     "contents": ".",
     "anyBranch": false
