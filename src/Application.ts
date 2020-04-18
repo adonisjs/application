@@ -292,4 +292,19 @@ export class Application implements ApplicationContract {
   public tmpPath (...paths: string[]): string {
     return this.makePathFromCwd(this.directoriesMap.get('tmp')!, ...paths)
   }
+
+  /**
+   * Serialized output
+   */
+  public toJSON () {
+    return {
+      isReady: this.isReady,
+      isShuttingDown: this.isShuttingDown,
+      environment: this.environment,
+      nodeEnvironment: this.inProduction ? 'PRODUCTION' : 'DEVELOPMENT',
+      appName: this.appName,
+      version: this.version ? this.version.toString() : null,
+      adonisVersion: this.adonisVersion ? this.adonisVersion.toString() : null,
+    }
+  }
 }

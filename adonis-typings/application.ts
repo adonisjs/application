@@ -249,6 +249,19 @@ declare module '@ioc:Adonis/Core/Application' {
      * Make path to a file or directory from the tmp path root
      */
     tmpPath (...paths: string[]): string
+
+    /**
+     * Serialized output
+     */
+    toJSON (): {
+      isReady: boolean,
+      isShuttingDown: boolean,
+      environment: 'web' | 'console' | 'test' | 'unknown',
+      nodeEnvironment: string,
+      appName: string,
+      version: string | null,
+      adonisVersion: string | null,
+    }
   }
 
   const Application: ApplicationContract
