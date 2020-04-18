@@ -30,7 +30,7 @@
   "devDependencies": {
     "@adonisjs/fold": "^6.3.5",
     "@adonisjs/mrm-preset": "^2.3.0",
-    "@types/node": "^13.11.1",
+    "@types/node": "^13.13.0",
     "@types/semver": "^7.1.0",
     "commitizen": "^4.0.4",
     "cz-conventional-changelog": "^3.1.0",
@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@poppinss/utils": "^2.2.4",
-    "semver": "^7.2.2"
+    "semver": "^7.3.2"
   },
   "peerDependencies": {
     "@adonisjs/fold": "^6.0.0"
