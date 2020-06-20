@@ -23,7 +23,7 @@ const DEFAULT_DIRECTORIES = {
   providers: 'providers',
   database: 'database',
   migrations: 'database/migrations',
-  seeds: 'database/seeds',
+  seeds: 'database/seeders',
   resources: 'resources',
   views: 'resources/views',
   start: 'start',

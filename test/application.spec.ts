@@ -26,7 +26,7 @@ test.group('Application', () => {
       database: 'database',
       contracts: 'contracts',
       providers: 'providers',
-      seeds: 'database/seeds',
+      seeds: 'database/seeders',
       migrations: 'database/migrations',
       resources: 'resources',
       views: 'resources/views',
@@ -83,7 +83,7 @@ test.group('Application', () => {
     assert.equal(app.publicPath(), join(__dirname, 'public'))
     assert.equal(app.databasePath(), join(__dirname, 'database'))
     assert.equal(app.migrationsPath(), join(__dirname, 'database/migrations'))
-    assert.equal(app.seedsPath(), join(__dirname, 'database/seeds'))
+    assert.equal(app.seedsPath(), join(__dirname, 'database/seeders'))
     assert.equal(app.resourcesPath(), join(__dirname, 'resources'))
     assert.equal(app.viewsPath(), join(__dirname, 'resources/views'))
     assert.equal(app.startPath('app'), join(__dirname, 'start/app'))
