@@ -23,6 +23,12 @@ import { IocContract } from '@adonisjs/fold'
 import { parse } from './rcParser'
 
 /**
+ * This variable will be set lazily the first time `Application.inProduction` is
+ * accessed to let time for the environment to be setup.
+ */
+let isInProduction: boolean
+
+/**
  * The main application instance to know about the environment, filesystem
  * in which your AdonisJs app is running
  */
@@ -43,16 +49,6 @@ export class Application implements ApplicationContract {
    * like `SIGINT` or `SIGTERM`.
    */
   public isShuttingDown: boolean = false
-
-  /**
-   * Is current environment production.
-   */
-  public inProduction: boolean = process.env.NODE_ENV === 'production'
-
-  /**
-   * Inverse of `inProduction`
-   */
-  public inDev: boolean = !this.inProduction
 
   /**
    * The environment in which application is running
@@ -174,6 +170,17 @@ export class Application implements ApplicationContract {
     if (this.version) {
       process.env.APP_VERSION = this.version.version
     }
+  }
+
+  public get inProduction (): boolean {
+    if (isInProduction === undefined) {
+      isInProduction = process.env.NODE_ENV === 'production'
+    }
+    return isInProduction
+  }
+
+  public get inDev (): boolean {
+    return !this.inProduction
   }
 
   /**
