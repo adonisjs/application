@@ -1,145 +1,145 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "typescript": {
-      "description": "Is project written in Typescript or not",
-      "type": "boolean"
-    },
-    "exceptionHandlerNamespace": {
-      "description": "Http server exception handler namespace",
-      "type": "string"
-    },
-    "preloads": {
-      "type": "array",
-      "items": {
-        "oneOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "file": { "type": "string" },
-              "environment": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "enum": ["web", "console", "test"]
-                }
-              },
-              "optional": {
-                "type": "boolean"
-              }
-            },
-            "required": ["file"],
-            "additionalProperties": false
-          }
-        ]
-      }
-    },
-    "metaFiles": {
-      "type": "array",
-      "items": {
-        "oneOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "pattern": { "type": "string" },
-              "reloadServer": { "type": "boolean" }
-            }
-          }
-        ]
-      }
-    },
-    "aliases": {
-      "type": "object"
-    },
-    "namespaces": {
-      "type": "object",
-      "properties": {
-        "models": {
-          "type": "string"
-        },
-        "validators": {
-          "type": "string"
-        },
-        "httpControllers": {
-          "type": "string"
-        },
-        "eventListeners": {
-          "type": "string"
-        },
-        "redisListeners": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
-    "directories": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "type": "string"
-        },
-        "public": {
-          "type": "string"
-        },
-        "contracts": {
-          "type": "string"
-        },
-        "providers": {
-          "type": "string"
-        },
-        "database": {
-          "type": "string"
-        },
-        "migrations": {
-          "type": "string"
-        },
-        "seeds": {
-          "type": "string"
-        },
-        "resources": {
-          "type": "string"
-        },
-        "views": {
-          "type": "string"
-        },
-        "start": {
-          "type": "string"
-        },
-        "tmp": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
-    "commands": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "providers": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "aceProviders": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
-  },
-  "required": [ "exceptionHandlerNamespace", "typescript", "providers" ]
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"typescript": {
+			"description": "Is project written in Typescript or not",
+			"type": "boolean"
+		},
+		"exceptionHandlerNamespace": {
+			"description": "Http server exception handler namespace",
+			"type": "string"
+		},
+		"preloads": {
+			"type": "array",
+			"items": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"file": { "type": "string" },
+							"environment": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"enum": ["web", "console", "test"]
+								}
+							},
+							"optional": {
+								"type": "boolean"
+							}
+						},
+						"required": ["file"],
+						"additionalProperties": false
+					}
+				]
+			}
+		},
+		"metaFiles": {
+			"type": "array",
+			"items": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "object",
+						"properties": {
+							"pattern": { "type": "string" },
+							"reloadServer": { "type": "boolean" }
+						}
+					}
+				]
+			}
+		},
+		"aliases": {
+			"type": "object"
+		},
+		"namespaces": {
+			"type": "object",
+			"properties": {
+				"models": {
+					"type": "string"
+				},
+				"validators": {
+					"type": "string"
+				},
+				"httpControllers": {
+					"type": "string"
+				},
+				"eventListeners": {
+					"type": "string"
+				},
+				"redisListeners": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": {
+				"type": "string"
+			}
+		},
+		"directories": {
+			"type": "object",
+			"properties": {
+				"config": {
+					"type": "string"
+				},
+				"public": {
+					"type": "string"
+				},
+				"contracts": {
+					"type": "string"
+				},
+				"providers": {
+					"type": "string"
+				},
+				"database": {
+					"type": "string"
+				},
+				"migrations": {
+					"type": "string"
+				},
+				"seeds": {
+					"type": "string"
+				},
+				"resources": {
+					"type": "string"
+				},
+				"views": {
+					"type": "string"
+				},
+				"start": {
+					"type": "string"
+				},
+				"tmp": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": {
+				"type": "string"
+			}
+		},
+		"commands": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"providers": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"aceProviders": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		}
+	},
+	"required": ["exceptionHandlerNamespace", "typescript", "providers"]
 }
