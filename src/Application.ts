@@ -9,7 +9,7 @@
 
 /// <reference path="../adonis-typings/application.ts" />
 
-import { RcFile, SemverNode, PreloadNode, ApplicationContract } from '@ioc:Adonis/Core/Application'
+import { RcFile, SemverNode, PreloadNode, ApplicationContract, AppEnvironments } from '@ioc:Adonis/Core/Application'
 
 import { join } from 'path'
 import { parse as semverParse } from 'semver'
@@ -52,7 +52,12 @@ export class Application implements ApplicationContract {
 	/**
 	 * The environment in which application is running
 	 */
-	public environment: 'web' | 'console' | 'test' | 'unknown' = 'unknown'
+	public environment: AppEnvironments | 'unknown' = 'unknown'
+
+	/**
+	 * The environment in which application is running
+	 */
+	public nodeEnvironment: string = 'unknown'
 
 	/**
 	 * The name of the application picked from `.adonisrc.json` file. This can

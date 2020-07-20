@@ -26,6 +26,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		views: string
 		start: string
 		tmp: string
+		tests: string
 		[key: string]: string
 	}
 
@@ -35,6 +36,8 @@ declare module '@ioc:Adonis/Core/Application' {
 	 */
 	export interface NamespacesNode {
 		models: string
+		exceptions: string
+		middleware: string
 		httpControllers: string
 		eventListeners: string
 		redisListeners: string
@@ -42,11 +45,16 @@ declare module '@ioc:Adonis/Core/Application' {
 	}
 
 	/**
+	 * Application environments
+	 */
+	export type AppEnvironments = 'web' | 'console' | 'test'
+
+	/**
 	 * Shape of preload files
 	 */
 	export type PreloadNode = {
 		file: string
-		environment: ('web' | 'console' | 'test')[]
+		environment: AppEnvironments[]
 		optional: boolean
 	}
 
@@ -149,7 +157,18 @@ declare module '@ioc:Adonis/Core/Application' {
 		 * - `web` is when running http server
 		 * - `test` is when running tests
 		 */
-		environment: 'web' | 'console' | 'test' | 'unknown'
+		environment: AppEnvironments | 'unknown'
+
+		/**
+		 * Value of `NODE_ENV`. But normalized in certain cases.
+		 *
+		 * - `development` - We normalize `dev`, `develop` to "development"
+		 * - `staging` - We normalize `stage` to "staging"
+		 * - `production` - We normalize `prod` to "production"
+		 *
+		 * Rest of the values remains untouched
+		 */
+		nodeEnvironment: string
 
 		/**
 		 * A boolean to know if application is ready
@@ -256,7 +275,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		toJSON(): {
 			isReady: boolean
 			isShuttingDown: boolean
-			environment: 'web' | 'console' | 'test' | 'unknown'
+			environment: AppEnvironments | 'unknown'
 			nodeEnvironment: string
 			appName: string
 			version: string | null
