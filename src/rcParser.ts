@@ -10,13 +10,19 @@
 /// <reference path="../adonis-typings/application.ts" />
 
 import { Exception } from '@poppinss/utils'
-import { RcFile, MetaFileNode, PreloadNode } from '@ioc:Adonis/Core/Application'
+import {
+	RcFile,
+	MetaFileNode,
+	PreloadNode,
+	DirectoriesNode,
+	NamespacesNode,
+} from '@ioc:Adonis/Core/Application'
 
 /**
  * Default set of directories for AdonisJs
  * applications
  */
-const DEFAULT_DIRECTORIES = {
+const DEFAULT_DIRECTORIES: DirectoriesNode = {
 	config: 'config',
 	public: 'public',
 	contracts: 'contracts',
@@ -28,13 +34,16 @@ const DEFAULT_DIRECTORIES = {
 	views: 'resources/views',
 	start: 'start',
 	tmp: 'tmp',
+	tests: 'tests',
 }
 
 /**
  * A list of default namespaces.
  */
-const DEFAULT_NAMESPACES = {
+const DEFAULT_NAMESPACES: NamespacesNode = {
 	models: 'App/Models',
+	middleware: 'App/Middleware',
+	exceptions: 'App/Exceptions',
 	validators: 'App/Validators',
 	httpControllers: 'App/Controllers/Http',
 	eventListeners: 'App/Listeners',

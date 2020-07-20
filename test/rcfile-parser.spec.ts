@@ -28,9 +28,12 @@ test.group('Rc Parser', () => {
 				views: 'resources/views',
 				start: 'start',
 				tmp: 'tmp',
+				tests: 'tests',
 			},
 			namespaces: {
 				models: 'App/Models',
+				exceptions: 'App/Exceptions',
+				middleware: 'App/Middleware',
 				validators: 'App/Validators',
 				httpControllers: 'App/Controllers/Http',
 				eventListeners: 'App/Listeners',
@@ -58,6 +61,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'Relay/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -71,6 +75,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
@@ -111,6 +117,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -124,6 +131,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
@@ -164,6 +173,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
 				directories: {
 					config: 'myconfig',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -177,6 +187,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
@@ -223,6 +235,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -236,6 +249,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers',
 					eventListeners: 'App/Listeners',
@@ -270,6 +285,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -283,6 +299,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers',
 					eventListeners: 'App/Listeners',
@@ -317,6 +335,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -331,6 +350,8 @@ test.group('Rc Parser', () => {
 				namespaces: {
 					models: 'App/Models',
 					validators: 'App/Validators',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					httpControllers: 'App/Controllers',
 					eventListeners: 'App/Listeners',
 					redisListeners: 'App/Listeners',
@@ -370,6 +391,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -384,6 +406,8 @@ test.group('Rc Parser', () => {
 				namespaces: {
 					models: 'App/Models',
 					validators: 'App/Validators',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
 					redisListeners: 'App/Listeners',
@@ -411,6 +435,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -425,6 +450,8 @@ test.group('Rc Parser', () => {
 				namespaces: {
 					models: 'App/Models',
 					validators: 'App/Validators',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
 					redisListeners: 'App/Listeners',
@@ -452,6 +479,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -465,6 +493,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
@@ -493,6 +523,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -506,6 +537,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
@@ -534,6 +567,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -547,6 +581,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
@@ -581,6 +617,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -594,6 +631,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
@@ -635,6 +674,7 @@ test.group('Rc Parser', () => {
 				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
+					tests: 'tests',
 					contracts: 'contracts',
 					providers: 'providers',
 					database: 'database',
@@ -648,6 +688,8 @@ test.group('Rc Parser', () => {
 				},
 				namespaces: {
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',

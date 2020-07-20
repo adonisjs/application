@@ -64,7 +64,13 @@
 				"models": {
 					"type": "string"
 				},
+				"exceptions": {
+					"type": "string"
+				},
 				"validators": {
+					"type": "string"
+				},
+				"middleware": {
 					"type": "string"
 				},
 				"httpControllers": {
@@ -74,6 +80,9 @@
 					"type": "string"
 				},
 				"redisListeners": {
+					"type": "string"
+				},
+				"validators": {
 					"type": "string"
 				}
 			},
@@ -115,6 +124,9 @@
 					"type": "string"
 				},
 				"tmp": {
+					"type": "string"
+				},
+				"tests": {
 					"type": "string"
 				}
 			},

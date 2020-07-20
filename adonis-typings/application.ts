@@ -41,6 +41,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		httpControllers: string
 		eventListeners: string
 		redisListeners: string
+		validators: string
 		[key: string]: string
 	}
 

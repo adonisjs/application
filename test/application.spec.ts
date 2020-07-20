@@ -35,6 +35,7 @@ test.group('Application', () => {
 					views: 'resources/views',
 					start: 'start',
 					tmp: 'tmp',
+					tests: 'tests',
 				})
 			)
 		)
@@ -50,6 +51,8 @@ test.group('Application', () => {
 			new Map(
 				Object.entries({
 					models: 'App/Models',
+					exceptions: 'App/Exceptions',
+					middleware: 'App/Middleware',
 					validators: 'App/Validators',
 					httpControllers: 'App/Controllers/Http',
 					eventListeners: 'App/Listeners',
