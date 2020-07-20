@@ -149,4 +149,12 @@ test.group('Application', () => {
 
 		assert.equal(app.adonisVersion!.toString(), '5.0.0-preview.1')
 	})
+
+	test('set inProduction lazily', (assert) => {
+		const app = new Application(__dirname, new Ioc(), {}, {})
+		assert.isFalse(app.inProduction)
+
+		process.env.NODE_ENV = 'production'
+		assert.isTrue(app.inProduction)
+	})
 })
