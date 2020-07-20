@@ -12,6 +12,10 @@ import { Ioc } from '@adonisjs/fold'
 import { Application } from '../src/Application'
 import { join } from 'path'
 
+function getApp() {
+	return new Application(__dirname, new Ioc(), {}, {})
+}
+
 test.group('Application', () => {
 	test('setup application', (assert) => {
 		const app = new Application(__dirname, new Ioc(), {}, {})
@@ -159,5 +163,62 @@ test.group('Application', () => {
 
 		process.env.NODE_ENV = 'production'
 		assert.isTrue(app.inProduction)
+		delete process.env.NODE_ENV
+	})
+
+	test('return nodeEnvironment as unknown when not defined', (assert) => {
+		const app = new Application(__dirname, new Ioc(), {}, {})
+		assert.equal(app.nodeEnvironment, 'unknown')
+
+		/**
+		 * Once defined, should update itself
+		 */
+		process.env.NODE_ENV = 'dev'
+		assert.equal(app.nodeEnvironment, 'development')
+
+		delete process.env.NODE_ENV
+	})
+
+	test('normalize development node environment', (assert) => {
+		process.env.NODE_ENV = 'dev'
+		assert.equal(getApp().nodeEnvironment, 'development')
+
+		process.env.NODE_ENV = 'develop'
+		assert.equal(getApp().nodeEnvironment, 'development')
+
+		process.env.NODE_ENV = 'DEVELOPMENT'
+		assert.equal(getApp().nodeEnvironment, 'development')
+
+		delete process.env.NODE_ENV
+	})
+
+	test('normalize staging node environment', (assert) => {
+		process.env.NODE_ENV = 'stage'
+		assert.equal(getApp().nodeEnvironment, 'staging')
+
+		process.env.NODE_ENV = 'STAGING'
+		assert.equal(getApp().nodeEnvironment, 'staging')
+
+		delete process.env.NODE_ENV
+	})
+
+	test('normalize production node environment', (assert) => {
+		process.env.NODE_ENV = 'prod'
+		assert.equal(getApp().nodeEnvironment, 'production')
+
+		process.env.NODE_ENV = 'PRODUCTION'
+		assert.equal(getApp().nodeEnvironment, 'production')
+
+		delete process.env.NODE_ENV
+	})
+
+	test('normalize testing node environment', (assert) => {
+		process.env.NODE_ENV = 'test'
+		assert.equal(getApp().nodeEnvironment, 'testing')
+
+		process.env.NODE_ENV = 'TESTING'
+		assert.equal(getApp().nodeEnvironment, 'testing')
+
+		delete process.env.NODE_ENV
 	})
 })

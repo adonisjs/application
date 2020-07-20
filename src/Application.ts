@@ -9,7 +9,13 @@
 
 /// <reference path="../adonis-typings/application.ts" />
 
-import { RcFile, SemverNode, PreloadNode, ApplicationContract, AppEnvironments } from '@ioc:Adonis/Core/Application'
+import {
+	RcFile,
+	SemverNode,
+	PreloadNode,
+	ApplicationContract,
+	AppEnvironments,
+} from '@ioc:Adonis/Core/Application'
 
 import { join } from 'path'
 import { parse as semverParse } from 'semver'
@@ -18,16 +24,20 @@ import { IocContract } from '@adonisjs/fold'
 import { parse } from './rcParser'
 
 /**
- * This variable is lazily set inside `inProduction` getter, once
- * the `NODE_ENV !== undefined`.
+ * Aliases for different environments
  */
-let nodeEnv: string | undefined
+const DEV_ENVS = ['dev', 'develop', 'development']
+const STAGING_ENVS = ['stage', 'staging']
+const PROD_ENVS = ['prod', 'production']
+const TEST_ENVS = ['test', 'testing']
 
 /**
  * The main application instance to know about the environment, filesystem
  * in which your AdonisJs app is running
  */
 export class Application implements ApplicationContract {
+	private cachedNodeEnv?: string
+
 	/**
 	 * A boolean to know if application has bootstrapped successfully
 	 */
@@ -48,7 +58,7 @@ export class Application implements ApplicationContract {
 	/**
 	 * The environment in which application is running
 	 */
-	public environment: 'web' | 'console' | 'test' | 'unknown' = 'unknown'
+	public environment: AppEnvironments = 'unknown'
 
 	/**
 	 * The name of the application picked from `.adonisrc.json` file. This can
@@ -170,14 +180,57 @@ export class Application implements ApplicationContract {
 	}
 
 	/**
-	 * Return true when `NODE_ENV === 'production'`
+	 * Normalizes node env
 	 */
-	public get inProduction(): boolean {
-		if (nodeEnv === undefined) {
-			nodeEnv = process.env.NODE_ENV
+	private normalizeNodeEnv(env: string) {
+		env = env.toLowerCase()
+
+		if (DEV_ENVS.includes(env)) {
+			return 'development'
 		}
 
-		return nodeEnv === 'production'
+		if (STAGING_ENVS.includes(env)) {
+			return 'staging'
+		}
+
+		if (PROD_ENVS.includes(env)) {
+			return 'production'
+		}
+
+		if (TEST_ENVS.includes(env)) {
+			return 'testing'
+		}
+
+		return env
+	}
+
+	/**
+	 * The environment in which application is running
+	 */
+	public get nodeEnvironment(): string {
+		/**
+		 * If nodeEnv is undefined, then attempt to read the value from `NODE_ENV`
+		 * and cache it (if defined)
+		 */
+		if (this.cachedNodeEnv === undefined && process.env.NODE_ENV) {
+			this.cachedNodeEnv = this.normalizeNodeEnv(process.env.NODE_ENV)
+		}
+
+		/**
+		 * If still undefined
+		 */
+		if (this.cachedNodeEnv === undefined) {
+			return 'unknown'
+		}
+
+		return this.cachedNodeEnv
+	}
+
+	/**
+	 * Return true when `this.nodeEnvironment === 'production'`
+	 */
+	public get inProduction(): boolean {
+		return this.nodeEnvironment === 'production'
 	}
 
 	/**
@@ -312,7 +365,7 @@ export class Application implements ApplicationContract {
 			isReady: this.isReady,
 			isShuttingDown: this.isShuttingDown,
 			environment: this.environment,
-			nodeEnvironment: this.inProduction ? 'PRODUCTION' : 'DEVELOPMENT',
+			nodeEnvironment: this.nodeEnvironment,
 			appName: this.appName,
 			version: this.version ? this.version.toString() : null,
 			adonisVersion: this.adonisVersion ? this.adonisVersion.toString() : null,

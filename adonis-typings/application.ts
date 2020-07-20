@@ -48,14 +48,14 @@ declare module '@ioc:Adonis/Core/Application' {
 	/**
 	 * Application environments
 	 */
-	export type AppEnvironments = 'web' | 'console' | 'test'
+	export type AppEnvironments = 'web' | 'console' | 'test' | 'unknown'
 
 	/**
 	 * Shape of preload files
 	 */
 	export type PreloadNode = {
 		file: string
-		environment: AppEnvironments[]
+		environment: Exclude<AppEnvironments, 'unknown'>[]
 		optional: boolean
 	}
 
@@ -158,7 +158,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		 * - `web` is when running http server
 		 * - `test` is when running tests
 		 */
-		environment: AppEnvironments | 'unknown'
+		environment: AppEnvironments
 
 		/**
 		 * Value of `NODE_ENV`. But normalized in certain cases.
@@ -166,6 +166,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		 * - `development` - We normalize `dev`, `develop` to "development"
 		 * - `staging` - We normalize `stage` to "staging"
 		 * - `production` - We normalize `prod` to "production"
+		 * - `testing` - We normalize `test` to "testing"
 		 *
 		 * Rest of the values remains untouched
 		 */
@@ -276,7 +277,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		toJSON(): {
 			isReady: boolean
 			isShuttingDown: boolean
-			environment: AppEnvironments | 'unknown'
+			environment: AppEnvironments
 			nodeEnvironment: string
 			appName: string
 			version: string | null
