@@ -243,6 +243,9 @@ export class Application implements ApplicationContract {
 	/**
 	 * Returns path for a given namespace by replacing the base namespace
 	 * with the defined directories map inside the rc file.
+	 *
+	 * The method returns a relative path from the application root. You can
+	 * use join it with the [[this.appRoot]] to make the absolute path
 	 */
 	public resolveNamespaceDirectory(namespaceFor: string): string | null {
 		/**
@@ -284,7 +287,6 @@ export class Application implements ApplicationContract {
 	public makePathFromCwd(...paths: string[]): string {
 		return join(this.cliCwd || this.appRoot, ...paths)
 	}
-
 	/**
 	 * Make path to a file or directory relative from
 	 * the config directory
@@ -299,6 +301,14 @@ export class Application implements ApplicationContract {
 	 */
 	public publicPath(...paths: string[]): string {
 		return this.makePath(this.directoriesMap.get('public')!, ...paths)
+	}
+
+	/**
+	 * Make path to a file or directory relative from
+	 * the providers path
+	 */
+	public providersPath(...paths: string[]): string {
+		return this.makePath(this.directoriesMap.get('providers')!, ...paths)
 	}
 
 	/**
@@ -346,6 +356,13 @@ export class Application implements ApplicationContract {
 	 */
 	public startPath(...paths: string[]): string {
 		return this.makePath(this.directoriesMap.get('start')!, ...paths)
+	}
+
+	/**
+	 * Makes path to the tests directory
+	 */
+	public testsPath(...paths: string[]): string {
+		return this.makePath(this.directoriesMap.get('tests')!, ...paths)
 	}
 
 	/**

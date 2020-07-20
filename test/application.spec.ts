@@ -113,6 +113,8 @@ test.group('Application', () => {
 		assert.equal(app.resourcesPath(), join(__dirname, 'resources'))
 		assert.equal(app.viewsPath(), join(__dirname, 'resources/views'))
 		assert.equal(app.startPath('app'), join(__dirname, 'start/app'))
+		assert.equal(app.testsPath('unit'), join(__dirname, 'tests/unit'))
+		assert.equal(app.providersPath('AppProvider'), join(__dirname, 'providers/AppProvider'))
 	})
 
 	test('pull name and version from pkgFile contents', (assert) => {
