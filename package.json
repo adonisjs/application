@@ -2,12 +2,12 @@
 	"name": "@adonisjs/application",
 	"version": "2.0.0",
 	"description": "AdonisJS application class to read app related data",
-	"main": "build/standalone.js",
+	"main": "build/index.js",
 	"files": [
 		"build/adonis-typings",
 		"build/src",
-		"build/standalone.d.ts",
-		"build/standalone.js"
+		"build/index.d.ts",
+		"build/index.js"
 	],
 	"scripts": {
 		"mrm": "mrm --preset=@adonisjs/mrm-preset",
@@ -96,5 +96,9 @@
 	"bugs": {
 		"url": "https://github.com/adonisjs/application/issues"
 	},
-	"homepage": "https://github.com/adonisjs/application#readme"
+	"homepage": "https://github.com/adonisjs/application#readme",
+	"publishConfig": {
+		"access": "public",
+		"tag": "next"
+	}
 }
