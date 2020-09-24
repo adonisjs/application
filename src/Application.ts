@@ -13,13 +13,19 @@ import {
 	RcFile,
 	SemverNode,
 	PreloadNode,
-	ApplicationContract,
 	AppEnvironments,
+	ApplicationStates,
+	ApplicationContract,
 } from '@ioc:Adonis/Core/Application'
 
 import { join } from 'path'
+import { Logger } from '@adonisjs/logger'
+import { Config } from '@adonisjs/config'
+import { Profiler } from '@adonisjs/profiler'
 import { parse as semverParse } from 'semver'
-import { IocContract } from '@adonisjs/fold'
+import { Ioc, Registrar } from '@adonisjs/fold'
+import { resolveFrom, requireAll } from '@poppinss/utils'
+import { Env, envLoader, EnvParser } from '@adonisjs/env'
 
 import { parse } from './rcParser'
 
@@ -36,12 +42,24 @@ const TEST_ENVS = ['test', 'testing']
  * in which your AdonisJs app is running
  */
 export class Application implements ApplicationContract {
-	private cachedNodeEnv?: string
+	/**
+	 * Available after setup call
+	 */
+	private profiler: Profiler
+	private logger: Logger
 
 	/**
-	 * A boolean to know if application has bootstrapped successfully
+	 * Available after registerProviders call
 	 */
-	public isReady: boolean = false
+	private registrar: Registrar
+
+	/**
+	 * An array of providers with ready and shutdown hooks.
+	 */
+	private providersWithReadyHook: { ready: () => Promise<void> }[] = []
+	private providersWithShutdownHook: { shutdown: () => Promise<void> }[] = []
+
+	public state: ApplicationStates = 'initiated'
 
 	/**
 	 * Current working directory for the CLI and not the build directory
@@ -50,47 +68,10 @@ export class Application implements ApplicationContract {
 	public readonly cliCwd?: string = process.env.ADONIS_ACE_CWD
 
 	/**
-	 * A boolean to know if application has received a shutdown signal
-	 * like `SIGINT` or `SIGTERM`.
-	 */
-	public isShuttingDown: boolean = false
-
-	/**
-	 * The environment in which application is running
-	 */
-	public environment: AppEnvironments = 'unknown'
-
-	/**
 	 * The name of the application picked from `.adonisrc.json` file. This can
 	 * be used to prefix logs.
 	 */
 	public readonly appName: string
-
-	/**
-	 * The namespace of exception handler that will handle exceptions
-	 */
-	public exceptionHandlerNamespace: string
-
-	/**
-	 * A array of files to be preloaded
-	 */
-	public preloads: PreloadNode[] = []
-
-	/**
-	 * A map of pre-configured directories
-	 */
-	public directoriesMap: Map<string, string> = new Map()
-
-	/**
-	 * A map of directories aliases
-	 */
-	public aliasesMap: Map<string, string> = new Map()
-
-	/**
-	 * A map of namespaces that different parts of apps
-	 * can use
-	 */
-	public namespacesMap: Map<string, string> = new Map()
 
 	/**
 	 * The application version. Again picked from `.adonisrc.json` file
@@ -117,35 +98,155 @@ export class Application implements ApplicationContract {
 	 */
 	public readonly typescript: boolean
 
+	/**
+	 * A boolean to know if application has bootstrapped successfully
+	 */
+	public get isReady() {
+		return this.state === 'ready'
+	}
+
+	/**
+	 * A boolean to know if application has received a shutdown signal
+	 * like `SIGINT` or `SIGTERM`.
+	 */
+	public get isShuttingDown() {
+		return this.state === 'shutdown'
+	}
+
+	/**
+	 * The namespace of exception handler that will handle exceptions
+	 */
+	public exceptionHandlerNamespace: string
+
+	/**
+	 * It is unknown until the `setup` method is called
+	 */
+	public nodeEnvironment = 'unknown'
+
+	/**
+	 * An array of files to be preloaded
+	 */
+	public preloads: PreloadNode[] = []
+
+	/**
+	 * A map of pre-configured directories
+	 */
+	public directoriesMap: Map<string, string> = new Map()
+
+	/**
+	 * A map of directories aliases
+	 */
+	public aliasesMap: Map<string, string> = new Map()
+
+	/**
+	 * A map of namespaces that different parts of apps
+	 * can use
+	 */
+	public namespacesMap: Map<string, string> = new Map()
+
+	/**
+	 * Reference to the IoC container for the application
+	 */
+	public container = new Ioc()
+
 	constructor(
 		public readonly appRoot: string,
-		public container: IocContract,
-		rcContents: { [key: string]: any },
-		pkgFile: Partial<
-			{ name: string; version: string; adonisVersion: string } & { [key: string]: any }
-		>
+		public readonly environment: AppEnvironments,
+		rcContents?: any
 	) {
-		this.rcFile = parse(rcContents)
-
+		this.rcFile = parse(rcContents || this.loadRcFile())
 		this.typescript = this.rcFile.typescript
+
+		/**
+		 * Loads the package.json files to collect optional
+		 * info about the app.
+		 */
+		const pkgFile = this.loadAppPackageJson()
+		const corePkgFile = this.loadCorePackageJson()
 
 		/**
 		 * Fetching following info from the package file
 		 */
-		this.appName = pkgFile.name || 'adonis-app'
-		this.version = this.parseVersion(pkgFile.version || '0.0.0')
-		this.adonisVersion = pkgFile.adonisVersion ? this.parseVersion(pkgFile.adonisVersion) : null
+		this.appName = pkgFile.name
+		this.version = this.parseVersion(pkgFile.version)
+		this.adonisVersion = corePkgFile.version ? this.parseVersion(corePkgFile.version) : null
 
 		/**
 		 * Fetching following info from the `.adonisrc.json` file.
 		 */
-		this.exceptionHandlerNamespace = this.rcFile.exceptionHandlerNamespace
 		this.preloads = this.rcFile.preloads
+		this.exceptionHandlerNamespace = this.rcFile.exceptionHandlerNamespace
 		this.directoriesMap = new Map(Object.entries(this.rcFile.directories))
 		this.aliasesMap = new Map(Object.entries(this.rcFile.aliases))
 		this.namespacesMap = new Map(Object.entries(this.rcFile.namespaces))
 
 		this.setEnvVars()
+		this.setupGlobals()
+		this.registerItselfToTheContainer()
+	}
+
+	/**
+	 * Resolve a given module from the application root. The callback is invoked
+	 * when the module is missing
+	 */
+	private resolveModule(modulePath: string, onMissingCallback: (error: any) => void) {
+		let filePath: string | undefined
+
+		try {
+			filePath = resolveFrom(this.appRoot, modulePath)
+			return require(filePath)
+		} catch (error) {
+			if (
+				['ENOENT', 'MODULE_NOT_FOUND'].includes(error.code) &&
+				(!filePath || filePath === error.path)
+			) {
+				return onMissingCallback(error)
+			} else {
+				throw error
+			}
+		}
+	}
+
+	/**
+	 * Loads the rc file from the application root
+	 */
+	private loadRcFile() {
+		return this.resolveModule('./.adonisrc.json', () => {
+			throw new Error('AdonisJS expects ".adonisrc.json" file to exist in the application root')
+		})
+	}
+
+	/**
+	 * Loads the package.json file from the application root. Swallows
+	 * the exception when file is missing
+	 */
+	private loadAppPackageJson(): {
+		name: string
+		engines?: { node?: string }
+		version: string
+	} {
+		const pkgFile = this.resolveModule('./package.json', () => {
+			return {}
+		})
+		return {
+			name: pkgFile.name || 'adonis-app',
+			version: pkgFile.version || '0.0.0',
+			engines: pkgFile.engines,
+		}
+	}
+
+	/**
+	 * Loads the package.json file for the "@adonisjs/core" package. Swallows
+	 * the exception when file is missing
+	 */
+	private loadCorePackageJson(): { version?: string } {
+		const pkgFile = this.resolveModule('@adonisjs/core/package.json', () => {
+			return {}
+		})
+
+		return {
+			version: pkgFile.version,
+		}
 	}
 
 	/**
@@ -175,16 +276,39 @@ export class Application implements ApplicationContract {
 	private setEnvVars() {
 		process.env.APP_NAME = this.appName
 		if (this.version) {
-			process.env.APP_VERSION = this.version.version
+			process.env.APP_VERSION = this.version.toString()
 		}
+
+		if (this.adonisVersion) {
+			process.env.ADONIS_VERSION = this.adonisVersion.toString()
+		}
+	}
+
+	/**
+	 * Setup container globals to easily resolve bindings
+	 */
+	private setupGlobals() {
+		global[Symbol.for('ioc.use')] = this.container.use.bind(this.container)
+		global[Symbol.for('ioc.make')] = this.container.make.bind(this.container)
+		global[Symbol.for('ioc.call')] = this.container.call.bind(this.container)
+	}
+
+	/**
+	 * Registering itself to the container
+	 */
+	private registerItselfToTheContainer() {
+		this.container.singleton('Adonis/Core/Application', () => this)
 	}
 
 	/**
 	 * Normalizes node env
 	 */
 	private normalizeNodeEnv(env: string) {
-		env = env.toLowerCase()
+		if (!env || typeof env !== 'string') {
+			return 'unknown'
+		}
 
+		env = env.toLowerCase()
 		if (DEV_ENVS.includes(env)) {
 			return 'development'
 		}
@@ -205,25 +329,79 @@ export class Application implements ApplicationContract {
 	}
 
 	/**
-	 * The environment in which application is running
+	 * Registering directory aliases
 	 */
-	public get nodeEnvironment(): string {
+	private registerAliases() {
+		this.aliasesMap.forEach((toPath, alias) => {
+			this.container.autoload(join(this.appRoot, toPath), alias)
+		})
+	}
+
+	/**
+	 * Setups the environment variables by loading the `.env` and `.env.testing`
+	 * files.
+	 */
+	private setupEnvironmentVariables() {
 		/**
-		 * If nodeEnv is undefined, then attempt to read the value from `NODE_ENV`
-		 * and cache it (if defined)
+		 * Load `.env` and `.env.testing` files from the application root. The
+		 * env loader handles the additional flags like
+		 *
+		 * ENV_SILENT = 'do not load the .env file'
+		 * ENV_PATH = 'load .env file from given path'
+		 * NODE_ENV = 'testing' will trigger optional loading of `.env.testing` file
 		 */
-		if (this.cachedNodeEnv === undefined && process.env.NODE_ENV) {
-			this.cachedNodeEnv = this.normalizeNodeEnv(process.env.NODE_ENV)
-		}
+		const { envContents, testEnvContent } = envLoader(this.appRoot)
 
 		/**
-		 * If still undefined
+		 * Create instance of the Env class
 		 */
-		if (this.cachedNodeEnv === undefined) {
-			return 'unknown'
-		}
+		const env = new Env([
+			{ values: new EnvParser(true).parse(envContents), overwriteExisting: false },
+			{ values: new EnvParser(false).parse(testEnvContent), overwriteExisting: true },
+		])
+		this.container.singleton('Adonis/Core/Env', () => env)
 
-		return this.cachedNodeEnv
+		/**
+		 * Attempt to load `env.(ts|js)` files to setup the validation rules
+		 */
+		this.resolveModule('./env', () => {})
+
+		/**
+		 * Process environment variables. This will trigger validations as well
+		 */
+		env.process()
+
+		/**
+		 * Update node environment
+		 */
+		this.nodeEnvironment = this.normalizeNodeEnv(env.get('NODE_ENV'))
+	}
+
+	/**
+	 * Load config and define the container binding
+	 */
+	private loadConfig() {
+		const config = new Config(requireAll(this.configPath()))
+		this.container.singleton('Adonis/Core/Config', () => config)
+	}
+
+	/**
+	 * Setup logger
+	 */
+	private setupLogger() {
+		const config = this.container.use('Adonis/Core/Config').get('app.logger', {})
+		this.logger = new Logger(config)
+		this.container.singleton('Adonis/Core/Logger', () => this.logger)
+	}
+
+	/**
+	 * Setup profiler
+	 */
+	private setupProfiler() {
+		const config = this.container.use('Adonis/Core/Config').get('app.profiler', {})
+		const logger = this.container.use('Adonis/Core/Logger')
+		this.profiler = new Profiler(this.appRoot, logger, config)
+		this.container.singleton('Adonis/Core/Profiler', () => this.profiler)
 	}
 
 	/**
@@ -387,5 +565,142 @@ export class Application implements ApplicationContract {
 			version: this.version ? this.version.toString() : null,
 			adonisVersion: this.adonisVersion ? this.adonisVersion.toString() : null,
 		}
+	}
+
+	/**
+	 * Performs the initial setup. This is the time, when we configure the
+	 * app to be able to boot itself. For example:
+	 *
+	 * - Loading environment variables
+	 * - Loading config
+	 * - Setting up the logger
+	 * - Registering directory aliases
+	 *
+	 * Apart from the providers, most of the app including the container
+	 * is ready at this stage
+	 */
+	public setup(): void {
+		if (this.state !== 'initiated') {
+			return
+		}
+
+		this.state = 'setup'
+		this.registerAliases()
+		this.setupEnvironmentVariables()
+		this.loadConfig()
+		this.setupLogger()
+		this.setupProfiler()
+	}
+
+	/**
+	 * Register providers
+	 */
+	public registerProviders(): void {
+		if (this.state !== 'setup') {
+			return
+		}
+
+		this.state = 'registered'
+
+		this.profiler.profile('providers:register', {}, () => {
+			this.logger.trace('registering providers')
+
+			const providers =
+				this.environment === 'console'
+					? this.rcFile.providers.concat(this.rcFile.aceProviders)
+					: this.rcFile.providers
+
+			this.registrar = new Registrar(this.container, this.appRoot)
+			const registeredProviders = this.registrar.useProviders(providers).register()
+
+			/**
+			 * Keep reference of providers that are using ready or shutdown hooks
+			 */
+			registeredProviders.forEach((provider: any) => {
+				if (typeof provider.shutdown === 'function') {
+					this.providersWithShutdownHook.push(provider)
+				}
+
+				if (typeof provider.ready === 'function') {
+					this.providersWithReadyHook.push(provider)
+				}
+			})
+		})
+	}
+
+	/**
+	 * Booted providers
+	 */
+	public async bootProviders(): Promise<void> {
+		if (this.state !== 'registered') {
+			return
+		}
+
+		this.state = 'booted'
+
+		await this.profiler.profileAsync('providers:boot', {}, async () => {
+			this.logger.trace('booting providers')
+			await this.registrar.boot()
+		})
+	}
+
+	/**
+	 * Require files registered as preloads inside `.adonisrc.json` file
+	 */
+	public requirePreloads(): void {
+		this.preloads
+			.filter((node) => {
+				if (!node.environment || this.environment === 'unknown') {
+					return true
+				}
+
+				return node.environment.indexOf(this.environment) > -1
+			})
+			.forEach((node) => {
+				this.profiler.profile('file:preload', node, () => {
+					this.logger.trace(node, 'file:preload')
+					this.resolveModule(node.file, (error) => {
+						if (!node.optional) {
+							throw error
+						}
+					})
+				})
+			})
+	}
+
+	/**
+	 * Start the application. At this time we execute the provider's
+	 * ready hooks
+	 */
+	public async start(): Promise<void> {
+		if (this.state !== 'booted') {
+			return
+		}
+
+		this.state = 'ready'
+		await this.profiler.profileAsync('providers:ready', {}, async () => {
+			this.logger.trace('executing providers ready hook')
+			await Promise.all(this.providersWithReadyHook.map((provider) => provider.ready()))
+		})
+
+		this.providersWithReadyHook = []
+	}
+
+	/**
+	 * Prepare the application for shutdown. At this time we execute the
+	 * provider's shutdown hooks
+	 */
+	public async shutdown(): Promise<void> {
+		if (['initiated', 'setup'].includes(this.state)) {
+			return
+		}
+
+		this.state = 'shutdown'
+		await this.profiler.profileAsync('providers:shutdown', {}, async () => {
+			this.logger.trace('executing providers shutdown hook')
+			await Promise.all(this.providersWithShutdownHook.map((provider) => provider.shutdown()))
+		})
+
+		this.providersWithShutdownHook = []
 	}
 }

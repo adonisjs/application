@@ -10,6 +10,14 @@
 declare module '@ioc:Adonis/Core/Application' {
 	import { IocContract } from '@adonisjs/fold'
 
+	export type ApplicationStates =
+		| 'initiated'
+		| 'setup'
+		| 'registered'
+		| 'booted'
+		| 'ready'
+		| 'shutdown'
+
 	/**
 	 * Shape of directories object with known and unknown
 	 * directories
@@ -100,6 +108,8 @@ declare module '@ioc:Adonis/Core/Application' {
 	}
 
 	export interface ApplicationContract {
+		state: ApplicationStates
+
 		/**
 		 * Readonly reference to the parsed rc file
 		 */
@@ -111,8 +121,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		readonly appRoot: string
 
 		/**
-		 * Absolute path to the application source root. Only defined when
-		 * application is started using `ace` commands
+		 * Absolute path to the current working directory
 		 */
 		readonly cliCwd?: string
 
@@ -137,12 +146,21 @@ declare module '@ioc:Adonis/Core/Application' {
 		readonly typescript: boolean
 
 		/**
+		 * Application environment.
+		 *
+		 * - `console` is when running ace commands
+		 * - `web` is when running http server
+		 * - `test` is when running tests
+		 */
+		readonly environment: AppEnvironments
+
+		/**
 		 * Global exception handler namespace
 		 */
 		exceptionHandlerNamespace: string
 
 		/**
-		 * Reference to IoC container
+		 * Reference to the IoC container
 		 */
 		container: IocContract
 
@@ -150,15 +168,6 @@ declare module '@ioc:Adonis/Core/Application' {
 		 * Reference to preloads defined inside `.adonisrc.json` file
 		 */
 		preloads: PreloadNode[]
-
-		/**
-		 * Application environment.
-		 *
-		 * - `console` is when running ace commands
-		 * - `web` is when running http server
-		 * - `test` is when running tests
-		 */
-		environment: AppEnvironments
 
 		/**
 		 * Value of `NODE_ENV`. But normalized in certain cases.
@@ -212,7 +221,7 @@ declare module '@ioc:Adonis/Core/Application' {
 
 		/**
 		 * Returns path for a given namespace by replacing the base namespace
-		 * with the defined directories map inside the rc file.
+		 * with the defined directories map inside the .adonisrc file.
 		 */
 		resolveNamespaceDirectory(namespaceFor: string): string | null
 
@@ -283,6 +292,47 @@ declare module '@ioc:Adonis/Core/Application' {
 			version: string | null
 			adonisVersion: string | null
 		}
+
+		/**
+		 * Performs the initial setup. This is the time, when we configure the
+		 * app to be able to boot itself. For example:
+		 *
+		 * - Loading environment variables
+		 * - Loading config
+		 * - Setting up the logger
+		 * - Registering directory aliases
+		 *
+		 * Apart from the providers, most of the app including the container
+		 * is ready at this stage
+		 */
+		setup(): void
+
+		/**
+		 * Register providers
+		 */
+		registerProviders(): void
+
+		/**
+		 * Booted providers
+		 */
+		bootProviders(): Promise<void>
+
+		/**
+		 * Registers the providers
+		 */
+		requirePreloads(): void
+
+		/**
+		 * Start the application. At this time we execute the provider's
+		 * ready hooks
+		 */
+		start(): Promise<void>
+
+		/**
+		 * Prepare the application for shutdown. At this time we execute the
+		 * provider's shutdown hooks
+		 */
+		shutdown(): Promise<void>
 	}
 
 	const Application: ApplicationContract

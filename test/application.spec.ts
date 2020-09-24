@@ -8,21 +8,30 @@
  */
 
 import test from 'japa'
-import { Ioc } from '@adonisjs/fold'
-import { Application } from '../src/Application'
 import { join } from 'path'
+import { Logger } from '@adonisjs/logger'
+import { Profiler } from '@adonisjs/profiler'
+import { Filesystem } from '@poppinss/dev-utils'
+import { Application } from '../src/Application'
 
-function getApp() {
-	return new Application(__dirname, new Ioc(), {}, {})
+const fs = new Filesystem(join(__dirname, 'app'))
+
+function getApp(rcContents?: any) {
+	return new Application(fs.basePath, 'web', rcContents)
 }
 
-test.group('Application', () => {
+test.group('Application', (group) => {
+	group.afterEach(async () => {
+		await fs.cleanup()
+	})
+
 	test('setup application', (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = getApp({})
+
 		assert.equal(app.appName, 'adonis-app')
 		assert.isNull(app.adonisVersion)
 		assert.equal(app.version!.major, 0)
-		assert.equal(app.appRoot, __dirname)
+		assert.equal(app.appRoot, fs.basePath)
 
 		assert.deepEqual(
 			app.directoriesMap,
@@ -50,6 +59,8 @@ test.group('Application', () => {
 		assert.isFalse(app.isReady)
 		assert.equal(app.exceptionHandlerNamespace, 'App/Exceptions/Handler')
 		assert.deepEqual(app.preloads, [])
+		assert.equal(app.environment, 'web')
+
 		assert.deepEqual(
 			app.namespacesMap,
 			new Map(
@@ -64,163 +75,809 @@ test.group('Application', () => {
 				})
 			)
 		)
+
+		/**
+		 * Env vars
+		 */
+		assert.equal(process.env.APP_NAME, 'adonis-app')
+		assert.equal(process.env.APP_VERSION, '0.0.0')
+		assert.isUndefined(process.env.ADONIS_VERSION)
+
+		/**
+		 * Container globals
+		 */
+		assert.isFunction(global[Symbol.for('ioc.use')])
+		assert.isFunction(global[Symbol.for('ioc.make')])
+		assert.isFunction(global[Symbol.for('ioc.call')])
 	})
 
 	test('resolve the namespace directory from rc file content', (assert) => {
-		const app = new Application(
-			__dirname,
-			new Ioc(),
-			{
-				namespaces: {
-					models: 'App/Models',
-				},
-				aliases: {
-					App: './app',
-				},
+		const app = getApp({
+			namespaces: {
+				models: 'App/Models',
 			},
-			{}
-		)
+			aliases: {
+				App: './app',
+			},
+		})
 
 		assert.equal(app.resolveNamespaceDirectory('models'), './app/Models')
 		assert.equal(app.resolveNamespaceDirectory('something'), null)
 	})
 
 	test('return null when namespace is not registered', (assert) => {
-		const app = new Application(
-			__dirname,
-			new Ioc(),
-			{
-				namespaces: {
-					models: 'App/Models',
-				},
-				aliases: {},
+		const app = getApp({
+			namespaces: {
+				models: 'App/Models',
 			},
-			{}
-		)
+			aliases: {},
+		})
 
 		assert.equal(app.resolveNamespaceDirectory('models'), null)
 	})
 
 	test('make paths to pre-configured directories', (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
+		const app = getApp({})
 
-		assert.equal(app.makePath('app'), join(__dirname, 'app'))
-		assert.equal(app.configPath(), join(__dirname, 'config'))
-		assert.equal(app.publicPath(), join(__dirname, 'public'))
-		assert.equal(app.databasePath(), join(__dirname, 'database'))
-		assert.equal(app.migrationsPath(), join(__dirname, 'database/migrations'))
-		assert.equal(app.seedsPath(), join(__dirname, 'database/seeders'))
-		assert.equal(app.resourcesPath(), join(__dirname, 'resources'))
-		assert.equal(app.viewsPath(), join(__dirname, 'resources/views'))
-		assert.equal(app.startPath('app'), join(__dirname, 'start/app'))
-		assert.equal(app.testsPath('unit'), join(__dirname, 'tests/unit'))
-		assert.equal(app.providersPath('AppProvider'), join(__dirname, 'providers/AppProvider'))
+		assert.equal(app.makePath('app'), join(fs.basePath, 'app'))
+		assert.equal(app.configPath(), join(fs.basePath, 'config'))
+		assert.equal(app.publicPath(), join(fs.basePath, 'public'))
+		assert.equal(app.databasePath(), join(fs.basePath, 'database'))
+		assert.equal(app.migrationsPath(), join(fs.basePath, 'database/migrations'))
+		assert.equal(app.seedsPath(), join(fs.basePath, 'database/seeders'))
+		assert.equal(app.resourcesPath(), join(fs.basePath, 'resources'))
+		assert.equal(app.viewsPath(), join(fs.basePath, 'resources/views'))
+		assert.equal(app.startPath('app'), join(fs.basePath, 'start/app'))
+		assert.equal(app.testsPath('unit'), join(fs.basePath, 'tests/unit'))
+		assert.equal(app.providersPath('AppProvider'), join(fs.basePath, 'providers/AppProvider'))
 	})
 
-	test('pull name and version from pkgFile contents', (assert) => {
-		const app = new Application(
-			__dirname,
-			new Ioc(),
-			{},
-			{
-				name: 'relay-app',
+	test('pull name and version from package.json file', async (assert) => {
+		await fs.add(
+			'package.json',
+			JSON.stringify({
+				name: 'dummy-app',
 				version: '1.0.0',
-				dependencies: {},
-			}
+			})
 		)
 
-		assert.equal(app.appName, 'relay-app')
+		const app = getApp({})
+		assert.equal(app.appName, 'dummy-app')
 		assert.equal(app.version!.major, 1)
 	})
 
-	test('pull adonis version from pkgFile contents', (assert) => {
-		const app = new Application(
-			__dirname,
-			new Ioc(),
-			{},
-			{
-				adonisVersion: '5.0.0',
-			}
+	test('pull adonis version from "@adonisjs/core" package.json file', async (assert) => {
+		await fs.add(
+			'node_modules/@adonisjs/core/package.json',
+			JSON.stringify({
+				name: '@adonisjs/core',
+				version: '5.0.0',
+			})
 		)
 
+		const app = getApp({})
 		assert.equal(app.adonisVersion!.major, 5)
 	})
 
-	test('parse prereleases', (assert) => {
-		const app = new Application(
-			__dirname,
-			new Ioc(),
-			{},
-			{
-				adonisVersion: '5.0.0-preview.1',
-			}
+	test('parse prereleases', async (assert) => {
+		await fs.add(
+			'node_modules/@adonisjs/core/package.json',
+			JSON.stringify({
+				name: '@adonisjs/core',
+				version: '5.0.0-preview-rc-1.12',
+			})
 		)
 
-		assert.equal(app.adonisVersion!.toString(), '5.0.0-preview.1')
+		const app = getApp({})
+		assert.equal(app.adonisVersion!.toString(), '5.0.0-preview-rc-1.12')
 	})
 
-	test('set inProduction lazily', (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		assert.isFalse(app.inProduction)
+	// test('set inProduction lazily', (assert) => {
+	// 	const app = new Application(__dirname, 'web')
+	// 	assert.isFalse(app.inProduction)
 
-		process.env.NODE_ENV = 'production'
-		assert.isTrue(app.inProduction)
-		delete process.env.NODE_ENV
+	// 	process.env.NODE_ENV = 'production'
+	// 	assert.isTrue(app.inProduction)
+	// 	delete process.env.NODE_ENV
+	// })
+
+	// test('return nodeEnvironment as unknown when not defined', (assert) => {
+	// 	const app = new Application(__dirname, 'web')
+	// 	assert.equal(app.nodeEnvironment, 'unknown')
+
+	// 	/**
+	// 	 * Once defined, should update itself
+	// 	 */
+	// 	process.env.NODE_ENV = 'dev'
+	// 	assert.equal(app.nodeEnvironment, 'development')
+
+	// 	delete process.env.NODE_ENV
+	// })
+
+	// test('normalize development node environment', (assert) => {
+	// 	process.env.NODE_ENV = 'dev'
+	// 	assert.equal(getApp().nodeEnvironment, 'development')
+
+	// 	process.env.NODE_ENV = 'develop'
+	// 	assert.equal(getApp().nodeEnvironment, 'development')
+
+	// 	process.env.NODE_ENV = 'DEVELOPMENT'
+	// 	assert.equal(getApp().nodeEnvironment, 'development')
+
+	// 	delete process.env.NODE_ENV
+	// })
+
+	// test('normalize staging node environment', (assert) => {
+	// 	process.env.NODE_ENV = 'stage'
+	// 	assert.equal(getApp().nodeEnvironment, 'staging')
+
+	// 	process.env.NODE_ENV = 'STAGING'
+	// 	assert.equal(getApp().nodeEnvironment, 'staging')
+
+	// 	delete process.env.NODE_ENV
+	// })
+
+	// test('normalize production node environment', (assert) => {
+	// 	process.env.NODE_ENV = 'prod'
+	// 	assert.equal(getApp().nodeEnvironment, 'production')
+
+	// 	process.env.NODE_ENV = 'PRODUCTION'
+	// 	assert.equal(getApp().nodeEnvironment, 'production')
+
+	// 	delete process.env.NODE_ENV
+	// })
+
+	// test('normalize testing node environment', (assert) => {
+	// 	process.env.NODE_ENV = 'test'
+	// 	assert.equal(getApp().nodeEnvironment, 'testing')
+
+	// 	process.env.NODE_ENV = 'TESTING'
+	// 	assert.equal(getApp().nodeEnvironment, 'testing')
+
+	// 	delete process.env.NODE_ENV
+	// })
+})
+
+test.group('Application | setup', (group) => {
+	group.afterEach(async () => {
+		delete process.env.ENV_APP_NAME
+		delete process.env.ENV_SILENT
+		delete process.env.ENV_PATH
+		await fs.cleanup()
 	})
 
-	test('return nodeEnvironment as unknown when not defined', (assert) => {
-		const app = new Application(__dirname, new Ioc(), {}, {})
-		assert.equal(app.nodeEnvironment, 'unknown')
+	test('register aliases', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
-		/**
-		 * Once defined, should update itself
-		 */
-		process.env.NODE_ENV = 'dev'
-		assert.equal(app.nodeEnvironment, 'development')
+		const app = getApp({
+			aliases: {
+				App: './app',
+			},
+		})
 
-		delete process.env.NODE_ENV
+		app.setup()
+		assert.deepEqual(app.container.autoloads, {
+			App: join(fs.basePath, './app'),
+		})
 	})
 
-	test('normalize development node environment', (assert) => {
-		process.env.NODE_ENV = 'dev'
-		assert.equal(getApp().nodeEnvironment, 'development')
+	test('load environment variables during setup', async (assert) => {
+		await fs.add('.env', 'ENV_APP_NAME=adonisjs')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
-		process.env.NODE_ENV = 'develop'
-		assert.equal(getApp().nodeEnvironment, 'development')
+		const app = getApp({})
+		app.setup()
 
-		process.env.NODE_ENV = 'DEVELOPMENT'
-		assert.equal(getApp().nodeEnvironment, 'development')
-
-		delete process.env.NODE_ENV
+		assert.equal(process.env.ENV_APP_NAME, 'adonisjs')
 	})
 
-	test('normalize staging node environment', (assert) => {
-		process.env.NODE_ENV = 'stage'
-		assert.equal(getApp().nodeEnvironment, 'staging')
+	test('run environment variables validations', async (assert) => {
+		await fs.add('.env', 'ENV_APP_NAME=foo')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+		await fs.add(
+			'env.ts',
+			`
+			const Env = global[Symbol.for('ioc.use')]('Adonis/Core/Env')
+			Env.rules({
+				ENV_APP_NAME: Env.schema.enum(['adonisjs', 'adonis'])
+			})
+		`
+		)
 
-		process.env.NODE_ENV = 'STAGING'
-		assert.equal(getApp().nodeEnvironment, 'staging')
-
-		delete process.env.NODE_ENV
+		const app = getApp({})
+		const fn = () => app.setup()
+		assert.throw(
+			fn,
+			'E_INVALID_ENV_VALUE: Value for environment variable "ENV_APP_NAME" must be one of "adonisjs,adonis"'
+		)
 	})
 
-	test('normalize production node environment', (assert) => {
-		process.env.NODE_ENV = 'prod'
-		assert.equal(getApp().nodeEnvironment, 'production')
+	test('raise error when .env file is missing', async (assert) => {
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
-		process.env.NODE_ENV = 'PRODUCTION'
-		assert.equal(getApp().nodeEnvironment, 'production')
-
-		delete process.env.NODE_ENV
+		const app = getApp({})
+		const fn = () => app.setup()
+		assert.throw(fn, `E_MISSING_ENV_FILE: The "${join(fs.basePath, '.env')}" file is missing`)
 	})
 
-	test('normalize testing node environment', (assert) => {
-		process.env.NODE_ENV = 'test'
-		assert.equal(getApp().nodeEnvironment, 'testing')
+	test('ignore error when ENV_SILENT is defined', async () => {
+		process.env.ENV_SILENT = 'true'
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
-		process.env.NODE_ENV = 'TESTING'
-		assert.equal(getApp().nodeEnvironment, 'testing')
+		const app = getApp({})
+		app.setup()
+	})
 
-		delete process.env.NODE_ENV
+	test('load env file from a different location', async (assert) => {
+		process.env.ENV_PATH = './foo/.env'
+		await fs.add('foo/.env', 'ENV_APP_NAME=adonisjs')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		const app = getApp({})
+		app.setup()
+
+		assert.equal(process.env.ENV_APP_NAME, 'adonisjs')
+	})
+
+	test('load config files from the config directory', async (assert) => {
+		await fs.add('.env', '')
+		await fs.add(
+			'config/app.ts',
+			`export const logger = {
+			name: 'foobar'
+		}`
+		)
+
+		const app = getApp({})
+		app.setup()
+
+		const Config = app.container.use('Adonis/Core/Config')
+		assert.equal(Config.get('app.logger.name'), 'foobar')
+	})
+
+	test('setup profiler and logger', async (assert) => {
+		await fs.add('.env', '')
+		await fs.add(
+			'config/app.ts',
+			`export const logger = {
+			name: 'foobar'
+		}`
+		)
+
+		const app = getApp({})
+		app.setup()
+
+		assert.instanceOf(app.container.use('Adonis/Core/Logger'), Logger)
+		assert.instanceOf(app.container.use('Adonis/Core/Profiler'), Profiler)
+	})
+})
+
+test.group('Application | registerProviders', (group) => {
+	group.afterEach(async () => {
+		delete process.env.ENV_APP_NAME
+		delete process.env.ENV_SILENT
+		delete process.env.ENV_PATH
+		await fs.cleanup()
+	})
+
+	test('register providers mentioned inside .adonisrc.json file', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'providers/AppProvider.ts',
+			`
+			export default class AppProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public register() {
+					this.container.bind('App/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		await fs.add(
+			'providers/AceProvider.ts',
+			`
+			export default class AceProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public register() {
+					this.container.bind('Ace/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		const app = getApp({
+			providers: ['./providers/AppProvider'],
+			aceProviders: ['./providers/AceProvider'],
+		})
+
+		app.setup()
+		app.registerProviders()
+
+		assert.equal(app.container.use('App/Foo'), 'foo')
+		assert.isFalse(app.container.hasBinding('Ace/Foo'))
+	})
+
+	test('register ace providers when environment is console', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'providers/AppProvider.ts',
+			`
+			export default class AppProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public register() {
+					this.container.bind('App/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		await fs.add(
+			'providers/AceProvider.ts',
+			`
+			export default class AceProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public register() {
+					this.container.bind('Ace/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		const app = new Application(fs.basePath, 'console', {
+			providers: ['./providers/AppProvider'],
+			aceProviders: ['./providers/AceProvider'],
+		})
+
+		app.setup()
+		app.registerProviders()
+
+		assert.equal(app.container.use('App/Foo'), 'foo')
+		assert.equal(app.container.use('Ace/Foo'), 'foo')
+	})
+
+	test('register providers exported by the provider', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'providers/AppProvider.ts',
+			`
+			export default class AppProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public register() {
+					this.container.bind('App/Foo', () => {
+						return 'foo'
+					})
+				}
+
+				public provides = ['./providers/MainProvider']
+			}
+		`
+		)
+
+		await fs.add(
+			'providers/MainProvider.ts',
+			`
+			export default class MainProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public register() {
+					this.container.bind('Main/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		const app = getApp({
+			providers: ['./providers/AppProvider'],
+		})
+
+		app.setup()
+		app.registerProviders()
+
+		assert.equal(app.container.use('App/Foo'), 'foo')
+		assert.equal(app.container.use('Main/Foo'), 'foo')
+	})
+})
+
+test.group('Application | bootProviders', (group) => {
+	group.afterEach(async () => {
+		delete process.env.ENV_APP_NAME
+		delete process.env.ENV_SILENT
+		delete process.env.ENV_PATH
+		await fs.cleanup()
+	})
+
+	test('boot providers', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'providers/AppProvider.ts',
+			`
+			export default class AppProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public async boot() {
+					this.container.bind('App/Foo', () => {
+						return 'foo'
+					})
+				}
+
+				public provides = ['./providers/MainProvider']
+			}
+		`
+		)
+
+		await fs.add(
+			'providers/MainProvider.ts',
+			`
+			export default class MainProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public async boot() {
+					this.container.bind('Main/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		const app = getApp({
+			providers: ['./providers/AppProvider'],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+
+		assert.equal(app.container.use('App/Foo'), 'foo')
+		assert.equal(app.container.use('Main/Foo'), 'foo')
+	})
+
+	test('boot ace providers when environment is console', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'providers/AppProvider.ts',
+			`
+			export default class AppProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public async boot() {
+					this.container.bind('App/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		await fs.add(
+			'providers/AceProvider.ts',
+			`
+			export default class AceProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public async boot() {
+					this.container.bind('Ace/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		const app = new Application(fs.basePath, 'console', {
+			providers: ['./providers/AppProvider'],
+			aceProviders: ['./providers/AceProvider'],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+
+		assert.equal(app.container.use('App/Foo'), 'foo')
+		assert.equal(app.container.use('Ace/Foo'), 'foo')
+	})
+})
+
+test.group('Application | requirePreloads', (group) => {
+	group.afterEach(async () => {
+		delete process.env.ENV_APP_NAME
+		delete process.env.ENV_SILENT
+		delete process.env.ENV_PATH
+		await fs.cleanup()
+	})
+
+	test('require files registered for preloading', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'start/foo.ts',
+			`
+			global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
+				return 'foo'
+			})
+		`
+		)
+
+		const app = getApp({
+			preloads: ['./start/foo'],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		app.requirePreloads()
+
+		assert.equal(app.container.use('Start/Foo'), 'foo')
+	})
+
+	test('do not require file when environment is different', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'start/foo.ts',
+			`
+			global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
+				return 'foo'
+			})
+		`
+		)
+
+		const app = getApp({
+			preloads: [
+				{
+					file: './start/foo',
+					environment: 'console',
+				},
+			],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		app.requirePreloads()
+
+		assert.isFalse(app.container.hasBinding('Start/Foo'))
+	})
+
+	test('require file when explicitly defined environment matches the current environment', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'start/foo.ts',
+			`
+			global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
+				return 'foo'
+			})
+		`
+		)
+
+		const app = getApp({
+			preloads: [
+				{
+					file: './start/foo',
+					environment: 'web',
+				},
+			],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		app.requirePreloads()
+
+		assert.equal(app.container.use('Start/Foo'), 'foo')
+	})
+
+	test('ignore error when marked as optional and is missing', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		const app = getApp({
+			preloads: [
+				{
+					file: './start/foo',
+					environment: 'web',
+					optional: true,
+				},
+			],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		app.requirePreloads()
+
+		assert.isFalse(app.container.hasBinding('Start/Foo'))
+	})
+
+	test('raise error when not marked as optional and is missing', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		const app = getApp({
+			preloads: [
+				{
+					file: './start/foo',
+					environment: 'web',
+					optional: false,
+				},
+			],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		const fn = () => app.requirePreloads()
+
+		assert.throw(
+			fn,
+			`ENOENT: no such file or directory, open '${join(fs.basePath, 'start/foo.ts')}'`
+		)
+	})
+
+	test('raise error when file has errors other then ENOENT', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'start/foo.ts',
+			`
+			global['ioc.use']('Adonis/Core/Application').container.bind('Start/Foo', () => {
+				return 'foo'
+			})
+		`
+		)
+
+		const app = getApp({
+			preloads: [
+				{
+					file: './start/foo',
+					environment: 'web',
+					optional: true,
+				},
+			],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		const fn = () => app.requirePreloads()
+
+		assert.throw(fn, `global.ioc.use is not a function`)
+	})
+})
+
+test.group('Application | start', (group) => {
+	group.afterEach(async () => {
+		delete process.env.ENV_APP_NAME
+		delete process.env.ENV_SILENT
+		delete process.env.ENV_PATH
+		await fs.cleanup()
+	})
+
+	test('execute providers ready hook', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'providers/AppProvider.ts',
+			`
+			export default class AppProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public async ready() {
+					this.container.bind('App/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		const app = getApp({
+			providers: ['./providers/AppProvider'],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		await app.start()
+
+		assert.equal(app.container.use('App/Foo'), 'foo')
+	})
+})
+
+test.group('Application | start', (group) => {
+	group.afterEach(async () => {
+		delete process.env.ENV_APP_NAME
+		delete process.env.ENV_SILENT
+		delete process.env.ENV_PATH
+		await fs.cleanup()
+	})
+
+	test('execute providers shutdown hook', async (assert) => {
+		await fs.add('.env', '')
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		await fs.add(
+			'providers/AppProvider.ts',
+			`
+			export default class AppProvider {
+				constructor(container) {
+					this.container = container
+				}
+
+				public async shutdown() {
+					this.container.bind('App/Foo', () => {
+						return 'foo'
+					})
+				}
+			}
+		`
+		)
+
+		const app = getApp({
+			providers: ['./providers/AppProvider'],
+		})
+
+		app.setup()
+		app.registerProviders()
+		await app.bootProviders()
+		await app.start()
+		await app.shutdown()
+
+		assert.equal(app.container.use('App/Foo'), 'foo')
 	})
 })
