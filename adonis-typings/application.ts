@@ -181,6 +181,14 @@ declare module '@ioc:Adonis/Core/Application' {
 		container: IocContract<ContainerBindings>
 
 		/**
+		 * Available after the [[setup]] call
+		 */
+		logger: LoggerContract
+		profiler: ProfilerContract
+		env: EnvContract
+		config: ConfigContract
+
+		/**
 		 * Reference to preloads defined inside `.adonisrc.json` file
 		 */
 		preloads: PreloadNode[]

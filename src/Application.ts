@@ -45,8 +45,10 @@ export class Application implements ApplicationContract {
 	/**
 	 * Available after setup call
 	 */
-	private profiler: Profiler
-	private logger: Logger
+	public logger: Logger
+	public profiler: Profiler
+	public env: Env
+	public config: Config
 
 	/**
 	 * Available after registerProviders call
@@ -355,11 +357,11 @@ export class Application implements ApplicationContract {
 		/**
 		 * Create instance of the Env class
 		 */
-		const env = new Env([
+		this.env = new Env([
 			{ values: new EnvParser(true).parse(envContents), overwriteExisting: false },
 			{ values: new EnvParser(false).parse(testEnvContent), overwriteExisting: true },
 		])
-		this.container.singleton('Adonis/Core/Env', () => env)
+		this.container.singleton('Adonis/Core/Env', () => this.env)
 
 		/**
 		 * Attempt to load `env.(ts|js)` files to setup the validation rules
@@ -369,20 +371,20 @@ export class Application implements ApplicationContract {
 		/**
 		 * Process environment variables. This will trigger validations as well
 		 */
-		env.process()
+		this.env.process()
 
 		/**
 		 * Update node environment
 		 */
-		this.nodeEnvironment = this.normalizeNodeEnv(env.get('NODE_ENV'))
+		this.nodeEnvironment = this.normalizeNodeEnv(this.env.get('NODE_ENV'))
 	}
 
 	/**
 	 * Load config and define the container binding
 	 */
 	private loadConfig() {
-		const config = new Config(requireAll(this.configPath()))
-		this.container.singleton('Adonis/Core/Config', () => config)
+		this.config = new Config(requireAll(this.configPath()))
+		this.container.singleton('Adonis/Core/Config', () => this.config)
 	}
 
 	/**
