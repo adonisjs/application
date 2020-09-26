@@ -193,7 +193,7 @@ test.group('Application | setup', (group) => {
 		})
 
 		app.setup()
-		assert.deepEqual(app.container.autoloads, {
+		assert.deepEqual(app.container.directoryAliases, {
 			App: join(fs.basePath, './app'),
 		})
 	})
@@ -385,12 +385,12 @@ test.group('Application | registerProviders', (group) => {
 			'providers/AppProvider.ts',
 			`
 			export default class AppProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public register() {
-					this.container.bind('App/Foo', () => {
+					this.application.container.bind('App/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -402,12 +402,12 @@ test.group('Application | registerProviders', (group) => {
 			'providers/AceProvider.ts',
 			`
 			export default class AceProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public register() {
-					this.container.bind('Ace/Foo', () => {
+					this.application.container.bind('Ace/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -435,12 +435,12 @@ test.group('Application | registerProviders', (group) => {
 			'providers/AppProvider.ts',
 			`
 			export default class AppProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public register() {
-					this.container.bind('App/Foo', () => {
+					this.application.container.bind('App/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -452,12 +452,12 @@ test.group('Application | registerProviders', (group) => {
 			'providers/AceProvider.ts',
 			`
 			export default class AceProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public register() {
-					this.container.bind('Ace/Foo', () => {
+					this.application.container.bind('Ace/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -485,12 +485,12 @@ test.group('Application | registerProviders', (group) => {
 			'providers/AppProvider.ts',
 			`
 			export default class AppProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public register() {
-					this.container.bind('App/Foo', () => {
+					this.application.container.bind('App/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -504,12 +504,12 @@ test.group('Application | registerProviders', (group) => {
 			'providers/MainProvider.ts',
 			`
 			export default class MainProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public register() {
-					this.container.bind('Main/Foo', () => {
+					this.application.container.bind('Main/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -545,12 +545,12 @@ test.group('Application | bootProviders', (group) => {
 			'providers/AppProvider.ts',
 			`
 			export default class AppProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public async boot() {
-					this.container.bind('App/Foo', () => {
+					this.application.container.bind('App/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -564,12 +564,12 @@ test.group('Application | bootProviders', (group) => {
 			'providers/MainProvider.ts',
 			`
 			export default class MainProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public async boot() {
-					this.container.bind('Main/Foo', () => {
+					this.application.container.bind('Main/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -597,12 +597,12 @@ test.group('Application | bootProviders', (group) => {
 			'providers/AppProvider.ts',
 			`
 			export default class AppProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public async boot() {
-					this.container.bind('App/Foo', () => {
+					this.application.container.bind('App/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -614,12 +614,12 @@ test.group('Application | bootProviders', (group) => {
 			'providers/AceProvider.ts',
 			`
 			export default class AceProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public async boot() {
-					this.container.bind('Ace/Foo', () => {
+					this.application.container.bind('Ace/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -829,12 +829,12 @@ test.group('Application | start', (group) => {
 			'providers/AppProvider.ts',
 			`
 			export default class AppProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public async ready() {
-					this.container.bind('App/Foo', () => {
+					this.application.container.bind('App/Foo', () => {
 						return 'foo'
 					})
 				}
@@ -871,12 +871,12 @@ test.group('Application | start', (group) => {
 			'providers/AppProvider.ts',
 			`
 			export default class AppProvider {
-				constructor(container) {
-					this.container = container
+				constructor(application) {
+					this.application = application
 				}
 
 				public async shutdown() {
-					this.container.bind('App/Foo', () => {
+					this.application.container.bind('App/Foo', () => {
 						return 'foo'
 					})
 				}

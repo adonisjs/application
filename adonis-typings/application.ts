@@ -9,6 +9,22 @@
 
 declare module '@ioc:Adonis/Core/Application' {
 	import { IocContract } from '@adonisjs/fold'
+	import { EnvContract } from '@ioc:Adonis/Core/Env'
+	import { ConfigContract } from '@ioc:Adonis/Core/Config'
+	import { LoggerContract } from '@ioc:Adonis/Core/Logger'
+	import { ProfilerContract } from '@ioc:Adonis/Core/Profiler'
+
+	/**
+	 * The interface that is meant to be extended in
+	 * the user land and other packages
+	 */
+	export interface ContainerBindings {
+		'Adonis/Core/Application': ApplicationContract
+		'Adonis/Core/Profiler': ProfilerContract
+		'Adonis/Core/Logger': LoggerContract
+		'Adonis/Core/Config': ConfigContract
+		'Adonis/Core/Env': EnvContract
+	}
 
 	export type ApplicationStates =
 		| 'initiated'
@@ -162,7 +178,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		/**
 		 * Reference to the IoC container
 		 */
-		container: IocContract
+		container: IocContract<ContainerBindings>
 
 		/**
 		 * Reference to preloads defined inside `.adonisrc.json` file

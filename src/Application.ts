@@ -147,7 +147,7 @@ export class Application implements ApplicationContract {
 	/**
 	 * Reference to the IoC container for the application
 	 */
-	public container = new Ioc()
+	public container: ApplicationContract['container'] = new Ioc()
 
 	constructor(
 		public readonly appRoot: string,
@@ -333,7 +333,7 @@ export class Application implements ApplicationContract {
 	 */
 	private registerAliases() {
 		this.aliasesMap.forEach((toPath, alias) => {
-			this.container.autoload(join(this.appRoot, toPath), alias)
+			this.container.alias(join(this.appRoot, toPath), alias)
 		})
 	}
 
@@ -610,7 +610,7 @@ export class Application implements ApplicationContract {
 					? this.rcFile.providers.concat(this.rcFile.aceProviders)
 					: this.rcFile.providers
 
-			this.registrar = new Registrar(this.container, this.appRoot)
+			this.registrar = new Registrar([this], this.appRoot)
 			const registeredProviders = this.registrar.useProviders(providers).register()
 
 			/**
