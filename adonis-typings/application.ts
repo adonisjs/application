@@ -208,7 +208,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		/**
 		 * A boolean to know if application is ready
 		 */
-		isReady: boolean
+		readonly isReady: boolean
 
 		/**
 		 * A boolean to know if application is running in production

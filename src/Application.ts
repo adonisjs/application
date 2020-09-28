@@ -104,16 +104,13 @@ export class Application implements ApplicationContract {
 	 * A boolean to know if application has bootstrapped successfully
 	 */
 	public get isReady() {
-		return this.state === 'ready'
+		return this.state === 'ready' && !this.isShuttingDown
 	}
 
 	/**
-	 * A boolean to know if application has received a shutdown signal
-	 * like `SIGINT` or `SIGTERM`.
+	 * A boolean to know if app is preparing to shutdown
 	 */
-	public get isShuttingDown() {
-		return this.state === 'shutdown'
-	}
+	public isShuttingDown = false
 
 	/**
 	 * The namespace of exception handler that will handle exceptions
@@ -697,6 +694,7 @@ export class Application implements ApplicationContract {
 			return
 		}
 
+		this.isShuttingDown = true
 		this.state = 'shutdown'
 		await this.profiler.profileAsync('providers:shutdown', {}, async () => {
 			this.logger.trace('executing providers shutdown hook')
