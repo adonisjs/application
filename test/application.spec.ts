@@ -495,7 +495,7 @@ test.group('Application | registerProviders', (group) => {
 					})
 				}
 
-				public provides = ['./providers/MainProvider']
+				public provides = ['./MainProvider']
 			}
 		`
 		)
@@ -555,7 +555,7 @@ test.group('Application | bootProviders', (group) => {
 					})
 				}
 
-				public provides = ['./providers/MainProvider']
+				public provides = ['./MainProvider']
 			}
 		`
 		)
