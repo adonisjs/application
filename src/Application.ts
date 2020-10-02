@@ -337,10 +337,10 @@ export class Application implements ApplicationContract {
 	}
 
 	/**
-	 * Setups the environment variables by loading the `.env` and `.env.testing`
-	 * files.
+	 * Loads the environment variables by reading and parsing the
+	 * `.env` and `.env.testing` files.
 	 */
-	private setupEnvironmentVariables() {
+	private loadEnvironmentVariables() {
 		/**
 		 * Load `.env` and `.env.testing` files from the application root. The
 		 * env loader handles the additional flags like
@@ -585,7 +585,7 @@ export class Application implements ApplicationContract {
 
 		this.state = 'setup'
 		this.registerAliases()
-		this.setupEnvironmentVariables()
+		this.loadEnvironmentVariables()
 		this.loadConfig()
 		this.setupLogger()
 		this.setupProfiler()
