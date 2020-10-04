@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+export { inject } from '@adonisjs/fold'
 export { Application } from './src/Application'
 import * as rcParser from './src/rcParser'
 export { rcParser }
