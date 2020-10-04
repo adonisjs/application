@@ -67,9 +67,6 @@
 				"exceptions": {
 					"type": "string"
 				},
-				"validators": {
-					"type": "string"
-				},
 				"middleware": {
 					"type": "string"
 				},
