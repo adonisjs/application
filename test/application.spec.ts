@@ -229,18 +229,8 @@ test.group('Application | setup', (group) => {
 		)
 	})
 
-	test('raise error when .env file is missing', async (assert) => {
+	test('do no t raise error when .env file is missing', async () => {
 		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
-
-		const app = getApp({})
-		const fn = () => app.setup()
-		assert.throw(fn, `E_MISSING_ENV_FILE: The "${join(fs.basePath, '.env')}" file is missing`)
-	})
-
-	test('ignore error when ENV_SILENT is defined', async () => {
-		process.env.ENV_SILENT = 'true'
-		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
-
 		const app = getApp({})
 		app.setup()
 	})
