@@ -610,7 +610,12 @@ export class Application implements ApplicationContract {
 					: this.rcFile.providers
 
 			this.registrar = new Registrar([this], this.appRoot)
-			const registeredProviders = this.registrar.useProviders(providers).register()
+
+			const registeredProviders = this.registrar
+				.useProviders(providers, (provider) => {
+					return new provider(provider['needsApplication'] ? this : this.container)
+				})
+				.register()
 
 			/**
 			 * Keep reference of providers that are using ready or shutdown hooks

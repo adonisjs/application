@@ -379,6 +379,8 @@ test.group('Application | registerProviders', (group) => {
 					this.application = application
 				}
 
+				public static needsApplication = true
+
 				public register() {
 					this.application.container.bind('App/Foo', () => {
 						return 'foo'
@@ -395,6 +397,8 @@ test.group('Application | registerProviders', (group) => {
 				constructor(application) {
 					this.application = application
 				}
+
+				public static needsApplication = true
 
 				public register() {
 					this.application.container.bind('Ace/Foo', () => {
@@ -429,6 +433,8 @@ test.group('Application | registerProviders', (group) => {
 					this.application = application
 				}
 
+				public static needsApplication = true
+
 				public register() {
 					this.application.container.bind('App/Foo', () => {
 						return 'foo'
@@ -445,6 +451,8 @@ test.group('Application | registerProviders', (group) => {
 				constructor(application) {
 					this.application = application
 				}
+
+				public static needsApplication = true
 
 				public register() {
 					this.application.container.bind('Ace/Foo', () => {
@@ -479,6 +487,8 @@ test.group('Application | registerProviders', (group) => {
 					this.application = application
 				}
 
+				public static needsApplication = true
+
 				public register() {
 					this.application.container.bind('App/Foo', () => {
 						return 'foo'
@@ -497,6 +507,8 @@ test.group('Application | registerProviders', (group) => {
 				constructor(application) {
 					this.application = application
 				}
+
+				public static needsApplication = true
 
 				public register() {
 					this.application.container.bind('Main/Foo', () => {
@@ -539,6 +551,8 @@ test.group('Application | bootProviders', (group) => {
 					this.application = application
 				}
 
+				public static needsApplication = true
+
 				public async boot() {
 					this.application.container.bind('App/Foo', () => {
 						return 'foo'
@@ -557,6 +571,8 @@ test.group('Application | bootProviders', (group) => {
 				constructor(application) {
 					this.application = application
 				}
+
+				public static needsApplication = true
 
 				public async boot() {
 					this.application.container.bind('Main/Foo', () => {
@@ -591,6 +607,8 @@ test.group('Application | bootProviders', (group) => {
 					this.application = application
 				}
 
+				public static needsApplication = true
+
 				public async boot() {
 					this.application.container.bind('App/Foo', () => {
 						return 'foo'
@@ -607,6 +625,8 @@ test.group('Application | bootProviders', (group) => {
 				constructor(application) {
 					this.application = application
 				}
+
+				public static needsApplication = true
 
 				public async boot() {
 					this.application.container.bind('Ace/Foo', () => {
@@ -823,6 +843,8 @@ test.group('Application | start', (group) => {
 					this.application = application
 				}
 
+				public static needsApplication = true
+
 				public async ready() {
 					this.application.container.bind('App/Foo', () => {
 						return 'foo'
@@ -864,6 +886,8 @@ test.group('Application | start', (group) => {
 				constructor(application) {
 					this.application = application
 				}
+
+				public static needsApplication = true
 
 				public async shutdown() {
 					this.application.container.bind('App/Foo', () => {
