@@ -361,4 +361,9 @@ declare module '@ioc:Adonis/Core/Application' {
 
 	const Application: ApplicationContract
 	export default Application
+
+	/**
+	 * Export Ioc Container static types
+	 */
+	export * from '@adonisjs/fold/build/src/Contracts'
 }
