@@ -150,7 +150,7 @@ export class Application implements ApplicationContract {
 
 	constructor(
 		public readonly appRoot: string,
-		public readonly environment: AppEnvironments,
+		public environment: AppEnvironments,
 		rcContents?: any
 	) {
 		this.rcFile = parse(rcContents || this.loadRcFile())
@@ -564,6 +564,19 @@ export class Application implements ApplicationContract {
 			version: this.version ? this.version.toString() : null,
 			adonisVersion: this.adonisVersion ? this.adonisVersion.toString() : null,
 		}
+	}
+
+	/**
+	 * Switch application environment. Only allowed before the setup
+	 * is called
+	 */
+	public switchEnvironment(environment: AppEnvironments): this {
+		if (this.state !== 'initiated') {
+			throw new Error(`Cannot switch application environment in "${this.state}" state`)
+		}
+
+		this.environment = environment
+		return this
 	}
 
 	/**

@@ -72,7 +72,7 @@ declare module '@ioc:Adonis/Core/Application' {
 	/**
 	 * Application environments
 	 */
-	export type AppEnvironments = 'web' | 'console' | 'test' | 'unknown'
+	export type AppEnvironments = 'web' | 'console' | 'test' | 'repl' | 'unknown'
 
 	/**
 	 * Shape of preload files
@@ -253,6 +253,12 @@ declare module '@ioc:Adonis/Core/Application' {
 		 * Make path to a file or directory from the application root
 		 */
 		makePath(...paths: string[]): string
+
+		/**
+		 * Switch application environment. Only allowed before the setup
+		 * is called
+		 */
+		switchEnvironment(environment: AppEnvironments): this
 
 		/**
 		 * Make path to a file or directory from the application source root

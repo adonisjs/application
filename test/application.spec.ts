@@ -171,6 +171,22 @@ test.group('Application', (group) => {
 		const app = getApp({})
 		assert.equal(app.adonisVersion!.toString(), '5.0.0-preview-rc-1.12')
 	})
+
+	test('switch enviroment at a later stage', async (assert) => {
+		const app = getApp({})
+		app.switchEnvironment('repl')
+		assert.equal(app.environment, 'repl')
+	})
+
+	test('do not allow switching enviroment after setup has been called', async (assert) => {
+		await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
+
+		const app = getApp({})
+		app.setup()
+
+		const fn = () => app.switchEnvironment('repl')
+		assert.throw(fn, 'Cannot switch application environment in "setup" state')
+	})
 })
 
 test.group('Application | setup', (group) => {
