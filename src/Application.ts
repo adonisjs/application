@@ -615,13 +615,12 @@ export class Application implements ApplicationContract {
 		this.state = 'registered'
 
 		this.profiler.profile('providers:register', {}, () => {
-			this.logger.trace('registering providers')
-
 			const providers =
-				this.environment === 'console'
+				this.environment !== 'web'
 					? this.rcFile.providers.concat(this.rcFile.aceProviders)
 					: this.rcFile.providers
 
+			this.logger.trace('registering providers', providers)
 			this.registrar = new Registrar([this], this.appRoot)
 
 			const registeredProviders = this.registrar
