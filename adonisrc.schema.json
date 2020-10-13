@@ -12,6 +12,7 @@
 		},
 		"preloads": {
 			"type": "array",
+			"uniqueItems": true,
 			"items": {
 				"oneOf": [
 					{
@@ -25,7 +26,7 @@
 								"type": "array",
 								"items": {
 									"type": "string",
-									"enum": ["web", "console", "test"]
+									"enum": ["web", "console", "test", "repl"]
 								}
 							},
 							"optional": {
@@ -41,6 +42,7 @@
 		"metaFiles": {
 			"type": "array",
 			"items": {
+				"uniqueItems": true,
 				"oneOf": [
 					{
 						"type": "string"
@@ -50,42 +52,31 @@
 						"properties": {
 							"pattern": { "type": "string" },
 							"reloadServer": { "type": "boolean" }
-						}
+						},
+						"required": ["pattern"]
 					}
 				]
 			}
 		},
-		"aliases": {
-			"type": "object"
-		},
-		"namespaces": {
-			"type": "object",
-			"properties": {
-				"models": {
-					"type": "string"
-				},
-				"exceptions": {
-					"type": "string"
-				},
-				"middleware": {
-					"type": "string"
-				},
-				"httpControllers": {
-					"type": "string"
-				},
-				"eventListeners": {
-					"type": "string"
-				},
-				"redisListeners": {
-					"type": "string"
-				},
-				"validators": {
-					"type": "string"
-				}
-			},
-			"additionalProperties": {
+		"commands": {
+			"type": "array",
+			"items": {
 				"type": "string"
 			}
+		},
+		"providers": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"uniqueItems": true
+		},
+		"aceProviders": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"uniqueItems": true
 		},
 		"directories": {
 			"type": "object",
@@ -131,21 +122,40 @@
 				"type": "string"
 			}
 		},
-		"commands": {
-			"type": "array",
-			"items": {
-				"type": "string"
+		"aliases": {
+			"type": "object",
+			"patternProperties": {
+				"^.*$": {
+					"type": "string"
+				}
 			}
 		},
-		"providers": {
-			"type": "array",
-			"items": {
-				"type": "string"
-			}
-		},
-		"aceProviders": {
-			"type": "array",
-			"items": {
+		"namespaces": {
+			"type": "object",
+			"properties": {
+				"models": {
+					"type": "string"
+				},
+				"exceptions": {
+					"type": "string"
+				},
+				"middleware": {
+					"type": "string"
+				},
+				"httpControllers": {
+					"type": "string"
+				},
+				"eventListeners": {
+					"type": "string"
+				},
+				"redisListeners": {
+					"type": "string"
+				},
+				"validators": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": {
 				"type": "string"
 			}
 		}
