@@ -73,11 +73,11 @@
 		}
 	},
 	"dependencies": {
-		"@adonisjs/config": "^2.0.0",
-		"@adonisjs/env": "^2.0.3",
-		"@adonisjs/fold": "^7.0.6",
-		"@adonisjs/logger": "^3.0.1",
-		"@adonisjs/profiler": "^5.0.1",
+		"@adonisjs/config": "^2.0.1",
+		"@adonisjs/env": "^2.0.4",
+		"@adonisjs/fold": "^7.0.7",
+		"@adonisjs/logger": "^3.0.2",
+		"@adonisjs/profiler": "^5.0.2",
 		"@poppinss/utils": "^2.5.7",
 		"semver": "^7.3.2"
 	},
