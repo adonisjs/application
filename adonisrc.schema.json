@@ -160,5 +160,5 @@
 			}
 		}
 	},
-	"required": ["exceptionHandlerNamespace", "typescript", "providers"]
+	"required": ["typescript", "providers"]
 }

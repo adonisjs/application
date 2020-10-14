@@ -17,11 +17,7 @@ test.group('JSON Schema', () => {
 		const result = validator.validate(config, require('../adonisrc.schema.json'))
 		assert.deepEqual(
 			result.errors.map(({ message }) => message),
-			[
-				'requires property "exceptionHandlerNamespace"',
-				'requires property "typescript"',
-				'requires property "providers"',
-			]
+			['requires property "typescript"', 'requires property "providers"']
 		)
 	})
 

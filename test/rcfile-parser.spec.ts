@@ -15,7 +15,6 @@ test.group('Rc Parser', () => {
 		assert.deepEqual(parse({}), {
 			raw: {},
 			typescript: true,
-			exceptionHandlerNamespace: 'App/Exceptions/Handler',
 			directories: {
 				config: 'config',
 				contracts: 'contracts',
@@ -232,7 +231,6 @@ test.group('Rc Parser', () => {
 					},
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -282,7 +280,6 @@ test.group('Rc Parser', () => {
 					metaFiles: ['foo.json'],
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -332,7 +329,6 @@ test.group('Rc Parser', () => {
 					metaFiles: [{ pattern: 'foo.json', run: false }],
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -388,7 +384,6 @@ test.group('Rc Parser', () => {
 					typescript: false,
 				},
 				typescript: false,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -432,7 +427,6 @@ test.group('Rc Parser', () => {
 					commands: ['./foo/bar'],
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -476,7 +470,6 @@ test.group('Rc Parser', () => {
 					providers: ['@adonisjs/core'],
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -520,7 +513,6 @@ test.group('Rc Parser', () => {
 					aceProviders: ['@adonisjs/commands'],
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -564,7 +556,6 @@ test.group('Rc Parser', () => {
 					preloads: ['./start/routes'],
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -614,7 +605,6 @@ test.group('Rc Parser', () => {
 					preloads: ['./start/routes', { file: './start/kernel', optional: true }],
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',
@@ -671,7 +661,6 @@ test.group('Rc Parser', () => {
 					aliases: { test: 'Test' },
 				},
 				typescript: true,
-				exceptionHandlerNamespace: 'App/Exceptions/Handler',
 				directories: {
 					config: 'config',
 					tests: 'tests',

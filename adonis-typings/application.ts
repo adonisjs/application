@@ -109,7 +109,7 @@ declare module '@ioc:Adonis/Core/Application' {
 	 */
 	export type RcFile = {
 		typescript: boolean
-		exceptionHandlerNamespace: string
+		exceptionHandlerNamespace?: string
 		preloads: PreloadNode[]
 		metaFiles: MetaFileNode[]
 		commands: string[]
@@ -173,7 +173,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		/**
 		 * Global exception handler namespace
 		 */
-		exceptionHandlerNamespace: string
+		exceptionHandlerNamespace?: string
 
 		/**
 		 * Reference to the IoC container

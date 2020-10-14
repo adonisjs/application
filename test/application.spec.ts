@@ -57,7 +57,7 @@ test.group('Application', (group) => {
 		assert.isTrue(app.inDev)
 		assert.isFalse(app.inProduction)
 		assert.isFalse(app.isReady)
-		assert.equal(app.exceptionHandlerNamespace, 'App/Exceptions/Handler')
+		assert.isUndefined(app.exceptionHandlerNamespace)
 		assert.deepEqual(app.preloads, [])
 		assert.equal(app.environment, 'web')
 

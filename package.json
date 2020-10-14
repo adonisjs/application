@@ -74,7 +74,7 @@
 	},
 	"dependencies": {
 		"@adonisjs/config": "^2.0.1",
-		"@adonisjs/env": "^2.0.4",
+		"@adonisjs/env": "^2.0.5",
 		"@adonisjs/fold": "^7.0.7",
 		"@adonisjs/logger": "^3.0.2",
 		"@adonisjs/profiler": "^5.0.2",

@@ -115,7 +115,7 @@ export class Application implements ApplicationContract {
 	/**
 	 * The namespace of exception handler that will handle exceptions
 	 */
-	public exceptionHandlerNamespace: string
+	public exceptionHandlerNamespace?: string
 
 	/**
 	 * It is unknown until the `setup` method is called

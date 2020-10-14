@@ -60,7 +60,6 @@ export function parse(contents: { [key: string]: any }): RcFile {
 			typescript: true,
 			directories: {},
 			namespaces: {},
-			exceptionHandlerNamespace: 'App/Exceptions/Handler',
 			preloads: [],
 			aliases: {},
 			metaFiles: [],
@@ -74,7 +73,9 @@ export function parse(contents: { [key: string]: any }): RcFile {
 	return {
 		typescript: normalizedContents.typescript,
 		directories: Object.assign({}, DEFAULT_DIRECTORIES, normalizedContents.directories),
-		exceptionHandlerNamespace: normalizedContents.exceptionHandlerNamespace,
+		...(normalizedContents.exceptionHandlerNamespace
+			? { exceptionHandlerNamespace: normalizedContents.exceptionHandlerNamespace }
+			: {}),
 		preloads: normalizedContents.preloads.map((preload: PreloadNode | string, index: number) => {
 			if (typeof preload === 'string') {
 				return {
