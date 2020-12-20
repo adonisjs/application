@@ -49,6 +49,7 @@ export class Application implements ApplicationContract {
 	public profiler: Profiler
 	public env: Env
 	public config: Config
+	public type: 'commonjs' | 'module' = 'commonjs'
 
 	/**
 	 * Available after registerProviders call
@@ -169,6 +170,7 @@ export class Application implements ApplicationContract {
 		this.appName = pkgFile.name
 		this.version = this.parseVersion(pkgFile.version)
 		this.adonisVersion = corePkgFile.version ? this.parseVersion(corePkgFile.version) : null
+		this.type = pkgFile.type
 
 		/**
 		 * Fetching following info from the `.adonisrc.json` file.
@@ -193,7 +195,9 @@ export class Application implements ApplicationContract {
 
 		try {
 			filePath = resolveFrom(this.appRoot, modulePath)
-			return require(filePath)
+			return this.type === 'commonjs' || filePath.endsWith('.json')
+				? require(filePath)
+				: import(filePath)
 		} catch (error) {
 			if (
 				['ENOENT', 'MODULE_NOT_FOUND'].includes(error.code) &&
@@ -223,6 +227,7 @@ export class Application implements ApplicationContract {
 		name: string
 		engines?: { node?: string }
 		version: string
+		type: 'commonjs' | 'module'
 	} {
 		const pkgFile = this.resolveModule('./package.json', () => {
 			return {}
@@ -231,6 +236,7 @@ export class Application implements ApplicationContract {
 			name: pkgFile.name || 'adonis-app',
 			version: pkgFile.version || '0.0.0',
 			engines: pkgFile.engines,
+			type: pkgFile.type || 'commonjs',
 		}
 	}
 
@@ -340,7 +346,7 @@ export class Application implements ApplicationContract {
 	 * Loads the environment variables by reading and parsing the
 	 * `.env` and `.env.testing` files.
 	 */
-	private loadEnvironmentVariables() {
+	private async loadEnvironmentVariables() {
 		/**
 		 * Load `.env` and `.env.testing` files from the application root. The
 		 * env loader handles the additional flags like
@@ -363,7 +369,7 @@ export class Application implements ApplicationContract {
 		/**
 		 * Attempt to load `env.(ts|js)` files to setup the validation rules
 		 */
-		this.resolveModule('./env', () => {})
+		await this.resolveModule('./env', () => {})
 
 		/**
 		 * Process environment variables. This will trigger validations as well
@@ -591,14 +597,14 @@ export class Application implements ApplicationContract {
 	 * Apart from the providers, most of the app including the container
 	 * is ready at this stage
 	 */
-	public setup(): void {
+	public async setup(): Promise<void> {
 		if (this.state !== 'initiated') {
 			return
 		}
 
 		this.state = 'setup'
 		this.registerAliases()
-		this.loadEnvironmentVariables()
+		await this.loadEnvironmentVariables()
 		this.loadConfig()
 		this.setupLogger()
 		this.setupProfiler()

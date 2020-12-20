@@ -335,7 +335,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		 * Apart from the providers, most of the app including the container
 		 * is ready at this stage
 		 */
-		setup(): void
+		setup(): Promise<void>
 
 		/**
 		 * Register providers
