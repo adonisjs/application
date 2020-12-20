@@ -40,9 +40,16 @@ async function importAll(path: string) {
 			(entry.name.endsWith('.js') || (entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts')))
 		) {
 			const name = basename(entry.name, extname(entry.name))
-			result[name] = await import(pathToFileURL(join(path, entry.name)).href)
+			const imported = await import(pathToFileURL(join(path, entry.name)).href)
+			const importedKeys = Object.keys(imported)
+			if (importedKeys.length === 1 && importedKeys[0] === 'default') {
+				result[name] = imported.default
+			} else {
+				result[name] = imported
+			}
 		}
 	}
+	return result
 }
 
 /**
@@ -423,7 +430,7 @@ export class Application implements ApplicationContract {
 		if (this.type === 'commonjs') {
 			this.config = new Config(requireAll(this.configPath()))
 		} else {
-			this.config = await new Config(importAll(this.configPath()))
+			this.config = new Config(await importAll(this.configPath()))
 		}
 		this.container.singleton('Adonis/Core/Config', () => this.config)
 	}
