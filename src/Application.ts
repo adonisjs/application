@@ -28,6 +28,7 @@ import { resolveFrom, requireAll } from '@poppinss/utils'
 import { Env, envLoader, EnvParser } from '@adonisjs/env'
 
 import { parse } from './rcParser'
+import { pathToFileURL } from 'url'
 
 /**
  * Aliases for different environments
@@ -186,18 +187,36 @@ export class Application implements ApplicationContract {
 		this.registerItselfToTheContainer()
 	}
 
+	private resolveJson(modulePath: string, onMissingCallback: (error: any) => void) {
+		let filePath: string | undefined
+
+		try {
+			filePath = resolveFrom(this.appRoot, modulePath)
+			return require(filePath)
+		} catch (error) {
+			if (
+				['ENOENT', 'MODULE_NOT_FOUND'].includes(error.code) &&
+				(!filePath || filePath === error.path)
+			) {
+				return onMissingCallback(error)
+			} else {
+				throw error
+			}
+		}
+	}
+
 	/**
 	 * Resolve a given module from the application root. The callback is invoked
 	 * when the module is missing
 	 */
-	private resolveModule(modulePath: string, onMissingCallback: (error: any) => void) {
+	private async resolveModule(modulePath: string, onMissingCallback: (error: any) => void) {
 		let filePath: string | undefined
 
 		try {
 			filePath = resolveFrom(this.appRoot, modulePath)
 			return this.type === 'commonjs' || filePath.endsWith('.json')
 				? require(filePath)
-				: import(filePath)
+				: await import(pathToFileURL(filePath).href)
 		} catch (error) {
 			if (
 				['ENOENT', 'MODULE_NOT_FOUND'].includes(error.code) &&
@@ -214,7 +233,7 @@ export class Application implements ApplicationContract {
 	 * Loads the rc file from the application root
 	 */
 	private loadRcFile() {
-		return this.resolveModule('./.adonisrc.json', () => {
+		return this.resolveJson('./.adonisrc.json', () => {
 			throw new Error('AdonisJS expects ".adonisrc.json" file to exist in the application root')
 		})
 	}
@@ -229,7 +248,7 @@ export class Application implements ApplicationContract {
 		version: string
 		type: 'commonjs' | 'module'
 	} {
-		const pkgFile = this.resolveModule('./package.json', () => {
+		const pkgFile = this.resolveJson('./package.json', () => {
 			return {}
 		})
 		return {
@@ -245,7 +264,7 @@ export class Application implements ApplicationContract {
 	 * the exception when file is missing
 	 */
 	private loadCorePackageJson(): { version?: string } {
-		const pkgFile = this.resolveModule('@adonisjs/core/package.json', () => {
+		const pkgFile = this.resolveJson('@adonisjs/core/package.json', () => {
 			return {}
 		})
 
@@ -669,25 +688,27 @@ export class Application implements ApplicationContract {
 	/**
 	 * Require files registered as preloads inside `.adonisrc.json` file
 	 */
-	public requirePreloads(): void {
-		this.preloads
-			.filter((node) => {
-				if (!node.environment || this.environment === 'unknown') {
-					return true
-				}
+	public async requirePreloads(): Promise<void> {
+		await Promise.all(
+			this.preloads
+				.filter((node) => {
+					if (!node.environment || this.environment === 'unknown') {
+						return true
+					}
 
-				return node.environment.indexOf(this.environment) > -1
-			})
-			.forEach((node) => {
-				this.profiler.profile('file:preload', node, () => {
-					this.logger.trace(node, 'file:preload')
-					this.resolveModule(node.file, (error) => {
-						if (!node.optional) {
-							throw error
-						}
-					})
+					return node.environment.indexOf(this.environment) > -1
 				})
-			})
+				.map(async (node) =>
+					this.profiler.profileAsync('file:preload', node, () => {
+						this.logger.trace(node, 'file:preload')
+						return this.resolveModule(node.file, (error) => {
+							if (!node.optional) {
+								throw error
+							}
+						})
+					})
+				)
+		)
 	}
 
 	/**

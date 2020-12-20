@@ -699,7 +699,7 @@ test.group('Application | requirePreloads', (group) => {
 		await app.setup()
 		app.registerProviders()
 		await app.bootProviders()
-		app.requirePreloads()
+		await app.requirePreloads()
 
 		assert.equal(app.container.use('Start/Foo'), 'foo')
 	})
@@ -729,7 +729,7 @@ test.group('Application | requirePreloads', (group) => {
 		await app.setup()
 		app.registerProviders()
 		await app.bootProviders()
-		app.requirePreloads()
+		await app.requirePreloads()
 
 		assert.isFalse(app.container.hasBinding('Start/Foo'))
 	})
@@ -759,7 +759,7 @@ test.group('Application | requirePreloads', (group) => {
 		await app.setup()
 		app.registerProviders()
 		await app.bootProviders()
-		app.requirePreloads()
+		await app.requirePreloads()
 
 		assert.equal(app.container.use('Start/Foo'), 'foo')
 	})
@@ -781,7 +781,7 @@ test.group('Application | requirePreloads', (group) => {
 		await app.setup()
 		app.registerProviders()
 		await app.bootProviders()
-		app.requirePreloads()
+		await app.requirePreloads()
 
 		assert.isFalse(app.container.hasBinding('Start/Foo'))
 	})
@@ -803,12 +803,16 @@ test.group('Application | requirePreloads', (group) => {
 		await app.setup()
 		app.registerProviders()
 		await app.bootProviders()
-		const fn = () => app.requirePreloads()
 
-		assert.throw(
-			fn,
-			`ENOENT: no such file or directory, open '${join(fs.basePath, 'start/foo.ts')}'`
-		)
+		try {
+			await app.requirePreloads()
+			assert.fail('unreachable')
+		} catch (err) {
+			assert.strictEqual(
+				err.message,
+				`ENOENT: no such file or directory, open '${join(fs.basePath, 'start/foo.ts')}'`
+			)
+		}
 	})
 
 	test('raise error when file has errors other then ENOENT', async (assert) => {
@@ -837,9 +841,13 @@ test.group('Application | requirePreloads', (group) => {
 		await app.setup()
 		app.registerProviders()
 		await app.bootProviders()
-		const fn = () => app.requirePreloads()
 
-		assert.throw(fn, `global.ioc.use is not a function`)
+		try {
+			await app.requirePreloads()
+			assert.fail('unreachable')
+		} catch (err) {
+			assert.strictEqual(err.message, `global.ioc.use is not a function`)
+		}
 	})
 })
 

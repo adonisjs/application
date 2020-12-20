@@ -350,7 +350,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		/**
 		 * Registers the providers
 		 */
-		requirePreloads(): void
+		requirePreloads(): Promise<void>
 
 		/**
 		 * Start the application. At this time we execute the provider's
