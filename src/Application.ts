@@ -18,7 +18,7 @@ import {
 	ApplicationContract,
 } from '@ioc:Adonis/Core/Application'
 
-import { join } from 'path'
+import { join, basename, extname } from 'path'
 import { Logger } from '@adonisjs/logger'
 import { Config } from '@adonisjs/config'
 import { Profiler } from '@adonisjs/profiler'
@@ -29,6 +29,21 @@ import { Env, envLoader, EnvParser } from '@adonisjs/env'
 
 import { parse } from './rcParser'
 import { pathToFileURL } from 'url'
+import { promises as fs } from 'fs'
+
+async function importAll(path: string) {
+	const result: Record<string, any> = {}
+	const dir = await fs.opendir(path)
+	for await (const entry of dir) {
+		if (
+			entry.isFile() &&
+			(entry.name.endsWith('.js') || (entry.name.endsWith('.ts') && !entry.name.endsWith('.d.ts')))
+		) {
+			const name = basename(entry.name, extname(entry.name))
+			result[name] = await import(pathToFileURL(join(path, entry.name)).href)
+		}
+	}
+}
 
 /**
  * Aliases for different environments
@@ -404,8 +419,12 @@ export class Application implements ApplicationContract {
 	/**
 	 * Load config and define the container binding
 	 */
-	private loadConfig() {
-		this.config = new Config(requireAll(this.configPath()))
+	private async loadConfig() {
+		if (this.type === 'commonjs') {
+			this.config = new Config(requireAll(this.configPath()))
+		} else {
+			this.config = await new Config(importAll(this.configPath()))
+		}
 		this.container.singleton('Adonis/Core/Config', () => this.config)
 	}
 
@@ -624,7 +643,7 @@ export class Application implements ApplicationContract {
 		this.state = 'setup'
 		this.registerAliases()
 		await this.loadEnvironmentVariables()
-		this.loadConfig()
+		await this.loadConfig()
 		this.setupLogger()
 		this.setupProfiler()
 	}
