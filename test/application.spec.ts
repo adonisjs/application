@@ -435,7 +435,7 @@ test.group('Application | registerProviders', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 
 		assert.equal(app.container.use('App/Foo'), 'foo')
 		assert.isFalse(app.container.hasBinding('Ace/Foo'))
@@ -489,7 +489,7 @@ test.group('Application | registerProviders', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 
 		assert.equal(app.container.use('App/Foo'), 'foo')
 		assert.equal(app.container.use('Ace/Foo'), 'foo')
@@ -544,7 +544,7 @@ test.group('Application | registerProviders', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 
 		assert.equal(app.container.use('App/Foo'), 'foo')
 		assert.equal(app.container.use('Main/Foo'), 'foo')
@@ -608,7 +608,7 @@ test.group('Application | bootProviders', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 
 		assert.equal(app.container.use('App/Foo'), 'foo')
@@ -663,7 +663,7 @@ test.group('Application | bootProviders', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 
 		assert.equal(app.container.use('App/Foo'), 'foo')
@@ -697,7 +697,7 @@ test.group('Application | requirePreloads', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 		await app.requirePreloads()
 
@@ -727,7 +727,7 @@ test.group('Application | requirePreloads', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 		await app.requirePreloads()
 
@@ -757,7 +757,7 @@ test.group('Application | requirePreloads', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 		await app.requirePreloads()
 
@@ -779,7 +779,7 @@ test.group('Application | requirePreloads', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 		await app.requirePreloads()
 
@@ -801,7 +801,7 @@ test.group('Application | requirePreloads', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 
 		try {
@@ -839,7 +839,7 @@ test.group('Application | requirePreloads', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 
 		try {
@@ -887,7 +887,7 @@ test.group('Application | start', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 		await app.start()
 
@@ -931,7 +931,7 @@ test.group('Application | start', (group) => {
 		})
 
 		await app.setup()
-		app.registerProviders()
+		await app.registerProviders()
 		await app.bootProviders()
 		await app.start()
 		await app.shutdown()

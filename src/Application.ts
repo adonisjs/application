@@ -658,23 +658,23 @@ export class Application implements ApplicationContract {
 	/**
 	 * Register providers
 	 */
-	public registerProviders(): void {
+	public async registerProviders(): Promise<void> {
 		if (this.state !== 'setup') {
 			return
 		}
 
 		this.state = 'registered'
 
-		this.profiler.profile('providers:register', {}, () => {
+		await this.profiler.profileAsync('providers:register', {}, async () => {
 			const providers =
 				this.environment !== 'web'
 					? this.rcFile.providers.concat(this.rcFile.aceProviders)
 					: this.rcFile.providers
 
 			this.logger.trace('registering providers', providers)
-			this.registrar = new Registrar([this], this.appRoot)
+			this.registrar = new Registrar([this], this.appRoot, this.type === 'module')
 
-			const registeredProviders = this.registrar
+			const registeredProviders = await this.registrar
 				.useProviders(providers, (provider) => {
 					return new provider(provider['needsApplication'] ? this : this.container)
 				})

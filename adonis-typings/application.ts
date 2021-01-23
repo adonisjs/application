@@ -162,6 +162,11 @@ declare module '@ioc:Adonis/Core/Application' {
 		readonly typescript: boolean
 
 		/**
+		 * Whether the application is written in CommonJS or ESM.
+		 */
+		readonly type: 'commonjs' | 'module'
+
+		/**
 		 * Application environment.
 		 *
 		 * - `console` is when running ace commands
@@ -340,7 +345,7 @@ declare module '@ioc:Adonis/Core/Application' {
 		/**
 		 * Register providers
 		 */
-		registerProviders(): void
+		registerProviders(): Promise<void>
 
 		/**
 		 * Booted providers
