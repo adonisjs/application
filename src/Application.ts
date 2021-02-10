@@ -24,8 +24,8 @@ import { Config } from '@adonisjs/config'
 import { Profiler } from '@adonisjs/profiler'
 import { parse as semverParse } from 'semver'
 import { Ioc, Registrar } from '@adonisjs/fold'
-import { resolveFrom, requireAll } from '@poppinss/utils'
 import { Env, envLoader, EnvParser } from '@adonisjs/env'
+import { resolveFrom, requireAll } from '@poppinss/utils/build/helpers'
 
 import { parse } from './rcParser'
 
