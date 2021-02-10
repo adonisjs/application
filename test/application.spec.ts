@@ -182,7 +182,7 @@ test.group('Application', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     const fn = () => app.switchEnvironment('repl')
     assert.throw(fn, 'Cannot switch application environment in "setup" state')
@@ -208,7 +208,7 @@ test.group('Application | setup', (group) => {
       },
     })
 
-    app.setup()
+    await app.setup()
     assert.deepEqual(app.container.importAliases, {
       App: join(fs.basePath, './app'),
     })
@@ -219,12 +219,14 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(process.env.ENV_APP_NAME, 'adonisjs')
   })
 
   test('run environment variables validations', async (assert) => {
+    assert.plan(1)
+
     await fs.add('.env', 'ENV_APP_NAME=foo')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
     await fs.add(
@@ -238,17 +240,20 @@ test.group('Application | setup', (group) => {
     )
 
     const app = getApp({})
-    const fn = () => app.setup()
-    assert.throw(
-      fn,
-      'E_INVALID_ENV_VALUE: Value for environment variable "ENV_APP_NAME" must be one of "adonisjs,adonis"'
-    )
+    try {
+      await app.setup()
+    } catch ({ message }) {
+      assert.equal(
+        message,
+        'E_INVALID_ENV_VALUE: Value for environment variable "ENV_APP_NAME" must be one of "adonisjs,adonis", instead received "foo"'
+      )
+    }
   })
 
   test('do no t raise error when .env file is missing', async () => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
     const app = getApp({})
-    app.setup()
+    await app.setup()
   })
 
   test('load env file from a different location', async (assert) => {
@@ -257,7 +262,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(process.env.ENV_APP_NAME, 'adonisjs')
   })
@@ -267,7 +272,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'development')
   })
@@ -277,7 +282,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'development')
   })
@@ -287,7 +292,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'staging')
   })
@@ -297,7 +302,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'staging')
   })
@@ -307,7 +312,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'production')
   })
@@ -317,7 +322,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'production')
   })
@@ -327,7 +332,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'testing')
   })
@@ -337,7 +342,7 @@ test.group('Application | setup', (group) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.equal(app.nodeEnvironment, 'testing')
   })
@@ -352,7 +357,7 @@ test.group('Application | setup', (group) => {
     )
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     const Config = app.container.use('Adonis/Core/Config')
     assert.equal(Config.get('app.logger.name'), 'foobar')
@@ -368,7 +373,7 @@ test.group('Application | setup', (group) => {
     )
 
     const app = getApp({})
-    app.setup()
+    await app.setup()
 
     assert.instanceOf(app.container.use('Adonis/Core/Logger'), Logger)
     assert.instanceOf(app.container.use('Adonis/Core/Profiler'), Profiler)
@@ -430,7 +435,7 @@ test.group('Application | registerProviders', (group) => {
       aceProviders: ['./providers/AceProvider'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
@@ -484,7 +489,7 @@ test.group('Application | registerProviders', (group) => {
       aceProviders: ['./providers/AceProvider'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
@@ -539,7 +544,7 @@ test.group('Application | registerProviders', (group) => {
       providers: ['./providers/AppProvider'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
@@ -603,7 +608,7 @@ test.group('Application | bootProviders', (group) => {
       providers: ['./providers/AppProvider'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
 
@@ -658,7 +663,7 @@ test.group('Application | bootProviders', (group) => {
       aceProviders: ['./providers/AceProvider'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
 
@@ -692,10 +697,10 @@ test.group('Application | requirePreloads', (group) => {
       preloads: ['./start/foo'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
-    app.requirePreloads()
+    await app.requirePreloads()
 
     assert.equal(app.container.use('Start/Foo'), 'foo')
   })
@@ -722,10 +727,10 @@ test.group('Application | requirePreloads', (group) => {
       ],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
-    app.requirePreloads()
+    await app.requirePreloads()
 
     assert.isFalse(app.container.hasBinding('Start/Foo'))
   })
@@ -752,10 +757,10 @@ test.group('Application | requirePreloads', (group) => {
       ],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
-    app.requirePreloads()
+    await app.requirePreloads()
 
     assert.equal(app.container.use('Start/Foo'), 'foo')
   })
@@ -774,15 +779,17 @@ test.group('Application | requirePreloads', (group) => {
       ],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
-    app.requirePreloads()
+    await app.requirePreloads()
 
     assert.isFalse(app.container.hasBinding('Start/Foo'))
   })
 
   test('raise error when not marked as optional and is missing', async (assert) => {
+    assert.plan(1)
+
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -796,18 +803,22 @@ test.group('Application | requirePreloads', (group) => {
       ],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
-    const fn = () => app.requirePreloads()
-
-    assert.throw(
-      fn,
-      `ENOENT: no such file or directory, open '${join(fs.basePath, 'start/foo.ts')}'`
-    )
+    try {
+      await app.requirePreloads()
+    } catch ({ message }) {
+      assert.equal(
+        message,
+        `ENOENT: no such file or directory, open '${join(fs.basePath, 'start/foo.ts')}'`
+      )
+    }
   })
 
   test('raise error when file has errors other then ENOENT', async (assert) => {
+    assert.plan(1)
+
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -830,12 +841,15 @@ test.group('Application | requirePreloads', (group) => {
       ],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
-    const fn = () => app.requirePreloads()
 
-    assert.throw(fn, `global.ioc.use is not a function`)
+    try {
+      await app.requirePreloads()
+    } catch ({ message }) {
+      assert.equal(message, 'global.ioc.use is not a function')
+    }
   })
 })
 
@@ -874,7 +888,7 @@ test.group('Application | start', (group) => {
       providers: ['./providers/AppProvider'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
     await app.start()
@@ -918,7 +932,7 @@ test.group('Application | start', (group) => {
       providers: ['./providers/AppProvider'],
     })
 
-    app.setup()
+    await app.setup()
     await app.registerProviders()
     await app.bootProviders()
     await app.start()

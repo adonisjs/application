@@ -601,7 +601,7 @@ export class Application implements ApplicationContract {
    * Apart from the providers, most of the app including the container
    * is ready at this stage
    */
-  public setup(): void {
+  public async setup(): Promise<void> {
     if (this.state !== 'initiated') {
       return
     }
@@ -673,7 +673,7 @@ export class Application implements ApplicationContract {
   /**
    * Require files registered as preloads inside `.adonisrc.json` file
    */
-  public requirePreloads(): void {
+  public async requirePreloads(): Promise<void> {
     this.preloads
       .filter((node) => {
         if (!node.environment || this.environment === 'unknown') {
