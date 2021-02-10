@@ -42,6 +42,8 @@ const TEST_ENVS = ['test', 'testing']
  * in which your AdonisJs app is running
  */
 export class Application implements ApplicationContract {
+  public helpers = helpers
+
   /**
    * Available after setup call
    */

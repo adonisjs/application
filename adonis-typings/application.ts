@@ -189,6 +189,7 @@ declare module '@ioc:Adonis/Core/Application' {
     profiler: ProfilerContract
     env: EnvContract
     config: ConfigContract
+    helpers: typeof helpers
 
     /**
      * Reference to preloads defined inside `.adonisrc.json` file
