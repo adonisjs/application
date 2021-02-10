@@ -8,6 +8,7 @@
  */
 
 declare module '@ioc:Adonis/Core/Application' {
+  import * as helpers from '@poppinss/utils/build/helpers'
   import { IocContract } from '@adonisjs/fold'
   import { EnvContract } from '@ioc:Adonis/Core/Env'
   import { ConfigContract } from '@ioc:Adonis/Core/Config'
@@ -24,6 +25,7 @@ declare module '@ioc:Adonis/Core/Application' {
     'Adonis/Core/Logger': LoggerContract
     'Adonis/Core/Config': ConfigContract
     'Adonis/Core/Env': EnvContract
+    'Adonis/Core/Helpers': typeof helpers
   }
 
   export type ApplicationStates =
@@ -340,7 +342,7 @@ declare module '@ioc:Adonis/Core/Application' {
     /**
      * Register providers
      */
-    registerProviders(): void
+    registerProviders(): Promise<void>
 
     /**
      * Booted providers

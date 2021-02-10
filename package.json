@@ -73,9 +73,9 @@
 	"dependencies": {
 		"@adonisjs/config": "^3.0.0",
 		"@adonisjs/env": "^3.0.0",
-		"@adonisjs/fold": "^7.0.7",
+		"@adonisjs/fold": "^8.0.0",
 		"@adonisjs/logger": "^4.0.0",
-		"@adonisjs/profiler": "^5.0.4",
+		"@adonisjs/profiler": "^6.0.0",
 		"@poppinss/utils": "^3.0.2",
 		"semver": "^7.3.4"
 	},

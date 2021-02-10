@@ -25,7 +25,7 @@ import { Profiler } from '@adonisjs/profiler'
 import { parse as semverParse } from 'semver'
 import { Ioc, Registrar } from '@adonisjs/fold'
 import { Env, envLoader, EnvParser } from '@adonisjs/env'
-import { resolveFrom, requireAll } from '@poppinss/utils/build/helpers'
+import * as helpers from '@poppinss/utils/build/helpers'
 
 import { parse } from './rcParser'
 
@@ -182,6 +182,7 @@ export class Application implements ApplicationContract {
     this.setEnvVars()
     this.setupGlobals()
     this.registerItselfToTheContainer()
+    this.setupHelpers()
   }
 
   /**
@@ -192,7 +193,7 @@ export class Application implements ApplicationContract {
     let filePath: string | undefined
 
     try {
-      filePath = resolveFrom(this.appRoot, modulePath)
+      filePath = helpers.resolveFrom(this.appRoot, modulePath)
       return require(filePath)
     } catch (error) {
       if (
@@ -380,7 +381,7 @@ export class Application implements ApplicationContract {
    * Load config and define the container binding
    */
   private loadConfig() {
-    this.config = new Config(requireAll(this.configPath()))
+    this.config = new Config(helpers.requireAll(this.configPath()))
     this.container.singleton('Adonis/Core/Config', () => this.config)
   }
 
@@ -388,7 +389,7 @@ export class Application implements ApplicationContract {
    * Setup logger
    */
   private setupLogger() {
-    const config = this.container.use('Adonis/Core/Config').get('app.logger', {})
+    const config = this.container.resolveBinding('Adonis/Core/Config').get('app.logger', {})
     this.logger = new Logger(config)
     this.container.singleton('Adonis/Core/Logger', () => this.logger)
   }
@@ -397,10 +398,17 @@ export class Application implements ApplicationContract {
    * Setup profiler
    */
   private setupProfiler() {
-    const config = this.container.use('Adonis/Core/Config').get('app.profiler', {})
-    const logger = this.container.use('Adonis/Core/Logger')
+    const config = this.container.resolveBinding('Adonis/Core/Config').get('app.profiler', {})
+    const logger = this.container.resolveBinding('Adonis/Core/Logger')
     this.profiler = new Profiler(this.appRoot, logger, config)
     this.container.singleton('Adonis/Core/Profiler', () => this.profiler)
+  }
+
+  /**
+   * Setup helpers
+   */
+  private setupHelpers() {
+    this.container.bind('Adonis/Core/Helpers', () => helpers)
   }
 
   /**
@@ -607,14 +615,14 @@ export class Application implements ApplicationContract {
   /**
    * Register providers
    */
-  public registerProviders(): void {
+  public async registerProviders(): Promise<void> {
     if (this.state !== 'setup') {
       return
     }
 
     this.state = 'registered'
 
-    this.profiler.profile('providers:register', {}, () => {
+    await this.profiler.profile('providers:register', {}, async () => {
       const providers =
         this.environment !== 'web'
           ? this.rcFile.providers.concat(this.rcFile.aceProviders)
@@ -623,7 +631,7 @@ export class Application implements ApplicationContract {
       this.logger.trace('registering providers', providers)
       this.registrar = new Registrar([this], this.appRoot)
 
-      const registeredProviders = this.registrar
+      const registeredProviders = await this.registrar
         .useProviders(providers, (provider) => {
           return new provider(provider['needsApplication'] ? this : this.container)
         })

@@ -209,7 +209,7 @@ test.group('Application | setup', (group) => {
     })
 
     app.setup()
-    assert.deepEqual(app.container.directoryAliases, {
+    assert.deepEqual(app.container.importAliases, {
       App: join(fs.basePath, './app'),
     })
   })
@@ -431,7 +431,7 @@ test.group('Application | registerProviders', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
     assert.isFalse(app.container.hasBinding('Ace/Foo'))
@@ -485,7 +485,7 @@ test.group('Application | registerProviders', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
     assert.equal(app.container.use('Ace/Foo'), 'foo')
@@ -540,7 +540,7 @@ test.group('Application | registerProviders', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
     assert.equal(app.container.use('Main/Foo'), 'foo')
@@ -604,7 +604,7 @@ test.group('Application | bootProviders', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
@@ -659,7 +659,7 @@ test.group('Application | bootProviders', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
@@ -693,7 +693,7 @@ test.group('Application | requirePreloads', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     app.requirePreloads()
 
@@ -723,7 +723,7 @@ test.group('Application | requirePreloads', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     app.requirePreloads()
 
@@ -753,7 +753,7 @@ test.group('Application | requirePreloads', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     app.requirePreloads()
 
@@ -775,7 +775,7 @@ test.group('Application | requirePreloads', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     app.requirePreloads()
 
@@ -797,7 +797,7 @@ test.group('Application | requirePreloads', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     const fn = () => app.requirePreloads()
 
@@ -831,7 +831,7 @@ test.group('Application | requirePreloads', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     const fn = () => app.requirePreloads()
 
@@ -875,7 +875,7 @@ test.group('Application | start', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     await app.start()
 
@@ -919,7 +919,7 @@ test.group('Application | start', (group) => {
     })
 
     app.setup()
-    app.registerProviders()
+    await app.registerProviders()
     await app.bootProviders()
     await app.start()
     await app.shutdown()
