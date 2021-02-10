@@ -1,35 +1,35 @@
 {
-	"name": "adonisjs",
-	"directories": {
-		"config": "config",
-		"public": "public",
-		"database": "database",
-		"migrations": "database/migrations",
-		"seeds": "database/seeds",
-		"resources": "resources",
-		"views": "resources/views"
-	},
-	"exceptionHandlerNamespace": "App/Exceptions/Handler",
-	"preloads": [
-		{
-			"file": "start/routes",
-			"environment": ["console", "test"]
-		},
-		{
-			"file": "start/kernel"
-		}
-	],
-	"aliases": {
-		"App": "app",
-		"Contracts": "contracts"
-	},
-	"metaFiles": [
-		".env",
-		"package.json",
-		".adonisrc.json",
-		{
-			"pattern": "foo/*",
-			"reloadServer": true
-		}
-	]
+  "name": "adonisjs",
+  "directories": {
+    "config": "config",
+    "public": "public",
+    "database": "database",
+    "migrations": "database/migrations",
+    "seeds": "database/seeds",
+    "resources": "resources",
+    "views": "resources/views"
+  },
+  "exceptionHandlerNamespace": "App/Exceptions/Handler",
+  "preloads": [
+    {
+      "file": "start/routes",
+      "environment": ["console", "test"]
+    },
+    {
+      "file": "start/kernel"
+    }
+  ],
+  "aliases": {
+    "App": "app",
+    "Contracts": "contracts"
+  },
+  "metaFiles": [
+    ".env",
+    "package.json",
+    ".adonisrc.json",
+    {
+      "pattern": "foo/*",
+      "reloadServer": true
+    }
+  ]
 }
