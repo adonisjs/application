@@ -97,6 +97,6 @@
   "homepage": "https://github.com/adonisjs/application#readme",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "next"
   }
 }
