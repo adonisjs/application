@@ -42,6 +42,7 @@ test.group('Rc Parser', () => {
       aliases: {},
       metaFiles: [],
       commands: [],
+      commandsAliases: {},
       providers: [],
       aceProviders: [],
     })
@@ -85,6 +86,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -147,6 +149,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -197,6 +200,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -258,6 +262,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -307,6 +312,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [{ pattern: 'foo.json', reloadServer: true }],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -356,6 +362,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [{ pattern: 'foo.json', reloadServer: false }],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -411,6 +418,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -454,6 +462,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: ['./foo/bar'],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -497,6 +506,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: ['@adonisjs/core'],
         aceProviders: [],
       }
@@ -540,6 +550,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: ['@adonisjs/commands'],
       }
@@ -589,6 +600,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -643,6 +655,7 @@ test.group('Rc Parser', () => {
         aliases: {},
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }
@@ -691,6 +704,7 @@ test.group('Rc Parser', () => {
         },
         metaFiles: [],
         commands: [],
+        commandsAliases: {},
         providers: [],
         aceProviders: [],
       }

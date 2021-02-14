@@ -62,6 +62,7 @@ export function parse(contents: { [key: string]: any }): RcFile {
       namespaces: {},
       preloads: [],
       aliases: {},
+      commandsAliases: {},
       metaFiles: [],
       commands: [],
       providers: [],
@@ -125,6 +126,7 @@ export function parse(contents: { [key: string]: any }): RcFile {
       }
     }),
     commands: normalizedContents.commands,
+    commandsAliases: normalizedContents.commandsAliases,
     providers: normalizedContents.providers,
     aceProviders: normalizedContents.aceProviders,
     raw: contents,

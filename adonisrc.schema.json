@@ -122,6 +122,14 @@
         "type": "string"
       }
     },
+    "commandsAliases": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "type": "string"
+        }
+      }
+    },
     "aliases": {
       "type": "object",
       "patternProperties": {

@@ -118,6 +118,9 @@ declare module '@ioc:Adonis/Core/Application' {
     providers: string[]
     aceProviders: string[]
     directories: DirectoriesNode
+    commandsAliases: {
+      [key: string]: string
+    }
     aliases: {
       [key: string]: string
     }

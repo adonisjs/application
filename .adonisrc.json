@@ -1,5 +1,7 @@
 {
   "name": "adonisjs",
+  "typescript": true,
+  "providers": [],
   "directories": {
     "config": "config",
     "public": "public",
