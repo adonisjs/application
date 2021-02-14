@@ -34,12 +34,12 @@
     "@adonisjs/mrm-preset": "^3.0.0",
     "@adonisjs/require-ts": "^2.0.2",
     "@poppinss/dev-utils": "^1.1.0",
-    "@types/node": "^14.14.25",
+    "@types/node": "^14.14.27",
     "@types/semver": "^7.3.4",
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "^3.3.0",
     "del-cli": "^3.0.1",
-    "eslint": "^7.19.0",
+    "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-adonis": "^1.2.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -48,9 +48,9 @@
     "japa": "^3.1.1",
     "jsonschema": "^1.4.0",
     "mrm": "^2.5.18",
-    "np": "^7.3.0",
+    "np": "^7.4.0",
     "prettier": "^2.2.1",
-    "typescript": "^4.1.4"
+    "typescript": "^4.1.5"
   },
   "nyc": {
     "exclude": [
@@ -76,7 +76,7 @@
     "@adonisjs/fold": "^8.0.1",
     "@adonisjs/logger": "^4.0.0",
     "@adonisjs/profiler": "^6.0.1",
-    "@poppinss/utils": "^3.0.2",
+    "@poppinss/utils": "^3.0.3",
     "semver": "^7.3.4"
   },
   "np": {
