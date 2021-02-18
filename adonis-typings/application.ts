@@ -268,6 +268,7 @@ declare module '@ioc:Adonis/Core/Application' {
 
     /**
      * Make path to a file or directory from the application source root
+     * @deprecated Use `makePath` instead
      */
     makePathFromCwd(...paths: string[]): string
 

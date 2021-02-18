@@ -470,8 +470,13 @@ export class Application implements ApplicationContract {
    * Makes the path to a directory from `cliCwd` vs the `appRoot`. This is
    * helpful when we want path inside the project root and not the
    * build directory
+   * @deprecated Use `makePath` instead
    */
   public makePathFromCwd(...paths: string[]): string {
+    process.emitWarning(
+      'DeprecationWarning',
+      'application.makePathFromCwd() is deprecated. Use application.makePath() instead'
+    )
     return join(this.cliCwd || this.appRoot, ...paths)
   }
   /**
