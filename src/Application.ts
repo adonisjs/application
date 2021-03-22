@@ -640,7 +640,7 @@ export class Application implements ApplicationContract {
 
       const registeredProviders = await this.registrar
         .useProviders(providers, (provider) => {
-          return new provider(provider['needsApplication'] ? this : this.container)
+          return new provider(this)
         })
         .register()
 
