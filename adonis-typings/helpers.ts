@@ -8,8 +8,5 @@
  */
 
 declare module '@ioc:Adonis/Core/Helpers' {
-  import * as helpers from '@poppinss/utils/build/helpers'
-
-  const Helpers: typeof helpers
-  export default Helpers
+  export * from '@poppinss/utils/build/helpers'
 }

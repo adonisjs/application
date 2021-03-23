@@ -8,9 +8,9 @@
  */
 
 declare module '@ioc:Adonis/Core/Application' {
-  import Helpers from '@ioc:Adonis/Core/Helpers'
   import { IocContract } from '@adonisjs/fold'
   import { EnvContract } from '@ioc:Adonis/Core/Env'
+  import * as Helpers from '@ioc:Adonis/Core/Helpers'
   import { ConfigContract } from '@ioc:Adonis/Core/Config'
   import { LoggerContract } from '@ioc:Adonis/Core/Logger'
   import { ProfilerContract } from '@ioc:Adonis/Core/Profiler'

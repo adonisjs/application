@@ -12,6 +12,7 @@ import { join } from 'path'
 import { Logger } from '@adonisjs/logger'
 import { Profiler } from '@adonisjs/profiler'
 import { Filesystem } from '@poppinss/dev-utils'
+import * as helpers from '@poppinss/utils/build/helpers'
 import { Application } from '../src/Application'
 
 const fs = new Filesystem(join(__dirname, 'app'))
@@ -89,6 +90,8 @@ test.group('Application', (group) => {
     assert.isFunction(global[Symbol.for('ioc.use')])
     assert.isFunction(global[Symbol.for('ioc.make')])
     assert.isFunction(global[Symbol.for('ioc.call')])
+
+    assert.deepEqual(app.helpers, helpers)
   })
 
   test('resolve the namespace directory from rc file content', (assert) => {
@@ -250,7 +253,7 @@ test.group('Application | setup', (group) => {
     }
   })
 
-  test('do no t raise error when .env file is missing', async () => {
+  test('do not raise error when .env file is missing', async () => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
     const app = getApp({})
     await app.setup()
