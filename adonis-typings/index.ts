@@ -12,3 +12,4 @@
 /// <reference path="../node_modules/@adonisjs/logger/build/adonis-typings/logger.d.ts" />
 /// <reference path="../node_modules/@adonisjs/profiler/build/adonis-typings/profiler.d.ts" />
 /// <reference path="./application.ts" />
+/// <reference path="./helpers.ts" />

@@ -8,7 +8,7 @@
  */
 
 declare module '@ioc:Adonis/Core/Application' {
-  import * as helpers from '@poppinss/utils/build/helpers'
+  import Helpers from '@ioc:Adonis/Core/Helpers'
   import { IocContract } from '@adonisjs/fold'
   import { EnvContract } from '@ioc:Adonis/Core/Env'
   import { ConfigContract } from '@ioc:Adonis/Core/Config'
@@ -25,7 +25,7 @@ declare module '@ioc:Adonis/Core/Application' {
     'Adonis/Core/Logger': LoggerContract
     'Adonis/Core/Config': ConfigContract
     'Adonis/Core/Env': EnvContract
-    'Adonis/Core/Helpers': typeof helpers
+    'Adonis/Core/Helpers': typeof Helpers
   }
 
   export type ApplicationStates =
@@ -192,7 +192,7 @@ declare module '@ioc:Adonis/Core/Application' {
     profiler: ProfilerContract
     env: EnvContract
     config: ConfigContract
-    helpers: typeof helpers
+    helpers: typeof Helpers
 
     /**
      * Reference to preloads defined inside `.adonisrc.json` file
