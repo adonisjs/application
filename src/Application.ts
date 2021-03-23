@@ -563,7 +563,7 @@ export class Application implements ApplicationContract {
    * source and not the build directory.
    */
   public tmpPath(...paths: string[]): string {
-    return this.makePathFromCwd(this.directoriesMap.get('tmp')!, ...paths)
+    return this.makePath(this.directoriesMap.get('tmp')!, ...paths)
   }
 
   /**
