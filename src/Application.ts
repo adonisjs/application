@@ -22,7 +22,8 @@ import { join } from 'path'
 import { Logger } from '@adonisjs/logger'
 import { Config } from '@adonisjs/config'
 import { Profiler } from '@adonisjs/profiler'
-import { parse as semverParse } from 'semver'
+import { parse as semverParse, satisfies as semverSatisfies } from 'semver'
+import { Exception } from '@poppinss/utils'
 import { Ioc, Registrar } from '@adonisjs/fold'
 import { Env, envLoader, EnvParser } from '@adonisjs/env'
 import * as helpers from '@poppinss/utils/build/helpers'
@@ -164,6 +165,7 @@ export class Application implements ApplicationContract {
      */
     const pkgFile = this.loadAppPackageJson()
     const corePkgFile = this.loadCorePackageJson()
+    this.verifyNodeEngine(pkgFile.engines)
 
     /**
      * Fetching following info from the package file
@@ -185,6 +187,24 @@ export class Application implements ApplicationContract {
     this.setupGlobals()
     this.registerItselfToTheContainer()
     this.setupHelpers()
+  }
+
+  /**
+   * Verify the node version when defined under "engines" object in
+   * "packages.json" file.
+   */
+  private verifyNodeEngine(engines?: { node?: string }) {
+    const nodeEngine = engines?.node
+    if (!nodeEngine) {
+      return
+    }
+
+    if (!semverSatisfies(process.version, nodeEngine)) {
+      throw new Exception(
+        `The installed Node.js version "${process.version}" does not satisfies the expected version "${nodeEngine}" defined inside package.json file`,
+        500
+      )
+    }
   }
 
   /**

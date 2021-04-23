@@ -142,7 +142,7 @@ test.group('Rc Parser', () => {
         preloads: [
           {
             file: 'foo',
-            environment: ['web', 'console', 'test'],
+            environment: ['web', 'console', 'test', 'repl'],
             optional: false,
           },
         ],
@@ -593,7 +593,7 @@ test.group('Rc Parser', () => {
         preloads: [
           {
             file: './start/routes',
-            environment: ['web', 'console', 'test'],
+            environment: ['web', 'console', 'test', 'repl'],
             optional: false,
           },
         ],
@@ -643,12 +643,12 @@ test.group('Rc Parser', () => {
         preloads: [
           {
             file: './start/routes',
-            environment: ['web', 'console', 'test'],
+            environment: ['web', 'console', 'test', 'repl'],
             optional: false,
           },
           {
             file: './start/kernel',
-            environment: ['web', 'console', 'test'],
+            environment: ['web', 'console', 'test', 'repl'],
             optional: true,
           },
         ],

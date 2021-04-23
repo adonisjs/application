@@ -235,11 +235,11 @@ test.group('Application | setup', (group) => {
     await fs.add(
       'env.ts',
       `
-			const Env = global[Symbol.for('ioc.use')]('Adonis/Core/Env')
-			Env.rules({
-				ENV_APP_NAME: Env.schema.enum(['adonisjs', 'adonis'])
-			})
-		`
+      const Env = global[Symbol.for('ioc.use')]('Adonis/Core/Env')
+      Env.rules({
+        ENV_APP_NAME: Env.schema.enum(['adonisjs', 'adonis'])
+      })
+    `
     )
 
     const app = getApp({})
@@ -355,8 +355,8 @@ test.group('Application | setup', (group) => {
     await fs.add(
       'config/app.ts',
       `export const logger = {
-			name: 'foobar'
-		}`
+      name: 'foobar'
+    }`
     )
 
     const app = getApp({})
@@ -371,8 +371,8 @@ test.group('Application | setup', (group) => {
     await fs.add(
       'config/app.ts',
       `export const logger = {
-			name: 'foobar'
-		}`
+      name: 'foobar'
+    }`
     )
 
     const app = getApp({})
@@ -380,6 +380,31 @@ test.group('Application | setup', (group) => {
 
     assert.instanceOf(app.container.use('Adonis/Core/Logger'), Logger)
     assert.instanceOf(app.container.use('Adonis/Core/Profiler'), Profiler)
+  })
+
+  test('raise exception when "engines.node" does not satisfy node version', async (assert) => {
+    await fs.add('.env', '')
+    await fs.add(
+      'package.json',
+      JSON.stringify({
+        name: 'dummy-app',
+        version: '1.0.0',
+        engines: {
+          node: '<=10.0.0',
+        },
+      })
+    )
+    await fs.add(
+      'config/app.ts',
+      `export const logger = {
+      name: 'foobar'
+    }`
+    )
+
+    assert.throw(
+      () => getApp({}),
+      `The installed Node.js version "${process.version}" does not satisfies the expected version "<=10.0.0" defined inside package.json file`
+    )
   })
 })
 
@@ -398,39 +423,39 @@ test.group('Application | registerProviders', (group) => {
     await fs.add(
       'providers/AppProvider.ts',
       `
-			export default class AppProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AppProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public register() {
-					this.application.container.bind('App/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public register() {
+          this.application.container.bind('App/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     await fs.add(
       'providers/AceProvider.ts',
       `
-			export default class AceProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AceProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public register() {
-					this.application.container.bind('Ace/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public register() {
+          this.application.container.bind('Ace/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     const app = getApp({
@@ -452,39 +477,39 @@ test.group('Application | registerProviders', (group) => {
     await fs.add(
       'providers/AppProvider.ts',
       `
-			export default class AppProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AppProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public register() {
-					this.application.container.bind('App/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public register() {
+          this.application.container.bind('App/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     await fs.add(
       'providers/AceProvider.ts',
       `
-			export default class AceProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AceProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public register() {
-					this.application.container.bind('Ace/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public register() {
+          this.application.container.bind('Ace/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     const app = new Application(fs.basePath, 'console', {
@@ -506,41 +531,41 @@ test.group('Application | registerProviders', (group) => {
     await fs.add(
       'providers/AppProvider.ts',
       `
-			export default class AppProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AppProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public register() {
-					this.application.container.bind('App/Foo', () => {
-						return 'foo'
-					})
-				}
+        public register() {
+          this.application.container.bind('App/Foo', () => {
+            return 'foo'
+          })
+        }
 
-				public provides = ['./MainProvider']
-			}
-		`
+        public provides = ['./MainProvider']
+      }
+    `
     )
 
     await fs.add(
       'providers/MainProvider.ts',
       `
-			export default class MainProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class MainProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public register() {
-					this.application.container.bind('Main/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public register() {
+          this.application.container.bind('Main/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     const app = getApp({
@@ -570,41 +595,41 @@ test.group('Application | bootProviders', (group) => {
     await fs.add(
       'providers/AppProvider.ts',
       `
-			export default class AppProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AppProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public async boot() {
-					this.application.container.bind('App/Foo', () => {
-						return 'foo'
-					})
-				}
+        public async boot() {
+          this.application.container.bind('App/Foo', () => {
+            return 'foo'
+          })
+        }
 
-				public provides = ['./MainProvider']
-			}
-		`
+        public provides = ['./MainProvider']
+      }
+    `
     )
 
     await fs.add(
       'providers/MainProvider.ts',
       `
-			export default class MainProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class MainProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public async boot() {
-					this.application.container.bind('Main/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public async boot() {
+          this.application.container.bind('Main/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     const app = getApp({
@@ -626,39 +651,39 @@ test.group('Application | bootProviders', (group) => {
     await fs.add(
       'providers/AppProvider.ts',
       `
-			export default class AppProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AppProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public async boot() {
-					this.application.container.bind('App/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public async boot() {
+          this.application.container.bind('App/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     await fs.add(
       'providers/AceProvider.ts',
       `
-			export default class AceProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AceProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public async boot() {
-					this.application.container.bind('Ace/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public async boot() {
+          this.application.container.bind('Ace/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     const app = new Application(fs.basePath, 'console', {
@@ -690,10 +715,10 @@ test.group('Application | requirePreloads', (group) => {
     await fs.add(
       'start/foo.ts',
       `
-			global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
-				return 'foo'
-			})
-		`
+      global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
+        return 'foo'
+      })
+    `
     )
 
     const app = getApp({
@@ -715,10 +740,10 @@ test.group('Application | requirePreloads', (group) => {
     await fs.add(
       'start/foo.ts',
       `
-			global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
-				return 'foo'
-			})
-		`
+      global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
+        return 'foo'
+      })
+    `
     )
 
     const app = getApp({
@@ -745,10 +770,10 @@ test.group('Application | requirePreloads', (group) => {
     await fs.add(
       'start/foo.ts',
       `
-			global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
-				return 'foo'
-			})
-		`
+      global[Symbol.for('ioc.use')]('Adonis/Core/Application').container.bind('Start/Foo', () => {
+        return 'foo'
+      })
+    `
     )
 
     const app = getApp({
@@ -828,10 +853,10 @@ test.group('Application | requirePreloads', (group) => {
     await fs.add(
       'start/foo.ts',
       `
-			global['ioc.use']('Adonis/Core/Application').container.bind('Start/Foo', () => {
-				return 'foo'
-			})
-		`
+      global['ioc.use']('Adonis/Core/Application').container.bind('Start/Foo', () => {
+        return 'foo'
+      })
+    `
     )
 
     const app = getApp({
@@ -871,20 +896,20 @@ test.group('Application | start', (group) => {
     await fs.add(
       'providers/AppProvider.ts',
       `
-			export default class AppProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AppProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public async ready() {
-					this.application.container.bind('App/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public async ready() {
+          this.application.container.bind('App/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     const app = getApp({
@@ -915,20 +940,20 @@ test.group('Application | start', (group) => {
     await fs.add(
       'providers/AppProvider.ts',
       `
-			export default class AppProvider {
-				constructor(application) {
-					this.application = application
-				}
+      export default class AppProvider {
+        constructor(application) {
+          this.application = application
+        }
 
-				public static needsApplication = true
+        public static needsApplication = true
 
-				public async shutdown() {
-					this.application.container.bind('App/Foo', () => {
-						return 'foo'
-					})
-				}
-			}
-		`
+        public async shutdown() {
+          this.application.container.bind('App/Foo', () => {
+            return 'foo'
+          })
+        }
+      }
+    `
     )
 
     const app = getApp({

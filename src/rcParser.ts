@@ -98,7 +98,9 @@ export function parse(contents: { [key: string]: any }): RcFile {
         file: preload.file,
         optional: preload.optional === undefined ? false : preload.optional,
         environment:
-          preload.environment === undefined ? ['web', 'console', 'test'] : preload.environment,
+          preload.environment === undefined
+            ? ['web', 'console', 'test', 'repl']
+            : preload.environment,
       }
     }),
     namespaces: Object.assign({}, DEFAULT_NAMESPACES, normalizedContents.namespaces),
