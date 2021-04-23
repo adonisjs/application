@@ -82,7 +82,7 @@ export function parse(contents: { [key: string]: any }): RcFile {
         return {
           file: preload,
           optional: false,
-          environment: ['web', 'console', 'test'],
+          environment: ['web', 'console', 'test', 'repl'],
         }
       }
 
