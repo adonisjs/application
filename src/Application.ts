@@ -201,7 +201,7 @@ export class Application implements ApplicationContract {
 
     if (!semverSatisfies(process.version, nodeEngine)) {
       throw new Exception(
-        `The installed Node.js version "${process.version}" does not satisfies the expected version "${nodeEngine}" defined inside package.json file`,
+        `The installed Node.js version "${process.version}" does not satisfy the expected version "${nodeEngine}" defined inside package.json file`,
         500
       )
     }
