@@ -403,7 +403,7 @@ test.group('Application | setup', (group) => {
 
     assert.throw(
       () => getApp({}),
-      `The installed Node.js version "${process.version}" does not satisfies the expected version "<=10.0.0" defined inside package.json file`
+      `The installed Node.js version "${process.version}" does not satisfy the expected version "<=10.0.0" defined inside package.json file`
     )
   })
 })
