@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+/// <reference path="./index.ts" />
+
 declare module '@ioc:Adonis/Core/Application' {
   import { IocContract } from '@adonisjs/fold'
   import { EnvContract } from '@ioc:Adonis/Core/Env'
