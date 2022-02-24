@@ -22,11 +22,11 @@ import { join } from 'path'
 import { Logger } from '@adonisjs/logger'
 import { Config } from '@adonisjs/config'
 import { Profiler } from '@adonisjs/profiler'
-import { parse as semverParse, satisfies as semverSatisfies } from 'semver'
 import { Exception } from '@poppinss/utils'
 import { Ioc, Registrar } from '@adonisjs/fold'
 import { Env, envLoader, EnvParser } from '@adonisjs/env'
 import * as helpers from '@poppinss/utils/build/helpers'
+import { parse as semverParse, satisfies as semverSatisfies } from 'semver'
 
 import { parse } from './rcParser'
 
@@ -650,10 +650,7 @@ export class Application implements ApplicationContract {
     this.state = 'registered'
 
     await this.profiler.profile('providers:register', {}, async () => {
-      const providers =
-        this.environment !== 'web'
-          ? this.rcFile.providers.concat(this.rcFile.aceProviders)
-          : this.rcFile.providers
+      const providers = this.rcFile.providers.concat(this.rcFile.aceProviders)
 
       this.logger.trace('registering providers', providers)
       this.registrar = new Registrar([this], this.appRoot)

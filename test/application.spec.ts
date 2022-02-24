@@ -467,60 +467,6 @@ test.group('Application | registerProviders', (group) => {
     await app.registerProviders()
 
     assert.equal(app.container.use('App/Foo'), 'foo')
-    assert.isFalse(app.container.hasBinding('Ace/Foo'))
-  })
-
-  test('register ace providers when environment is console', async (assert) => {
-    await fs.add('.env', '')
-    await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
-
-    await fs.add(
-      'providers/AppProvider.ts',
-      `
-      export default class AppProvider {
-        constructor(application) {
-          this.application = application
-        }
-
-        public static needsApplication = true
-
-        public register() {
-          this.application.container.bind('App/Foo', () => {
-            return 'foo'
-          })
-        }
-      }
-    `
-    )
-
-    await fs.add(
-      'providers/AceProvider.ts',
-      `
-      export default class AceProvider {
-        constructor(application) {
-          this.application = application
-        }
-
-        public static needsApplication = true
-
-        public register() {
-          this.application.container.bind('Ace/Foo', () => {
-            return 'foo'
-          })
-        }
-      }
-    `
-    )
-
-    const app = new Application(fs.basePath, 'console', {
-      providers: ['./providers/AppProvider'],
-      aceProviders: ['./providers/AceProvider'],
-    })
-
-    await app.setup()
-    await app.registerProviders()
-
-    assert.equal(app.container.use('App/Foo'), 'foo')
     assert.equal(app.container.use('Ace/Foo'), 'foo')
   })
 
