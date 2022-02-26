@@ -166,6 +166,44 @@
       "additionalProperties": {
         "type": "string"
       }
+    },
+    "tests": {
+      "type": "object",
+      "properties": {
+        "suites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "files": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              },
+              "timeout": {
+                "type": "number"
+              }
+            },
+            "required": ["name", "files"]
+          }
+        },
+        "timeout": {
+          "type": "number"
+        },
+        "forceExit": {
+          "type": "boolean"
+        }
+      },
+      "required": ["suites"]
     }
   },
   "required": ["typescript", "providers"]

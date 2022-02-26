@@ -126,6 +126,11 @@ declare module '@ioc:Adonis/Core/Application' {
     aliases: {
       [key: string]: string
     }
+    tests: {
+      suites: { name: string; files: string | string[]; timeout?: number }[]
+      forceExit: boolean
+      timeout: number
+    }
     namespaces: NamespacesNode
     raw: any
   }

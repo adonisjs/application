@@ -67,6 +67,11 @@ export function parse(contents: { [key: string]: any }): RcFile {
       commands: [],
       providers: [],
       aceProviders: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
     },
     contents
   )
@@ -131,6 +136,25 @@ export function parse(contents: { [key: string]: any }): RcFile {
     commandsAliases: normalizedContents.commandsAliases,
     providers: normalizedContents.providers,
     aceProviders: normalizedContents.aceProviders,
+    tests: {
+      suites: (normalizedContents.tests.suites || []).map((suite: any, index) => {
+        if (!suite.name || !suite.files) {
+          throw new Exception(
+            `Invalid value for "tests.suites[${index}]"`,
+            500,
+            'E_MISSING_SUITE_PROPERTIES'
+          )
+        }
+
+        return suite
+      }),
+      timeout:
+        normalizedContents.tests.timeout !== undefined ? normalizedContents.tests.timeout : 2000,
+      forceExit:
+        normalizedContents.tests.forceExit !== undefined
+          ? normalizedContents.tests.forceExit
+          : true,
+    },
     raw: contents,
   }
 }

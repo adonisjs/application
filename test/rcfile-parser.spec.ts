@@ -45,6 +45,11 @@ test.group('Rc Parser', () => {
       commandsAliases: {},
       providers: [],
       aceProviders: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
     })
   })
 
@@ -89,6 +94,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -152,6 +162,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -203,6 +218,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -265,6 +285,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -315,6 +340,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -365,6 +395,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -421,6 +456,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -465,6 +505,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -509,6 +554,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: ['@adonisjs/core'],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -553,6 +603,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: ['@adonisjs/commands'],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -603,6 +658,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -658,6 +718,11 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
@@ -707,6 +772,79 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        tests: {
+          suites: [],
+          timeout: 2000,
+          forceExit: true,
+        },
+      }
+    )
+  })
+
+  test('define test suites', (assert) => {
+    assert.deepEqual(
+      parse({
+        tests: {
+          suites: [
+            {
+              name: 'unit',
+              files: ['tests/unit/*.spec.js'],
+            },
+          ],
+        },
+      }),
+      {
+        raw: {
+          tests: {
+            suites: [
+              {
+                name: 'unit',
+                files: ['tests/unit/*.spec.js'],
+              },
+            ],
+          },
+        },
+        typescript: true,
+        directories: {
+          config: 'config',
+          tests: 'tests',
+          contracts: 'contracts',
+          providers: 'providers',
+          database: 'database',
+          migrations: 'database/migrations',
+          public: 'public',
+          resources: 'resources',
+          seeds: 'database/seeders',
+          views: 'resources/views',
+          start: 'start',
+          tmp: 'tmp',
+        },
+        namespaces: {
+          models: 'App/Models',
+          exceptions: 'App/Exceptions',
+          middleware: 'App/Middleware',
+          validators: 'App/Validators',
+          httpControllers: 'App/Controllers/Http',
+          eventListeners: 'App/Listeners',
+          redisListeners: 'App/Listeners',
+        },
+        preloads: [],
+        aliases: {},
+        metaFiles: [],
+        commands: [],
+        commandsAliases: {},
+        providers: [],
+        aceProviders: [],
+        tests: {
+          suites: [
+            {
+              name: 'unit',
+              files: ['tests/unit/*.spec.js'],
+            },
+          ],
+          timeout: 2000,
+          forceExit: true,
+        },
       }
     )
   })
