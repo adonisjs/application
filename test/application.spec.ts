@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { join } from 'path'
 import { Logger } from '@adonisjs/logger'
 import { Profiler } from '@adonisjs/profiler'
@@ -22,11 +22,11 @@ function getApp(rcContents?: any) {
 }
 
 test.group('Application', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     await fs.cleanup()
   })
 
-  test('setup application', (assert) => {
+  test('setup application', ({ assert }) => {
     const app = getApp({})
 
     assert.equal(app.appName, 'adonis-app')
@@ -94,7 +94,7 @@ test.group('Application', (group) => {
     assert.deepEqual(app.helpers, helpers)
   })
 
-  test('resolve the namespace directory from rc file content', (assert) => {
+  test('resolve the namespace directory from rc file content', ({ assert }) => {
     const app = getApp({
       namespaces: {
         models: 'App/Models',
@@ -108,7 +108,7 @@ test.group('Application', (group) => {
     assert.equal(app.resolveNamespaceDirectory('something'), null)
   })
 
-  test('return null when namespace is not registered', (assert) => {
+  test('return null when namespace is not registered', ({ assert }) => {
     const app = getApp({
       namespaces: {
         models: 'App/Models',
@@ -119,7 +119,7 @@ test.group('Application', (group) => {
     assert.equal(app.resolveNamespaceDirectory('models'), null)
   })
 
-  test('make paths to pre-configured directories', (assert) => {
+  test('make paths to pre-configured directories', ({ assert }) => {
     const app = getApp({})
 
     assert.equal(app.makePath('app'), join(fs.basePath, 'app'))
@@ -135,7 +135,7 @@ test.group('Application', (group) => {
     assert.equal(app.providersPath('AppProvider'), join(fs.basePath, 'providers/AppProvider'))
   })
 
-  test('pull name and version from package.json file', async (assert) => {
+  test('pull name and version from package.json file', async ({ assert }) => {
     await fs.add(
       'package.json',
       JSON.stringify({
@@ -149,7 +149,7 @@ test.group('Application', (group) => {
     assert.equal(app.version!.major, 1)
   })
 
-  test('pull adonis version from "@adonisjs/core" package.json file', async (assert) => {
+  test('pull adonis version from "@adonisjs/core" package.json file', async ({ assert }) => {
     await fs.add(
       'node_modules/@adonisjs/core/package.json',
       JSON.stringify({
@@ -162,7 +162,7 @@ test.group('Application', (group) => {
     assert.equal(app.adonisVersion!.major, 5)
   })
 
-  test('parse prereleases', async (assert) => {
+  test('parse prereleases', async ({ assert }) => {
     await fs.add(
       'node_modules/@adonisjs/core/package.json',
       JSON.stringify({
@@ -175,25 +175,25 @@ test.group('Application', (group) => {
     assert.equal(app.adonisVersion!.toString(), '5.0.0-preview-rc-1.12')
   })
 
-  test('switch enviroment at a later stage', async (assert) => {
+  test('switch enviroment at a later stage', async ({ assert }) => {
     const app = getApp({})
     app.switchEnvironment('repl')
     assert.equal(app.environment, 'repl')
   })
 
-  test('do not allow switching enviroment after setup has been called', async (assert) => {
+  test('do not allow switching enviroment after setup has been called', async ({ assert }) => {
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
     const app = getApp({})
     await app.setup()
 
     const fn = () => app.switchEnvironment('repl')
-    assert.throw(fn, 'Cannot switch application environment in "setup" state')
+    assert.throws(fn, 'Cannot switch application environment in "setup" state')
   })
 })
 
 test.group('Application | setup', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     delete process.env.ENV_APP_NAME
     delete process.env.NODE_ENV
     delete process.env.ENV_SILENT
@@ -201,7 +201,7 @@ test.group('Application | setup', (group) => {
     await fs.cleanup()
   })
 
-  test('register aliases', async (assert) => {
+  test('register aliases', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -217,7 +217,7 @@ test.group('Application | setup', (group) => {
     })
   })
 
-  test('load environment variables during setup', async (assert) => {
+  test('load environment variables during setup', async ({ assert }) => {
     await fs.add('.env', 'ENV_APP_NAME=adonisjs')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -227,7 +227,7 @@ test.group('Application | setup', (group) => {
     assert.equal(process.env.ENV_APP_NAME, 'adonisjs')
   })
 
-  test('run environment variables validations', async (assert) => {
+  test('run environment variables validations', async ({ assert }) => {
     assert.plan(1)
 
     await fs.add('.env', 'ENV_APP_NAME=foo')
@@ -259,7 +259,7 @@ test.group('Application | setup', (group) => {
     await app.setup()
   })
 
-  test('load env file from a different location', async (assert) => {
+  test('load env file from a different location', async ({ assert }) => {
     process.env.ENV_PATH = './foo/.env'
     await fs.add('foo/.env', 'ENV_APP_NAME=adonisjs')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
@@ -270,7 +270,7 @@ test.group('Application | setup', (group) => {
     assert.equal(process.env.ENV_APP_NAME, 'adonisjs')
   })
 
-  test('normalize NODE_ENV "dev"', async (assert) => {
+  test('normalize NODE_ENV "dev"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=dev')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -280,7 +280,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'development')
   })
 
-  test('normalize NODE_ENV "DEVELOPMENT"', async (assert) => {
+  test('normalize NODE_ENV "DEVELOPMENT"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=DEVELOPMENT')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -290,7 +290,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'development')
   })
 
-  test('normalize NODE_ENV "stage"', async (assert) => {
+  test('normalize NODE_ENV "stage"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=stage')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -300,7 +300,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'staging')
   })
 
-  test('normalize NODE_ENV "STAGING"', async (assert) => {
+  test('normalize NODE_ENV "STAGING"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=STAGING')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -310,7 +310,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'staging')
   })
 
-  test('normalize NODE_ENV "prod"', async (assert) => {
+  test('normalize NODE_ENV "prod"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=prod')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -320,7 +320,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'production')
   })
 
-  test('normalize NODE_ENV "PRODUCTION"', async (assert) => {
+  test('normalize NODE_ENV "PRODUCTION"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=PRODUCTION')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -330,7 +330,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'production')
   })
 
-  test('normalize NODE_ENV "test"', async (assert) => {
+  test('normalize NODE_ENV "test"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=test')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -340,7 +340,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'testing')
   })
 
-  test('normalize NODE_ENV "TESTING"', async (assert) => {
+  test('normalize NODE_ENV "TESTING"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=TESTING')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -350,7 +350,7 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'testing')
   })
 
-  test('load config files from the config directory', async (assert) => {
+  test('load config files from the config directory', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.add(
       'config/app.ts',
@@ -366,7 +366,7 @@ test.group('Application | setup', (group) => {
     assert.equal(Config.get('app.logger.name'), 'foobar')
   })
 
-  test('setup profiler and logger', async (assert) => {
+  test('setup profiler and logger', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.add(
       'config/app.ts',
@@ -382,7 +382,7 @@ test.group('Application | setup', (group) => {
     assert.instanceOf(app.container.use('Adonis/Core/Profiler'), Profiler)
   })
 
-  test('raise exception when "engines.node" does not satisfy node version', async (assert) => {
+  test('raise exception when "engines.node" does not satisfy node version', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.add(
       'package.json',
@@ -401,7 +401,7 @@ test.group('Application | setup', (group) => {
     }`
     )
 
-    assert.throw(
+    assert.throws(
       () => getApp({}),
       `The installed Node.js version "${process.version}" does not satisfy the expected version "<=10.0.0" defined inside package.json file`
     )
@@ -409,14 +409,14 @@ test.group('Application | setup', (group) => {
 })
 
 test.group('Application | registerProviders', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     delete process.env.ENV_APP_NAME
     delete process.env.ENV_SILENT
     delete process.env.ENV_PATH
     await fs.cleanup()
   })
 
-  test('register providers mentioned inside .adonisrc.json file', async (assert) => {
+  test('register providers mentioned inside .adonisrc.json file', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -470,7 +470,7 @@ test.group('Application | registerProviders', (group) => {
     assert.equal(app.container.use('Ace/Foo'), 'foo')
   })
 
-  test('register providers exported by the provider', async (assert) => {
+  test('register providers exported by the provider', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -527,14 +527,14 @@ test.group('Application | registerProviders', (group) => {
 })
 
 test.group('Application | bootProviders', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     delete process.env.ENV_APP_NAME
     delete process.env.ENV_SILENT
     delete process.env.ENV_PATH
     await fs.cleanup()
   })
 
-  test('boot providers', async (assert) => {
+  test('boot providers', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -590,7 +590,7 @@ test.group('Application | bootProviders', (group) => {
     assert.equal(app.container.use('Main/Foo'), 'foo')
   })
 
-  test('boot ace providers when environment is console', async (assert) => {
+  test('boot ace providers when environment is console', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -647,14 +647,14 @@ test.group('Application | bootProviders', (group) => {
 })
 
 test.group('Application | requirePreloads', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     delete process.env.ENV_APP_NAME
     delete process.env.ENV_SILENT
     delete process.env.ENV_PATH
     await fs.cleanup()
   })
 
-  test('require files registered for preloading', async (assert) => {
+  test('require files registered for preloading', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -679,7 +679,7 @@ test.group('Application | requirePreloads', (group) => {
     assert.equal(app.container.use('Start/Foo'), 'foo')
   })
 
-  test('do not require file when environment is different', async (assert) => {
+  test('do not require file when environment is different', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -709,7 +709,9 @@ test.group('Application | requirePreloads', (group) => {
     assert.isFalse(app.container.hasBinding('Start/Foo'))
   })
 
-  test('require file when explicitly defined environment matches the current environment', async (assert) => {
+  test('require file when explicitly defined environment matches the current environment', async ({
+    assert,
+  }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -739,7 +741,7 @@ test.group('Application | requirePreloads', (group) => {
     assert.equal(app.container.use('Start/Foo'), 'foo')
   })
 
-  test('ignore error when marked as optional and is missing', async (assert) => {
+  test('ignore error when marked as optional and is missing', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -761,7 +763,7 @@ test.group('Application | requirePreloads', (group) => {
     assert.isFalse(app.container.hasBinding('Start/Foo'))
   })
 
-  test('raise error when not marked as optional and is missing', async (assert) => {
+  test('raise error when not marked as optional and is missing', async ({ assert }) => {
     assert.plan(1)
 
     await fs.add('.env', '')
@@ -790,7 +792,7 @@ test.group('Application | requirePreloads', (group) => {
     }
   })
 
-  test('raise error when file has errors other then ENOENT', async (assert) => {
+  test('raise error when file has errors other then ENOENT', async ({ assert }) => {
     assert.plan(1)
 
     await fs.add('.env', '')
@@ -828,14 +830,14 @@ test.group('Application | requirePreloads', (group) => {
 })
 
 test.group('Application | start', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     delete process.env.ENV_APP_NAME
     delete process.env.ENV_SILENT
     delete process.env.ENV_PATH
     await fs.cleanup()
   })
 
-  test('execute providers ready hook', async (assert) => {
+  test('execute providers ready hook', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 
@@ -872,14 +874,14 @@ test.group('Application | start', (group) => {
 })
 
 test.group('Application | start', (group) => {
-  group.afterEach(async () => {
+  group.each.teardown(async () => {
     delete process.env.ENV_APP_NAME
     delete process.env.ENV_SILENT
     delete process.env.ENV_PATH
     await fs.cleanup()
   })
 
-  test('execute providers shutdown hook', async (assert) => {
+  test('execute providers shutdown hook', async ({ assert }) => {
     await fs.add('.env', '')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
 

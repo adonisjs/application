@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import test from 'japa'
+import { test } from '@japa/runner'
 import { parse } from '../src/rcParser'
 
 test.group('Rc Parser', () => {
-  test('parse empty object to rc file node', (assert) => {
+  test('parse empty object to rc file node', ({ assert }) => {
     assert.deepEqual(parse({}), {
       raw: {},
       typescript: true,
@@ -53,7 +53,7 @@ test.group('Rc Parser', () => {
     })
   })
 
-  test('give preference to json content literal values', (assert) => {
+  test('give preference to json content literal values', ({ assert }) => {
     assert.deepEqual(
       parse({
         exceptionHandlerNamespace: 'Relay/Handler',
@@ -103,7 +103,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('drop extra nodes from preloads', (assert) => {
+  test('drop extra nodes from preloads', ({ assert }) => {
     assert.deepEqual(
       parse({
         preloads: [
@@ -171,7 +171,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('deep merge directories', (assert) => {
+  test('deep merge directories', ({ assert }) => {
     assert.deepEqual(
       parse({
         directories: {
@@ -227,7 +227,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test("raise exception when preload doesn't defines file property", (assert) => {
+  test("raise exception when preload doesn't defines file property", ({ assert }) => {
     const fn = () =>
       parse({
         preloads: [
@@ -238,10 +238,10 @@ test.group('Rc Parser', () => {
         exceptionHandlerNamespace: 'Relay/Exceptions/Handler',
       })
 
-    assert.throw(fn, 'E_PRELOAD_MISSING_FILE_PROPERTY: Invalid value for preloads[0]')
+    assert.throws(fn, 'E_PRELOAD_MISSING_FILE_PROPERTY: Invalid value for preloads[0]')
   })
 
-  test('deep merge namespaces', (assert) => {
+  test('deep merge namespaces', ({ assert }) => {
     assert.deepEqual(
       parse({
         namespaces: {
@@ -294,7 +294,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('normalize string based meta file patterns', (assert) => {
+  test('normalize string based meta file patterns', ({ assert }) => {
     assert.deepEqual(
       parse({
         namespaces: {
@@ -349,7 +349,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('drop extra properties from meta file objects', (assert) => {
+  test('drop extra properties from meta file objects', ({ assert }) => {
     assert.deepEqual(
       parse({
         namespaces: {
@@ -404,7 +404,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('raise exception when pattern is missing', (assert) => {
+  test('raise exception when pattern is missing', ({ assert }) => {
     const fn = () =>
       parse({
         namespaces: {
@@ -413,10 +413,10 @@ test.group('Rc Parser', () => {
         metaFiles: [{ run: false }],
       })
 
-    assert.throw(fn, 'E_METAFILE_MISSING_PATTERN: Invalid value for metaFiles[0]')
+    assert.throws(fn, 'E_METAFILE_MISSING_PATTERN: Invalid value for metaFiles[0]')
   })
 
-  test('set typescript to false', (assert) => {
+  test('set typescript to false', ({ assert }) => {
     assert.deepEqual(
       parse({
         typescript: false,
@@ -465,7 +465,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('define custom commands', (assert) => {
+  test('define custom commands', ({ assert }) => {
     assert.deepEqual(
       parse({
         commands: ['./foo/bar'],
@@ -514,7 +514,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('define custom providers', (assert) => {
+  test('define custom providers', ({ assert }) => {
     assert.deepEqual(
       parse({
         providers: ['@adonisjs/core'],
@@ -563,7 +563,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('define custom commands', (assert) => {
+  test('define custom commands', ({ assert }) => {
     assert.deepEqual(
       parse({
         aceProviders: ['@adonisjs/commands'],
@@ -612,7 +612,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('define preload file as a string', (assert) => {
+  test('define preload file as a string', ({ assert }) => {
     assert.deepEqual(
       parse({
         preloads: ['./start/routes'],
@@ -667,7 +667,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('define preload files as string and object together', (assert) => {
+  test('define preload files as string and object together', ({ assert }) => {
     assert.deepEqual(
       parse({
         preloads: ['./start/routes', { file: './start/kernel', optional: true }],
@@ -727,7 +727,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('merge autoloads from json file to aliases. Backward compatible', (assert) => {
+  test('merge autoloads from json file to aliases. Backward compatible', ({ assert }) => {
     assert.deepEqual(
       parse({
         autoloads: { app: 'App' },
@@ -781,7 +781,7 @@ test.group('Rc Parser', () => {
     )
   })
 
-  test('define test suites', (assert) => {
+  test('define test suites', ({ assert }) => {
     assert.deepEqual(
       parse({
         tests: {
