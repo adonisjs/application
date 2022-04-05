@@ -34,7 +34,6 @@ import { parse } from './rcParser'
  * Aliases for different environments
  */
 const DEV_ENVS = ['dev', 'develop', 'development']
-const STAGING_ENVS = ['stage', 'staging']
 const PROD_ENVS = ['prod', 'production']
 const TEST_ENVS = ['test', 'testing']
 
@@ -123,7 +122,7 @@ export class Application implements ApplicationContract {
   /**
    * It is unknown until the `setup` method is called
    */
-  public nodeEnvironment = 'unknown'
+  public nodeEnvironment: 'unknown' | 'development' | 'production' | 'test' | string = 'unknown'
 
   /**
    * An array of files to be preloaded
@@ -335,16 +334,12 @@ export class Application implements ApplicationContract {
       return 'development'
     }
 
-    if (STAGING_ENVS.includes(env)) {
-      return 'staging'
-    }
-
     if (PROD_ENVS.includes(env)) {
       return 'production'
     }
 
     if (TEST_ENVS.includes(env)) {
-      return 'testing'
+      return 'test'
     }
 
     return env
@@ -445,6 +440,13 @@ export class Application implements ApplicationContract {
    */
   public get inDev(): boolean {
     return !this.inProduction
+  }
+
+  /**
+   * Returns true when `this.nodeEnvironment === 'test'`
+   */
+  public get inTest(): boolean {
+    return this.nodeEnvironment === 'test'
   }
 
   /**

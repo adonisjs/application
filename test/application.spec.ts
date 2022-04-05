@@ -290,26 +290,6 @@ test.group('Application | setup', (group) => {
     assert.equal(app.nodeEnvironment, 'development')
   })
 
-  test('normalize NODE_ENV "stage"', async ({ assert }) => {
-    await fs.add('.env', 'NODE_ENV=stage')
-    await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
-
-    const app = getApp({})
-    await app.setup()
-
-    assert.equal(app.nodeEnvironment, 'staging')
-  })
-
-  test('normalize NODE_ENV "STAGING"', async ({ assert }) => {
-    await fs.add('.env', 'NODE_ENV=STAGING')
-    await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
-
-    const app = getApp({})
-    await app.setup()
-
-    assert.equal(app.nodeEnvironment, 'staging')
-  })
-
   test('normalize NODE_ENV "prod"', async ({ assert }) => {
     await fs.add('.env', 'NODE_ENV=prod')
     await fs.fsExtra.ensureDir(join(fs.basePath, 'config'))
@@ -337,7 +317,7 @@ test.group('Application | setup', (group) => {
     const app = getApp({})
     await app.setup()
 
-    assert.equal(app.nodeEnvironment, 'testing')
+    assert.equal(app.nodeEnvironment, 'test')
   })
 
   test('normalize NODE_ENV "TESTING"', async ({ assert }) => {
@@ -347,7 +327,7 @@ test.group('Application | setup', (group) => {
     const app = getApp({})
     await app.setup()
 
-    assert.equal(app.nodeEnvironment, 'testing')
+    assert.equal(app.nodeEnvironment, 'test')
   })
 
   test('load config files from the config directory', async ({ assert }) => {
