@@ -652,7 +652,9 @@ export class Application implements ApplicationContract {
     this.state = 'registered'
 
     await this.profiler.profile('providers:register', {}, async () => {
-      const providers = this.rcFile.providers.concat(this.rcFile.aceProviders)
+      const providers = this.rcFile.providers
+        .concat(this.rcFile.aceProviders)
+        .concat(this.inTest ? this.rcFile.testProviders : [])
 
       this.logger.trace('registering providers', providers)
       this.registrar = new Registrar([this], this.appRoot)

@@ -78,6 +78,13 @@
       },
       "uniqueItems": true
     },
+    "testProviders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
     "directories": {
       "type": "object",
       "properties": {

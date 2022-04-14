@@ -45,6 +45,7 @@ test.group('Rc Parser', () => {
       commandsAliases: {},
       providers: [],
       aceProviders: [],
+      testProviders: [],
       tests: {
         suites: [],
         timeout: 2000,
@@ -94,6 +95,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -162,6 +164,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -218,6 +221,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -285,6 +289,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -340,6 +345,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -395,6 +401,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -456,6 +463,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -505,6 +513,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -554,6 +563,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: ['@adonisjs/core'],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -603,6 +613,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: ['@adonisjs/commands'],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -658,6 +669,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -718,6 +730,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -772,6 +785,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [],
           timeout: 2000,
@@ -835,6 +849,7 @@ test.group('Rc Parser', () => {
         commandsAliases: {},
         providers: [],
         aceProviders: [],
+        testProviders: [],
         tests: {
           suites: [
             {

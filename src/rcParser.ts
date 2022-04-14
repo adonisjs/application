@@ -67,6 +67,7 @@ export function parse(contents: { [key: string]: any }): RcFile {
       commands: [],
       providers: [],
       aceProviders: [],
+      testProviders: [],
       tests: {
         suites: [],
         timeout: 2000,
@@ -136,6 +137,7 @@ export function parse(contents: { [key: string]: any }): RcFile {
     commandsAliases: normalizedContents.commandsAliases,
     providers: normalizedContents.providers,
     aceProviders: normalizedContents.aceProviders,
+    testProviders: normalizedContents.testProviders,
     tests: {
       suites: (normalizedContents.tests.suites || []).map((suite: any, index) => {
         if (!suite.name || !suite.files) {
