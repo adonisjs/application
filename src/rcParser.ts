@@ -93,7 +93,7 @@ export function parse(contents: { [key: string]: any }): RcFile {
 
   return {
     typescript: normalizedContents.typescript,
-    assetsDriver: normalizedContents.assetsDriver,
+    ...(normalizedContents.assetsDriver ? { assetsDriver: normalizedContents.assetsDriver } : {}),
     directories: Object.assign({}, DEFAULT_DIRECTORIES, normalizedContents.directories),
     ...(normalizedContents.exceptionHandlerNamespace
       ? { exceptionHandlerNamespace: normalizedContents.exceptionHandlerNamespace }
