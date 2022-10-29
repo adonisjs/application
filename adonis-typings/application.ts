@@ -236,6 +236,11 @@ declare module '@ioc:Adonis/Core/Application' {
     inDev: boolean
 
     /**
+     * Returns true when `this.nodeEnvironment === 'test'`
+     */
+    inTest: boolean
+
+    /**
      * A boolean to know if application is tearing down
      */
     isShuttingDown: boolean
