@@ -137,7 +137,7 @@ declare module '@ioc:Adonis/Core/Application' {
     raw: any
   }
 
-  export type AssetsDriver = 'vite' | 'encore'
+  export type AssetsDriver = 'vite' | 'encore' | 'fake'
 
   export interface ApplicationContract {
     state: ApplicationStates

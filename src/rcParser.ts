@@ -81,7 +81,7 @@ export function parse(contents: { [key: string]: any }): RcFile {
    * Validate the assetsDriver value
    */
   const { assetsDriver } = normalizedContents
-  if (assetsDriver && !['vite', 'encore'].includes(assetsDriver)) {
+  if (assetsDriver && !['vite', 'encore', 'fake'].includes(assetsDriver)) {
     throw new Exception(
       `Invalid assets driver "${assetsDriver}" defined in .adonisrc.json file`,
       500,
