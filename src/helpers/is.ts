@@ -7,6 +7,5 @@
  * file that was distributed with this source code.
  */
 
-export { Container, inject } from '@adonisjs/fold'
-export { Application } from './src/application.js'
-export { RcFileParser } from './src/rc_file_parser.js'
+import is from '@sindresorhus/is'
+export default is

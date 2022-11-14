@@ -3,12 +3,8 @@
   "type": "object",
   "properties": {
     "typescript": {
-      "description": "Is project written in Typescript or not",
+      "description": "Is project written in TypeScript or not",
       "type": "boolean"
-    },
-    "exceptionHandlerNamespace": {
-      "description": "Http server exception handler namespace",
-      "type": "string"
     },
     "preloads": {
       "type": "array",
@@ -60,30 +56,36 @@
     },
     "commands": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "string"
       }
     },
     "providers": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "type": "string"
-      },
-      "uniqueItems": true
-    },
-    "aceProviders": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "uniqueItems": true
-    },
-    "testProviders": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "uniqueItems": true
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "file": { "type": "string" },
+              "environment": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["web", "console", "test", "repl"]
+                }
+              }
+            },
+            "required": ["file"],
+            "additionalProperties": false
+          }
+        ]
+      }
     },
     "directories": {
       "type": "object",
@@ -137,43 +139,6 @@
         }
       }
     },
-    "aliases": {
-      "type": "object",
-      "patternProperties": {
-        "^.*$": {
-          "type": "string"
-        }
-      }
-    },
-    "namespaces": {
-      "type": "object",
-      "properties": {
-        "models": {
-          "type": "string"
-        },
-        "exceptions": {
-          "type": "string"
-        },
-        "middleware": {
-          "type": "string"
-        },
-        "httpControllers": {
-          "type": "string"
-        },
-        "eventListeners": {
-          "type": "string"
-        },
-        "redisListeners": {
-          "type": "string"
-        },
-        "validators": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
     "tests": {
       "type": "object",
       "properties": {
@@ -190,6 +155,7 @@
                   },
                   {
                     "type": "array",
+                    "uniqueItems": true,
                     "items": {
                       "type": "string"
                     }
