@@ -185,10 +185,10 @@ export class Application<
   }
 
   /**
-   * Opposite of [[this.isProduction]]
+   * Return true when `this.nodeEnvironment === 'development'`
    */
   get inDev(): boolean {
-    return !this.inProduction
+    return this.nodeEnvironment === 'development'
   }
 
   /**
@@ -306,6 +306,7 @@ export class Application<
     }
 
     this.#instantiateContainer()
+    await this.#metaDataManager.process()
     await this.#rcFileManager.process()
     await this.#envManager.process()
     await this.#configManager.process(this.rcFile.directories.config)

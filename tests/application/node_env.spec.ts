@@ -24,6 +24,9 @@ test.group('Application | nodeEnv', () => {
     })
 
     assert.equal(app.nodeEnvironment, 'development')
+    assert.isTrue(app.inDev)
+    assert.isFalse(app.inProduction)
+    assert.isFalse(app.inTest)
   })
 
   test('normalize develop NODE_ENV value', async ({ assert, cleanup }) => {
@@ -37,6 +40,9 @@ test.group('Application | nodeEnv', () => {
     })
 
     assert.equal(app.nodeEnvironment, 'development')
+    assert.isTrue(app.inDev)
+    assert.isFalse(app.inProduction)
+    assert.isFalse(app.inTest)
   })
 
   test('normalize testing NODE_ENV value', async ({ assert, cleanup }) => {
@@ -50,6 +56,9 @@ test.group('Application | nodeEnv', () => {
     })
 
     assert.equal(app.nodeEnvironment, 'test')
+    assert.isTrue(app.inTest)
+    assert.isFalse(app.inProduction)
+    assert.isFalse(app.inDev)
   })
 
   test('normalize prod NODE_ENV value', async ({ assert, cleanup }) => {
@@ -63,6 +72,9 @@ test.group('Application | nodeEnv', () => {
     })
 
     assert.equal(app.nodeEnvironment, 'production')
+    assert.isTrue(app.inProduction)
+    assert.isFalse(app.inTest)
+    assert.isFalse(app.inDev)
   })
 
   test('use other NODE_ENV values as it is', async ({ assert, cleanup }) => {
@@ -76,5 +88,8 @@ test.group('Application | nodeEnv', () => {
     })
 
     assert.equal(app.nodeEnvironment, 'staging')
+    assert.isFalse(app.inProduction)
+    assert.isFalse(app.inTest)
+    assert.isFalse(app.inDev)
   })
 })

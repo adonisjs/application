@@ -85,9 +85,9 @@ export class MetaDataManager {
    */
   async #parseCorePackageJsonFile() {
     const contents = await readFileOptional(new URL('@adonisjs/core/package.json', this.#appRoot))
-    const corePackageJson = contents ? JSON.parse(contents) : null
+    const corePackageJson = contents ? JSON.parse(contents) : {}
 
-    this.version = this.#parseVersionNumber(corePackageJson.version) || null
+    this.adonisVersion = this.#parseVersionNumber(corePackageJson.version) || null
   }
 
   /**
