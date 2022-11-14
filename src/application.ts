@@ -44,6 +44,9 @@ export class Application<
   KnownLoggers extends Record<string, LoggerConfig>
 > {
   #terminating: boolean = false
+  #surroundedEnvironment = {
+    pm2: false,
+  }
 
   /**
    * Application root. The path must end with '/'
@@ -199,6 +202,14 @@ export class Application<
   }
 
   /**
+   * Find if the process is managed and run under
+   * pm2
+   */
+  get managedByPm2() {
+    return this.#surroundedEnvironment.pm2
+  }
+
+  /**
    * Reference to the AdonisJS IoC container. The value is defined
    * after the "init" method call
    */
@@ -222,6 +233,7 @@ export class Application<
     })
 
     this.#nodeEnvManager.process()
+    this.#surroundedEnvironment.pm2 = !!process.env.pm2_id
   }
 
   /**
@@ -287,6 +299,43 @@ export class Application<
    */
   useConfig(values: Record<any, any>): this {
     this.#configManager.useConfig(values)
+    return this
+  }
+
+  /**
+   * Notify the parent process when the Node.js process is spawned with an IPC channel.
+   * The arguments accepted are same as "process.send"
+   */
+  notify(
+    message: any,
+    sendHandle?: any,
+    options?: {
+      swallowErrors?: boolean | undefined
+    },
+    callback?: (error: Error | null) => void
+  ) {
+    if (process.send) {
+      process.send(message, sendHandle, options, callback)
+    }
+  }
+
+  /**
+   * Listen for a process signal. This method is same as calling
+   * "process.on(signal)"
+   */
+  listen(signal: NodeJS.Signals, callback: () => any): this {
+    process.on(signal, callback)
+    return this
+  }
+
+  /**
+   * Listen for a process signal conditionally.
+   */
+  listenIf(conditional: boolean, signal: NodeJS.Signals, callback: () => any): this {
+    if (conditional) {
+      process.on(signal, callback)
+    }
+
     return this
   }
 
@@ -394,6 +443,11 @@ export class Application<
      * App ready
      */
     this.#state = 'ready'
+
+    /**
+     * Notify process is ready
+     */
+    this.notify('ready')
   }
 
   /**

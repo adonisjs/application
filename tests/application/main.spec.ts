@@ -85,4 +85,58 @@ test.group('Application', (group) => {
       version: null,
     })
   })
+
+  test('listen for signals', async ({ assert, cleanup }) => {
+    function onSigint() {}
+
+    cleanup(() => {
+      process.removeListener('SIGINT', onSigint)
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+
+    app.listen('SIGINT', onSigint)
+    assert.deepEqual(process.listeners('SIGINT'), [onSigint])
+  })
+
+  test('listen for signals conditionally', async ({ assert, cleanup }) => {
+    function onSigint() {}
+
+    cleanup(() => {
+      process.removeListener('SIGINT', onSigint)
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+
+    app.listenIf(false, 'SIGINT', onSigint)
+    assert.deepEqual(process.listeners('SIGINT'), [])
+
+    app.listenIf(true, 'SIGINT', onSigint)
+    assert.deepEqual(process.listeners('SIGINT'), [onSigint])
+  })
+
+  test('find if app is managed by pm2', async ({ assert, cleanup }) => {
+    cleanup(() => {
+      process.env.pm2_id
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.isFalse(app.managedByPm2)
+
+    process.env.pm2_id = '1'
+    const app1 = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.isTrue(app1.managedByPm2)
+  })
 })
