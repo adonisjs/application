@@ -229,7 +229,7 @@ test.group('Application', (group) => {
 
     await assert.rejects(
       () => app.init(),
-      `The installed Node.js version "${process.env.version}" does not satisfy the expected Node.js version "<=10.0.0" defined inside package.json file`
+      `The installed Node.js version "${process.version}" does not satisfy the expected Node.js version "<=10.0.0" defined inside package.json file`
     )
   })
 })
