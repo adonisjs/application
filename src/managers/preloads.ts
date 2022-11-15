@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { resolveOptional } from '../helpers.js'
 import type { AppEnvironments, PreloadNode } from '../types.js'
 
 /**
@@ -63,17 +64,9 @@ export class PreloadsManager {
     }
 
     /**
-     * Ignore error when module is missing and optional
+     * Optionally resolve module
      */
-    let resolvedPath: null | string = null
-    try {
-      resolvedPath = await import.meta.resolve!(preload.file, this.#appRoot)
-    } catch (error) {
-      if (!error.message.includes('Cannot find module')) {
-        throw error
-      }
-    }
-
+    const resolvedPath = await resolveOptional(preload.file, this.#appRoot)
     if (resolvedPath) {
       await import(resolvedPath)
     }

@@ -7,9 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { parse } from 'semver'
+import { fileURLToPath } from 'node:url'
+import { parse, satisfies } from 'semver'
+import { readFile } from 'node:fs/promises'
 import type { SemverNode } from '../types.js'
-import { readFileOptional } from '../helpers.js'
+import { resolveOptional } from '../helpers.js'
+import { UnsupportedNodeVersion } from '../exceptions/unsupported_node_version.js'
 
 /**
  * MetadataManager is used to load the metadata for the application.
@@ -32,7 +35,7 @@ export class MetaDataManager {
   /**
    * The application name defined inside the "package.json" file
    */
-  appName: string = 'adonis-app'
+  appName: string = 'adonisjs_app'
 
   /**
    * The parsed version of the application defined in the "package.json"
@@ -71,8 +74,16 @@ export class MetaDataManager {
    * app name, version and the engines.
    */
   async #parseAppPackageJsonFile() {
-    const contents = await readFileOptional(new URL('./package.json', this.#appRoot))
-    const appPackageJson = contents ? JSON.parse(contents) : {}
+    /**
+     * Optionally resolve module
+     */
+    const resolvedPath = await resolveOptional('./package.json', this.#appRoot)
+    if (!resolvedPath) {
+      return
+    }
+
+    const contents = await readFile(fileURLToPath(resolvedPath), 'utf-8')
+    const appPackageJson = JSON.parse(contents)
 
     this.appName = appPackageJson.name || 'adonisjs_app'
     this.version = this.#parseVersionNumber(appPackageJson.version) || null
@@ -84,8 +95,13 @@ export class MetaDataManager {
    * the package version.
    */
   async #parseCorePackageJsonFile() {
-    const contents = await readFileOptional(new URL('@adonisjs/core/package.json', this.#appRoot))
-    const corePackageJson = contents ? JSON.parse(contents) : {}
+    const resolvedPath = await resolveOptional('@adonisjs/core/package.json', this.#appRoot)
+    if (!resolvedPath) {
+      return
+    }
+
+    const contents = await readFile(fileURLToPath(resolvedPath), 'utf-8')
+    const corePackageJson = JSON.parse(contents)
 
     this.adonisVersion = this.#parseVersionNumber(corePackageJson.version) || null
   }
@@ -96,5 +112,36 @@ export class MetaDataManager {
   async process() {
     await this.#parseAppPackageJsonFile()
     await this.#parseCorePackageJsonFile()
+  }
+
+  /**
+   * Verify the current node.js process against the defined
+   * engine in the package.json file.
+   */
+  async verifyNodeEngine() {
+    const nodeEngine = this.engines.node
+    if (!nodeEngine) {
+      return
+    }
+
+    if (!satisfies(process.version, nodeEngine)) {
+      throw new UnsupportedNodeVersion(
+        `The installed Node.js version "${process.version}" does not satisfy the expected Node.js version "${nodeEngine}" defined inside package.json file`
+      )
+    }
+  }
+
+  /**
+   * Adds metadata about the app to the process.env
+   */
+  addMetaDataToEnv() {
+    process.env.APP_NAME = this.appName
+    if (this.version) {
+      process.env.APP_VERSION = this.version.toString()
+    }
+
+    if (this.adonisVersion) {
+      process.env.ADONIS_VERSION = this.adonisVersion.toString()
+    }
   }
 }

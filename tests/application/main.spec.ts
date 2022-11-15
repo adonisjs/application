@@ -21,6 +21,30 @@ test.group('Application', (group) => {
     return () => remove(BASE_PATH)
   })
 
+  test('use default name when package.json does not exists', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+    assert.equal(app.appName, 'adonisjs_app')
+    assert.equal(process.env.APP_NAME, 'adonisjs_app')
+    assert.isNull(app.version)
+  })
+
+  test('use default name when package.json does not have name', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await outputFile(join(BASE_PATH, 'package.json'), JSON.stringify({}))
+
+    await app.init()
+    assert.equal(app.appName, 'adonisjs_app')
+    assert.equal(process.env.APP_NAME, 'adonisjs_app')
+    assert.isNull(app.version)
+  })
+
   test('parse app name from package.json file', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
@@ -35,6 +59,7 @@ test.group('Application', (group) => {
 
     await app.init()
     assert.equal(app.appName, 'test-app')
+    assert.equal(process.env.APP_NAME, 'test-app')
     assert.isNull(app.version)
   })
 
@@ -53,10 +78,12 @@ test.group('Application', (group) => {
 
     await app.init()
     assert.equal(app.appName, 'test-app')
+    assert.equal(process.env.APP_NAME, 'test-app')
     assert.equal(app.version?.major, 1)
     assert.equal(app.version?.minor, 0)
     assert.equal(app.version?.patch, 0)
     assert.equal(app.version?.toString(), '1.0.0')
+    assert.equal(process.env.APP_VERSION, '1.0.0')
   })
 
   test('return null for @adonisjs/core version when not installed', async ({ assert }) => {
@@ -67,6 +94,48 @@ test.group('Application', (group) => {
     await app.init()
     assert.equal(app.appName, 'adonisjs_app')
     assert.isNull(app.adonisVersion)
+  })
+
+  test('return null when @adonisjs/core does not have version', async ({ assert, cleanup }) => {
+    const pkgPath = join(BASE_PATH, '../../../node_modules/@adonisjs/core')
+    cleanup(async () => {
+      await remove(pkgPath)
+    })
+
+    await outputFile(join(pkgPath, 'package.json'), JSON.stringify({}))
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+    assert.isNull(app.adonisVersion)
+  })
+
+  test('return version of @adonisjs/core package', async ({ assert, cleanup }) => {
+    const pkgPath = join(BASE_PATH, '../../../node_modules/@adonisjs/core')
+    cleanup(async () => {
+      await remove(pkgPath)
+    })
+
+    await outputFile(
+      join(pkgPath, 'package.json'),
+      JSON.stringify({
+        version: '4.0.0',
+      })
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+    assert.equal(app.appName, 'adonisjs_app')
+    assert.equal(app.adonisVersion?.major, 4)
+    assert.equal(app.adonisVersion?.minor, 0)
+    assert.equal(app.adonisVersion?.patch, 0)
+    assert.equal(app.adonisVersion?.toString(), '4.0.0')
+    assert.equal(process.env.ADONIS_VERSION, '4.0.0')
   })
 
   test('get app JSON representation', async ({ assert }) => {
@@ -138,5 +207,29 @@ test.group('Application', (group) => {
       environment: 'web',
     })
     assert.isTrue(app1.managedByPm2)
+  })
+
+  test('raise exception when current version of Node does not satisify node engine', async ({
+    assert,
+  }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await outputFile(
+      join(BASE_PATH, 'package.json'),
+      JSON.stringify({
+        name: 'test-app',
+        version: '1.0.0',
+        engines: {
+          node: '<=10.0.0',
+        },
+      })
+    )
+
+    await assert.rejects(
+      () => app.init(),
+      'The installed Node.js version "v19.0.0" does not satisfy the expected Node.js version "<=10.0.0" defined inside package.json file'
+    )
   })
 })

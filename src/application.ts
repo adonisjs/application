@@ -355,7 +355,11 @@ export class Application<
     }
 
     this.#instantiateContainer()
+
     await this.#metaDataManager.process()
+    await this.#metaDataManager.verifyNodeEngine()
+    this.#metaDataManager.addMetaDataToEnv()
+
     await this.#rcFileManager.process()
     await this.#envManager.process()
     await this.#configManager.process(this.rcFile.directories.config)
