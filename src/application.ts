@@ -28,6 +28,8 @@ import type {
   EnvValidatorFunction,
 } from './types.js'
 import { MetaDataManager } from './managers/meta_data.js'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes
@@ -504,6 +506,167 @@ export class Application<
     await this.#providersManager.shutdown()
     this.#hooks.clear('terminating')
     this.#state = 'terminated'
+  }
+
+  /**
+   * Returns URL to a path from the application root.
+   */
+  makeURL(...paths: string[]): URL {
+    return new URL(join(...paths), this.#appRoot)
+  }
+
+  /**
+   * Returns file system path from the application root.
+   */
+  makePath(...paths: string[]): string {
+    return fileURLToPath(this.makeURL(...paths))
+  }
+
+  /**
+   * Makes path to the config directory
+   */
+  configPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.config, ...paths)
+  }
+
+  /**
+   * Makes path to the public directory
+   */
+  publicPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.public, ...paths)
+  }
+
+  /**
+   * Makes path to the providers directory
+   */
+  providersPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.providers, ...paths)
+  }
+
+  /**
+   * Makes path to the factories directory
+   */
+  factoriesPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.factories, ...paths)
+  }
+
+  /**
+   * Makes path to the migrations directory
+   */
+  migrationsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.migrations, ...paths)
+  }
+
+  /**
+   * Makes path to the seeders directory
+   */
+  seedersPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.seeders, ...paths)
+  }
+
+  /**
+   * Makes path to the language files directory
+   */
+  languageFilesPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.languageFiles, ...paths)
+  }
+
+  /**
+   * Makes path to the views directory
+   */
+  viewsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.views, ...paths)
+  }
+
+  /**
+   * Makes path to the start directory
+   */
+  startPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.start, ...paths)
+  }
+
+  /**
+   * Makes path to the tests directory
+   */
+  testsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.tests, ...paths)
+  }
+
+  /**
+   * Makes path to the tmp directory
+   */
+  tmpPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.tmp, ...paths)
+  }
+
+  /**
+   * Makes path to the contracts directory
+   */
+  contractsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.contracts, ...paths)
+  }
+
+  /**
+   * Makes path to the http controllers directory
+   */
+  httpControllersPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.httpControllers, ...paths)
+  }
+
+  /**
+   * Makes path to the models directory
+   */
+  modelsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.models, ...paths)
+  }
+
+  /**
+   * Makes path to the services directory
+   */
+  servicesPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.services, ...paths)
+  }
+
+  /**
+   * Makes path to the exceptions directory
+   */
+  exceptionsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.exceptions, ...paths)
+  }
+
+  /**
+   * Makes path to the mailers directory
+   */
+  mailersPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.mailers, ...paths)
+  }
+
+  /**
+   * Makes path to the middleware directory
+   */
+  middlewarePath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.middleware, ...paths)
+  }
+
+  /**
+   * Makes path to the policies directory
+   */
+  policiesPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.policies, ...paths)
+  }
+
+  /**
+   * Makes path to the validators directory
+   */
+  validatorsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.validators, ...paths)
+  }
+
+  /**
+   * Makes path to the commands directory
+   */
+  commandsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.commands, ...paths)
   }
 
   toJSON() {
