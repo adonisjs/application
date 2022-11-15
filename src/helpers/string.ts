@@ -14,6 +14,7 @@ const stringHelpers: typeof string & {
   toSentence: typeof string['sentence']
   ordinalize: typeof string['ordinal']
   generateRandom: typeof string['random']
+  isEmpty(value: string): boolean
   escapeHTML(value: string, options?: { encodeSymbols?: boolean }): string
   encodeSymbols(value: string, options?: EncodeOptions): string
 } = {
@@ -21,6 +22,9 @@ const stringHelpers: typeof string & {
   toSentence: string.sentence,
   ordinalize: string.ordinal,
   generateRandom: string.random,
+  isEmpty(value: string): boolean {
+    return value.trim().length === 0
+  },
 
   escapeHTML(value: string, options?: { encodeSymbols?: boolean }): string {
     value = he.escape(value)
