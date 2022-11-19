@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
+import * as semver from 'semver'
 import { fileURLToPath } from 'node:url'
-import { parse, satisfies } from 'semver'
 import { readFile } from 'node:fs/promises'
 import type { SemverNode } from '../types.js'
 import { resolveOptional } from '../helpers.js'
@@ -52,7 +52,7 @@ export class MetaDataManager {
    * Parses the version number using the semver formatting
    */
   #parseVersionNumber(version?: string): SemverNode | null {
-    const parsed = parse(version)
+    const parsed = semver.parse(version)
     if (!parsed) {
       return null
     }
@@ -124,7 +124,7 @@ export class MetaDataManager {
       return
     }
 
-    if (!satisfies(process.version, nodeEngine)) {
+    if (!semver.satisfies(process.version, nodeEngine)) {
       throw new UnsupportedNodeVersion(
         `The installed Node.js version "${process.version}" does not satisfy the expected Node.js version "${nodeEngine}" defined inside package.json file`
       )
