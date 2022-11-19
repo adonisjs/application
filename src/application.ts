@@ -41,9 +41,9 @@ import { fileURLToPath } from 'node:url'
  * - Invoking lifecycle methods on the providers and hooks
  */
 export class Application<
-  ContainerBindings extends Record<any, any>,
-  Validator extends EnvValidatorFunction,
-  KnownLoggers extends Record<string, LoggerConfig>
+  ContainerBindings extends Record<any, any> = Record<any, any>,
+  Validator extends EnvValidatorFunction = EnvValidatorFunction,
+  KnownLoggers extends Record<string, LoggerConfig> = Record<string, LoggerConfig>
 > {
   #terminating: boolean = false
   #surroundedEnvironment = {
