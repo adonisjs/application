@@ -16,6 +16,7 @@ import {
   AppEnvironments,
   ApplicationStates,
   ApplicationContract,
+  AssetsDriver,
 } from '@ioc:Adonis/Core/Application'
 
 import { join } from 'path'
@@ -120,6 +121,11 @@ export class Application implements ApplicationContract {
   public exceptionHandlerNamespace?: string
 
   /**
+   * The driver to use for assets bundling
+   */
+  public assetsDriver?: AssetsDriver
+
+  /**
    * It is unknown until the `setup` method is called
    */
   public nodeEnvironment: 'unknown' | 'development' | 'production' | 'test' | string = 'unknown'
@@ -178,6 +184,7 @@ export class Application implements ApplicationContract {
      */
     this.preloads = this.rcFile.preloads
     this.exceptionHandlerNamespace = this.rcFile.exceptionHandlerNamespace
+    this.assetsDriver = this.rcFile.assetsDriver
     this.directoriesMap = new Map(Object.entries(this.rcFile.directories))
     this.aliasesMap = new Map(Object.entries(this.rcFile.aliases))
     this.namespacesMap = new Map(Object.entries(this.rcFile.namespaces))

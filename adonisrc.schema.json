@@ -10,6 +10,11 @@
       "description": "Http server exception handler namespace",
       "type": "string"
     },
+    "assetsDriver": {
+      "description": "The driver to use for assets bundling",
+      "type": "string",
+      "enum": ["encore", "vite", "fake"]
+    },
     "preloads": {
       "type": "array",
       "uniqueItems": true,

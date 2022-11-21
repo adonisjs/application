@@ -77,8 +77,21 @@ export function parse(contents: { [key: string]: any }): RcFile {
     contents
   )
 
+  /**
+   * Validate the assetsDriver value
+   */
+  const { assetsDriver } = normalizedContents
+  if (assetsDriver && !['vite', 'encore', 'fake'].includes(assetsDriver)) {
+    throw new Exception(
+      `Invalid assets driver "${assetsDriver}" defined in .adonisrc.json file`,
+      500,
+      'E_INVALID_ASSETS_DRIVER'
+    )
+  }
+
   return {
     typescript: normalizedContents.typescript,
+    ...(assetsDriver ? { assetsDriver } : {}),
     directories: Object.assign({}, DEFAULT_DIRECTORIES, normalizedContents.directories),
     ...(normalizedContents.exceptionHandlerNamespace
       ? { exceptionHandlerNamespace: normalizedContents.exceptionHandlerNamespace }

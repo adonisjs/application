@@ -114,6 +114,7 @@ declare module '@ioc:Adonis/Core/Application' {
   export type RcFile = {
     typescript: boolean
     exceptionHandlerNamespace?: string
+    assetsDriver?: AssetsDriver
     preloads: PreloadNode[]
     metaFiles: MetaFileNode[]
     commands: string[]
@@ -135,6 +136,8 @@ declare module '@ioc:Adonis/Core/Application' {
     namespaces: NamespacesNode
     raw: any
   }
+
+  export type AssetsDriver = 'vite' | 'encore' | 'fake'
 
   export interface ApplicationContract {
     state: ApplicationStates
@@ -187,6 +190,11 @@ declare module '@ioc:Adonis/Core/Application' {
      * Global exception handler namespace
      */
     exceptionHandlerNamespace?: string
+
+    /**
+     * The driver to use for assets bundling.
+     */
+    assetsDriver?: AssetsDriver
 
     /**
      * Reference to the IoC container
