@@ -10,9 +10,10 @@
 import * as semver from 'semver'
 import { fileURLToPath } from 'node:url'
 import { readFile } from 'node:fs/promises'
+import { RuntimeException } from '@poppinss/utils'
+
 import type { SemverNode } from '../types.js'
 import { resolveOptional } from '../helpers.js'
-import { UnsupportedNodeVersion } from '../exceptions/unsupported_node_version.js'
 
 /**
  * MetadataManager is used to load the metadata for the application.
@@ -125,7 +126,7 @@ export class MetaDataManager {
     }
 
     if (!semver.satisfies(process.version, nodeEngine)) {
-      throw new UnsupportedNodeVersion(
+      throw new RuntimeException(
         `The installed Node.js version "${process.version}" does not satisfy the expected Node.js version "${nodeEngine}" defined inside package.json file`
       )
     }
