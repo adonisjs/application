@@ -378,7 +378,7 @@ export class Application<
    */
   async init() {
     if (this.#state !== 'created') {
-      debug('cannot initiate from state "%s"', this.#state)
+      debug('cannot initiate app from state "%s"', this.#state)
       return
     }
 
@@ -406,7 +406,7 @@ export class Application<
    */
   async boot() {
     if (this.#state !== 'initiated') {
-      debug('cannot boot from state "%s"', this.#state)
+      debug('cannot boot app from state "%s"', this.#state)
       return
     }
 
@@ -453,7 +453,7 @@ export class Application<
    */
   async start(callback: (app: this) => void | Promise<void>) {
     if (this.#state !== 'booted') {
-      debug('cannot start from state "%s"', this.#state)
+      debug('cannot start app from state "%s"', this.#state)
       return
     }
 
@@ -485,6 +485,7 @@ export class Application<
     /**
      * Notify process is ready
      */
+    debug('application ready')
     this.notify('ready')
   }
 
@@ -530,7 +531,7 @@ export class Application<
    */
   async terminate() {
     if (!this.isBooted || this.#state === 'terminated') {
-      debug('cannot terminate from state "%s"', this.#state)
+      debug('cannot terminate app from state "%s"', this.#state)
       return
     }
 
