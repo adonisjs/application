@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { RuntimeException } from '@poppinss/utils'
 
+import debug from '../debug.js'
 import type { SemverNode } from '../types.js'
 import { resolveOptional } from '../helpers.js'
 
@@ -113,6 +114,10 @@ export class MetaDataManager {
   async process() {
     await this.#parseAppPackageJsonFile()
     await this.#parseCorePackageJsonFile()
+
+    if (debug.enabled && this.adonisVersion) {
+      debug('adonisjs version "%s"', this.adonisVersion.toString())
+    }
   }
 
   /**
