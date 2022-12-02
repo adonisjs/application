@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import debug from '../debug.js'
 import { resolveOptional } from '../helpers.js'
 import type { AppEnvironments, PreloadNode } from '../types.js'
 
@@ -84,11 +85,10 @@ export class PreloadsManager {
    * Import preload files
    */
   async import() {
-    await Promise.all(
-      this.#list
-        .filter((preload) => this.#filterByEnvironment(preload))
-        .map((preload) => this.#importPreloadModule(preload))
-    )
+    const preloads = this.#list.filter((preload) => this.#filterByEnvironment(preload))
+    debug('preloading modules %O', preloads)
+
+    await Promise.all(preloads.map((preload) => this.#importPreloadModule(preload)))
 
     this.#list = []
   }

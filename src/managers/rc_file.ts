@@ -10,6 +10,7 @@
 import type { RcFile } from '../types.js'
 import { readFileOptional } from '../helpers.js'
 import { RcFileParser } from '../rc_file_parser.js'
+import debug from '../debug.js'
 
 /**
  * RcFileManager is used to process the raw contents or the contents
@@ -50,6 +51,7 @@ export class RcFileManager {
     if (!this.#rcContents) {
       const contents = await readFileOptional(new URL('.adonisrc.json', this.#appRoot))
       this.#rcContents = contents ? JSON.parse(contents) : {}
+      debug('.adonisrc.json file contents: %O', this.#rcContents)
     }
 
     this.rcFile = new RcFileParser(this.#rcContents!).parse()

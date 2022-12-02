@@ -7,8 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { EnvValidatorFunction } from '../types.js'
 import { Env, EnvLoader, EnvParser } from '@adonisjs/env'
+
+import debug from '../debug.js'
+import type { EnvValidatorFunction } from '../types.js'
 
 /**
  * Env manager is used to load, parse, validate and set environment
@@ -75,6 +77,13 @@ export class EnvManager<Validator extends EnvValidatorFunction> {
   async #loadAndParseDotFiles() {
     const loader = new EnvLoader(this.#appRoot)
     const envFiles = await loader.load()
+
+    if (debug.enabled) {
+      debug(
+        'processing .env files (priority from top to bottom) %O',
+        envFiles.map((file) => file.path)
+      )
+    }
 
     /**
      * Collected env variables

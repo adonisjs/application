@@ -8,6 +8,7 @@
  */
 
 import { Config, ConfigLoader } from '@adonisjs/config'
+import debug from '../debug.js'
 
 /**
  * Env manager is used to load, parse, validate and set environment
@@ -49,6 +50,7 @@ export class ConfigManager {
       this.config = new Config(this.#configValues)
     } else {
       const loader = new ConfigLoader(new URL(configDirectory, this.#appRoot))
+      debug('loading config from directory "%s"', configDirectory)
       this.config = new Config(await loader.load())
     }
 

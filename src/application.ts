@@ -7,7 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import { join } from 'node:path'
 import Hooks from '@poppinss/hooks'
+import { fileURLToPath } from 'node:url'
 import { Container } from '@adonisjs/fold'
 import type { HookHandler } from '@poppinss/hooks/types'
 import type { LoggerConfig } from '@adonisjs/logger/types'
@@ -28,8 +30,7 @@ import type {
   EnvValidatorFunction,
 } from './types.js'
 import { MetaDataManager } from './managers/meta_data.js'
-import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import debug from './debug.js'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes
@@ -45,7 +46,16 @@ export class Application<
   Validator extends EnvValidatorFunction = EnvValidatorFunction,
   KnownLoggers extends Record<string, LoggerConfig> = Record<string, LoggerConfig>
 > {
+  /**
+   * Flag to know when we have started the termination
+   * process
+   */
   #terminating: boolean = false
+
+  /**
+   * The envrionment in which the app is running. Currently we track
+   * pm2 only
+   */
   #surroundedEnvironment = {
     pm2: false,
   }
@@ -236,6 +246,20 @@ export class Application<
 
     this.#nodeEnvManager.process()
     this.#surroundedEnvironment.pm2 = !!process.env.pm2_id
+
+    this.#debugState()
+  }
+
+  #debugState() {
+    if (!debug.enabled) {
+      return
+    }
+
+    debug('app environment :%O', {
+      pm2: this.#surroundedEnvironment.pm2,
+      environment: this.#environment,
+      nodeEnv: this.#nodeEnvManager.nodeEnvironment,
+    })
   }
 
   /**
@@ -263,6 +287,7 @@ export class Application<
       throw new CannotSwitchEnvironmentException()
     }
 
+    debug('switching environment { from:"%s", to: "%s" }', this.#environment, environment)
     this.#environment = environment
     return this
   }
@@ -353,9 +378,11 @@ export class Application<
    */
   async init() {
     if (this.#state !== 'created') {
+      debug('cannot initiate from state "%s"', this.#state)
       return
     }
 
+    debug('initiating app')
     this.#instantiateContainer()
 
     await this.#metaDataManager.process()
@@ -379,9 +406,11 @@ export class Application<
    */
   async boot() {
     if (this.#state !== 'initiated') {
+      debug('cannot boot from state "%s"', this.#state)
       return
     }
 
+    debug('booting app')
     this.#providersManager.use(this.rcFile.providers)
     await this.#providersManager.register()
     await this.#providersManager.boot()
@@ -424,8 +453,11 @@ export class Application<
    */
   async start(callback: (app: this) => void | Promise<void>) {
     if (this.#state !== 'booted') {
+      debug('cannot start from state "%s"', this.#state)
       return
     }
+
+    debug('starting app')
 
     /**
      * Pre start phase
@@ -498,9 +530,11 @@ export class Application<
    */
   async terminate() {
     if (!this.isBooted || this.#state === 'terminated') {
+      debug('cannot terminate from state "%s"', this.#state)
       return
     }
 
+    debug('terminating app')
     this.#terminating = true
     await this.#hooks.runner('terminating').run(this)
     await this.#providersManager.shutdown()

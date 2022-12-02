@@ -8,6 +8,8 @@
  */
 
 import { inspect } from 'node:util'
+
+import debug from '../debug.js'
 import { InvalidProviderException } from '../exceptions/invalid_provider_exception.js'
 import type { AppEnvironments, ContainerProviderContract, ProviderNode } from '../types.js'
 
@@ -115,11 +117,10 @@ export class ProvidersManager {
    * Resolves all providers from the supplied list of module paths.
    */
   #resolve() {
-    return Promise.all(
-      this.#list
-        .filter((provider) => this.#filterByEnvironment(provider))
-        .map((provider) => this.#resolveProvider(provider))
-    )
+    const providers = this.#list.filter((provider) => this.#filterByEnvironment(provider))
+    debug('loading providers %O', providers)
+
+    return Promise.all(providers.map((provider) => this.#resolveProvider(provider)))
   }
 
   /**
