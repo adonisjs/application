@@ -41,8 +41,8 @@
   "devDependencies": {
     "@adonisjs/config": "^4.1.0-0",
     "@adonisjs/env": "^4.0.2-0",
-    "@adonisjs/fold": "^9.3.2-0",
-    "@adonisjs/logger": "^5.0.1-0",
+    "@adonisjs/fold": "^9.4.1-0",
+    "@adonisjs/logger": "^5.0.2-0",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@japa/assert": "^1.3.5",
@@ -81,7 +81,7 @@
   "peerDependencies": {
     "@adonisjs/config": "^4.1.0-0",
     "@adonisjs/env": "^4.0.2-0",
-    "@adonisjs/fold": "^9.3.1-0",
+    "@adonisjs/fold": "^9.4.0-0",
     "@adonisjs/logger": "^5.0.1-0"
   },
   "repository": {
