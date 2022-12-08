@@ -172,6 +172,23 @@ test.group('Application', (group) => {
     assert.deepEqual(process.listeners('SIGINT'), [onSigint])
   })
 
+  test('listen once for signals', async ({ assert, cleanup }) => {
+    function onSigint() {}
+
+    cleanup(() => {
+      process.removeListener('SIGINT', onSigint)
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+
+    app.listenOnce('SIGINT', onSigint)
+    assert.deepEqual(process.listeners('SIGINT'), [onSigint])
+  })
+
   test('listen for signals conditionally', async ({ assert, cleanup }) => {
     function onSigint() {}
 
@@ -189,6 +206,26 @@ test.group('Application', (group) => {
     assert.deepEqual(process.listeners('SIGINT'), [])
 
     app.listenIf(true, 'SIGINT', onSigint)
+    assert.deepEqual(process.listeners('SIGINT'), [onSigint])
+  })
+
+  test('listen once for signals conditionally', async ({ assert, cleanup }) => {
+    function onSigint() {}
+
+    cleanup(() => {
+      process.removeListener('SIGINT', onSigint)
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+
+    app.listenOnceIf(false, 'SIGINT', onSigint)
+    assert.deepEqual(process.listeners('SIGINT'), [])
+
+    app.listenOnceIf(true, 'SIGINT', onSigint)
     assert.deepEqual(process.listeners('SIGINT'), [onSigint])
   })
 

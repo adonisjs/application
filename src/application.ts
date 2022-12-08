@@ -376,9 +376,13 @@ export class Application<
   }
 
   /**
- * Listen for a process signal once conditionally.
- */
-  listenOnceIf(conditional: boolean, signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
+   * Listen for a process signal once conditionally.
+   */
+  listenOnceIf(
+    conditional: boolean,
+    signal: NodeJS.Signals,
+    callback: NodeJS.SignalsListener
+  ): this {
     if (conditional) {
       process.once(signal, callback)
     }
