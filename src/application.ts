@@ -350,17 +350,37 @@ export class Application<
    * Listen for a process signal. This method is same as calling
    * "process.on(signal)"
    */
-  listen(signal: NodeJS.Signals, callback: () => any): this {
+  listen(signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
     process.on(signal, callback)
+    return this
+  }
+
+  /**
+   * Listen for a process signal once. This method is same as calling
+   * "process.once(signal)"
+   */
+  listenOnce(signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
+    process.once(signal, callback)
     return this
   }
 
   /**
    * Listen for a process signal conditionally.
    */
-  listenIf(conditional: boolean, signal: NodeJS.Signals, callback: () => any): this {
+  listenIf(conditional: boolean, signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
     if (conditional) {
       process.on(signal, callback)
+    }
+
+    return this
+  }
+
+  /**
+ * Listen for a process signal once conditionally.
+ */
+  listenOnceIf(conditional: boolean, signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
+    if (conditional) {
+      process.once(signal, callback)
     }
 
     return this
