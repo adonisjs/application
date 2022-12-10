@@ -42,9 +42,9 @@ import debug from './debug.js'
  * - Invoking lifecycle methods on the providers and hooks
  */
 export class Application<
-  ContainerBindings extends Record<any, any> = Record<any, any>,
-  Validator extends EnvValidatorFunction = EnvValidatorFunction,
-  KnownLoggers extends Record<string, LoggerConfig> = Record<string, LoggerConfig>
+  ContainerBindings extends Record<any, any>,
+  Validator extends EnvValidatorFunction,
+  KnownLoggers extends Record<string, LoggerConfig>
 > {
   /**
    * Flag to know when we have started the termination
