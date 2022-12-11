@@ -29,7 +29,9 @@ export class LoggerManager<KnownLoggers extends Record<string, LoggerConfig>> {
       config || {
         default: 'app',
         loggers: {
-          app: {},
+          app: {
+            enabled: false,
+          },
         },
       }
     )

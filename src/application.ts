@@ -394,12 +394,12 @@ export class Application<
     }
 
     debug('initiating app')
-    this.#instantiateContainer()
 
     /**
      * Metadata management is not considering part
      * of initiating the app
      */
+    this.#instantiateContainer()
     await this.#metaDataManager.process()
     await this.#metaDataManager.verifyNodeEngine()
     this.#metaDataManager.addMetaDataToEnv()
@@ -409,10 +409,16 @@ export class Application<
      */
     await this.#hooks.runner('initiating').run(this)
 
+    /**
+     * Initiate essentials
+     */
     await this.#rcFileManager.process()
     await this.#configManager.process(this.rcFile.directories.config)
-    this.#loggerManager.configure()
+    this.#loggerManager.configure(this.config.get('logger', {}))
 
+    /**
+     * Cleanup registered hooks
+     */
     this.#hooks.clear('initiating')
     this.#state = 'initiated'
   }

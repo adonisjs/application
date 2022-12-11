@@ -25,6 +25,7 @@ test.group('Application | logger', () => {
         default: 'app',
         loggers: {
           app: {
+            level: 'warn',
             enabled: true,
           },
         },
@@ -32,6 +33,9 @@ test.group('Application | logger', () => {
     })
 
     await app.init()
+
+    assert.isTrue(app.logger.isEnabled)
+    assert.equal(app.logger.level, 'warn')
     assert.instanceOf(app.logger, LoggerManager)
   })
 })
