@@ -14,28 +14,21 @@ import { Container } from '@adonisjs/fold'
 import type { HookHandler } from '@poppinss/hooks/types'
 import type { LoggerConfig } from '@adonisjs/logger/types'
 
-import { EnvManager } from './managers/env.js'
+import debug from './debug.js'
 import { ConfigManager } from './managers/config.js'
 import { RcFileManager } from './managers/rc_file.js'
 import { LoggerManager } from './managers/logger.js'
 import { NodeEnvManager } from './managers/node_env.js'
 import { PreloadsManager } from './managers/preloads.js'
 import { ProvidersManager } from './managers/providers.js'
-import { CannotSwitchEnvironmentException } from './exceptions/cannot_switch_environment.js'
-import type {
-  HooksState,
-  SemverNode,
-  AppEnvironments,
-  ApplicationStates,
-  EnvValidatorFunction,
-} from './types.js'
 import { MetaDataManager } from './managers/meta_data.js'
-import debug from './debug.js'
+import { CannotSwitchEnvironmentException } from './exceptions/cannot_switch_environment.js'
+import type { HooksState, SemverNode, AppEnvironments, ApplicationStates } from './types.js'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes
  *
- * - Setting up the base features like logger and env variables.
+ * - Setting up the base features like importing config and setting up logger.
  * - Parsing the ".adonisrc.json" file
  * - Setting up the IoC container
  * - Registering an booting providers
@@ -43,7 +36,6 @@ import debug from './debug.js'
  */
 export class Application<
   ContainerBindings extends Record<any, any>,
-  Validator extends EnvValidatorFunction,
   KnownLoggers extends Record<string, LoggerConfig>
 > {
   /**
@@ -53,7 +45,7 @@ export class Application<
   #terminating: boolean = false
 
   /**
-   * The envrionment in which the app is running. Currently we track
+   * The environment in which the app is running. Currently we track
    * pm2 only
    */
   #surroundedEnvironment = {
@@ -83,7 +75,6 @@ export class Application<
   #nodeEnvManager: NodeEnvManager
   #metaDataManager: MetaDataManager
   #preloadsManager: PreloadsManager
-  #envManager: EnvManager<Validator>
   #providersManager: ProvidersManager
   #loggerManager: LoggerManager<KnownLoggers>
 
@@ -91,9 +82,9 @@ export class Application<
    * Lifecycle hooks
    */
   #hooks = new Hooks<{
-    booted: HooksState<ContainerBindings, Validator, KnownLoggers>
-    ready: HooksState<ContainerBindings, Validator, KnownLoggers>
-    terminating: HooksState<ContainerBindings, Validator, KnownLoggers>
+    booted: HooksState<ContainerBindings, KnownLoggers>
+    ready: HooksState<ContainerBindings, KnownLoggers>
+    terminating: HooksState<ContainerBindings, KnownLoggers>
   }>()
 
   /**
@@ -170,14 +161,6 @@ export class Application<
   }
 
   /**
-   * Reference to parsed environment variables. The value is defined
-   * after the "init" method call
-   */
-  get env() {
-    return this.#envManager.env
-  }
-
-  /**
    * Reference to the parsed rc file. The value is defined
    * after the "init" method call
    */
@@ -227,7 +210,7 @@ export class Application<
    */
   container!: Container<ContainerBindings>
 
-  constructor(appRoot: URL, options: { environment: AppEnvironments; envValidator?: Validator }) {
+  constructor(appRoot: URL, options: { environment: AppEnvironments }) {
     this.#appRoot = appRoot
     this.#environment = options.environment
     this.#loggerManager = new LoggerManager()
@@ -235,7 +218,6 @@ export class Application<
     this.#configManager = new ConfigManager(this.appRoot)
     this.#rcFileManager = new RcFileManager(this.appRoot)
     this.#metaDataManager = new MetaDataManager(this.appRoot)
-    this.#envManager = new EnvManager(this.appRoot, options.envValidator)
     this.#providersManager = new ProvidersManager(this.appRoot, {
       environment: this.#environment,
       providersState: [this],
@@ -306,16 +288,6 @@ export class Application<
    */
   rcContents(value: Record<string, any>): this {
     this.#rcFileManager.rcContents(value)
-    return this
-  }
-
-  /**
-   * Specify the contents for environment variables as
-   * a string. Calling this method will disable
-   * reading .env files from the disk
-   */
-  envContents(contents: string): this {
-    this.#envManager.envContents(contents)
     return this
   }
 
@@ -414,7 +386,6 @@ export class Application<
     this.#metaDataManager.addMetaDataToEnv()
 
     await this.#rcFileManager.process()
-    await this.#envManager.process()
     await this.#configManager.process(this.rcFile.directories.config)
     this.#loggerManager.configure()
     this.#state = 'initiated'
@@ -453,8 +424,8 @@ export class Application<
    */
   booted(
     handler: HookHandler<
-      [Application<ContainerBindings, Validator, KnownLoggers>],
-      [Application<ContainerBindings, Validator, KnownLoggers>]
+      [Application<ContainerBindings, KnownLoggers>],
+      [Application<ContainerBindings, KnownLoggers>]
     >
   ): this {
     if (this.isBooted) {
@@ -519,8 +490,8 @@ export class Application<
    */
   ready(
     handler: HookHandler<
-      [Application<ContainerBindings, Validator, KnownLoggers>],
-      [Application<ContainerBindings, Validator, KnownLoggers>]
+      [Application<ContainerBindings, KnownLoggers>],
+      [Application<ContainerBindings, KnownLoggers>]
     >
   ): this {
     if (this.isReady) {
@@ -538,8 +509,8 @@ export class Application<
    */
   terminating(
     handler: HookHandler<
-      [Application<ContainerBindings, Validator, KnownLoggers>],
-      [Application<ContainerBindings, Validator, KnownLoggers>]
+      [Application<ContainerBindings, KnownLoggers>],
+      [Application<ContainerBindings, KnownLoggers>]
     >
   ): this {
     this.#hooks.add('terminating', handler)

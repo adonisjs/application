@@ -40,7 +40,6 @@
   "license": "MIT",
   "devDependencies": {
     "@adonisjs/config": "^4.1.1-0",
-    "@adonisjs/env": "^4.0.3-0",
     "@adonisjs/fold": "^9.5.0-0",
     "@adonisjs/logger": "^5.1.0-0",
     "@commitlint/cli": "^17.3.0",
@@ -81,7 +80,6 @@
   },
   "peerDependencies": {
     "@adonisjs/config": "^4.1.1-0",
-    "@adonisjs/env": "^4.0.3-0",
     "@adonisjs/fold": "^9.5.0-0",
     "@adonisjs/logger": "^5.1.0-0"
   },

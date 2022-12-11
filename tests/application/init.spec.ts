@@ -33,9 +33,7 @@ test.group('Application | init', () => {
     assert.equal(app.getState(), 'initiated')
     assert.isUndefined(process.env.HOST)
 
-    app.envContents(`PORT=3000`)
     await app.init()
-    assert.isUndefined(process.env.HOST)
   })
 
   test('update environment before app is initiated', async ({ assert }) => {

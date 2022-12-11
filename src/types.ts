@@ -42,22 +42,12 @@ export type AppEnvironments = 'web' | 'console' | 'test' | 'repl' | 'unknown'
 export type ApplicationStates = 'created' | 'initiated' | 'booted' | 'ready' | 'terminated'
 
 /**
- * The validator function to validate environment variables. The env package
- * validator.validate function satisfies the following type.
- */
-export type EnvValidatorFunction = (values: Record<string, any>) => Record<string, any>
-
-/**
  * State shared with hooks
  */
 export type HooksState<
   ContainerBindings extends Record<any, any>,
-  Validator extends EnvValidatorFunction,
   KnownLoggers extends Record<string, LoggerConfig>
-> = [
-  [Application<ContainerBindings, Validator, KnownLoggers>],
-  [Application<ContainerBindings, Validator, KnownLoggers>]
-]
+> = [[Application<ContainerBindings, KnownLoggers>], [Application<ContainerBindings, KnownLoggers>]]
 
 /**
  * Shape of directories object with known and unknown
