@@ -142,7 +142,7 @@ export class Application<
    * terminating
    */
   get isTerminating() {
-    return this.#terminating
+    return this.#terminating && this.#state !== 'terminated'
   }
 
   /**
