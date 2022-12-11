@@ -414,7 +414,7 @@ export class Application<
      */
     await this.#rcFileManager.process()
     await this.#configManager.process(this.rcFile.directories.config)
-    this.#loggerManager.configure(this.config.get('logger', {}))
+    this.#loggerManager.configure(this.config.get('logger'))
 
     /**
      * Cleanup registered hooks
