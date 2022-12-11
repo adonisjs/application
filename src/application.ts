@@ -234,15 +234,13 @@ export class Application<
   }
 
   #debugState() {
-    if (!debug.enabled) {
-      return
+    if (debug.enabled) {
+      debug('app environment :%O', {
+        pm2: this.#surroundedEnvironment.pm2,
+        environment: this.#environment,
+        nodeEnv: this.#nodeEnvManager.nodeEnvironment,
+      })
     }
-
-    debug('app environment :%O', {
-      pm2: this.#surroundedEnvironment.pm2,
-      environment: this.#environment,
-      nodeEnv: this.#nodeEnvManager.nodeEnvironment,
-    })
   }
 
   /**
