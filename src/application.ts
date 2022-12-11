@@ -82,6 +82,7 @@ export class Application<
    * Lifecycle hooks
    */
   #hooks = new Hooks<{
+    initiating: HooksState<ContainerBindings, KnownLoggers>
     booted: HooksState<ContainerBindings, KnownLoggers>
     ready: HooksState<ContainerBindings, KnownLoggers>
     terminating: HooksState<ContainerBindings, KnownLoggers>
@@ -363,6 +364,20 @@ export class Application<
   }
 
   /**
+   * Register hooks that are called before the app starts
+   * the initiating process
+   */
+  initiating(
+    handler: HookHandler<
+      [Application<ContainerBindings, KnownLoggers>],
+      [Application<ContainerBindings, KnownLoggers>]
+    >
+  ): this {
+    this.#hooks.add('initiating', handler)
+    return this
+  }
+
+  /**
    * Initiate the application. Calling this method performs following
    * operations.
    *
@@ -381,13 +396,24 @@ export class Application<
     debug('initiating app')
     this.#instantiateContainer()
 
+    /**
+     * Metadata management is not considering part
+     * of initiating the app
+     */
     await this.#metaDataManager.process()
     await this.#metaDataManager.verifyNodeEngine()
     this.#metaDataManager.addMetaDataToEnv()
 
+    /**
+     * Notify we are about to initiate the app
+     */
+    await this.#hooks.runner('initiating').run(this)
+
     await this.#rcFileManager.process()
     await this.#configManager.process(this.rcFile.directories.config)
     this.#loggerManager.configure()
+
+    this.#hooks.clear('initiating')
     this.#state = 'initiated'
   }
 
