@@ -452,19 +452,17 @@ export class Application<
    * The hook will be called immediately if the app has already
    * been booted.
    */
-  booted(
+  async booted(
     handler: HookHandler<
       [Application<ContainerBindings, KnownLoggers>],
       [Application<ContainerBindings, KnownLoggers>]
     >
-  ): this {
+  ): Promise<void> {
     if (this.isBooted) {
-      handler(this)
+      await handler(this)
     } else {
       this.#hooks.add('booted', handler)
     }
-
-    return this
   }
 
   /**
@@ -518,19 +516,17 @@ export class Application<
    * Register hooks that are called when the app is
    * ready
    */
-  ready(
+  async ready(
     handler: HookHandler<
       [Application<ContainerBindings, KnownLoggers>],
       [Application<ContainerBindings, KnownLoggers>]
     >
-  ): this {
+  ): Promise<void> {
     if (this.isReady) {
-      handler(this)
+      await handler(this)
     } else {
       this.#hooks.add('ready', handler)
     }
-
-    return this
   }
 
   /**
