@@ -81,7 +81,7 @@
   },
   "peerDependencies": {
     "@adonisjs/config": "^4.1.2-0",
-    "@adonisjs/fold": "^9.6.0-0",
+    "@adonisjs/fold": "^9.8.0-0",
     "@adonisjs/logger": "^5.1.0-0"
   },
   "repository": {
