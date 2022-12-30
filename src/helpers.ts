@@ -8,6 +8,29 @@
  */
 
 import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
+
+/**
+ * Attempts to read a file from multiple sources and returns the contents
+ * of the first matching one. `null` is returned when file does not
+ * exist in any of the sources.
+ */
+export async function readFileFromSources(fileName: string, sources: string[]) {
+  for (let source of sources) {
+    const filePath = join(source, fileName)
+    const contents = await readFileOptional(filePath)
+    if (contents !== null) {
+      return {
+        contents,
+        filePath,
+        fileName,
+        source,
+      }
+    }
+  }
+
+  return null
+}
 
 /**
  * Optionally read the contents of a file
@@ -33,7 +56,10 @@ export async function resolveOptional(filePath: string, parent: URL): Promise<st
     return await import.meta.resolve!(filePath, parent)
   } catch (error) {
     /* c8 ignore next 3 */
-    if (!error.message.includes('Cannot find')) {
+    if (
+      !error.message.includes('Cannot find') &&
+      !error.message.includes('ERR_PACKAGE_PATH_NOT_EXPORTED')
+    ) {
       throw error
     }
   }

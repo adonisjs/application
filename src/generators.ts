@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { extname } from 'node:path'
 import string from './helpers/string.js'
 import { StringBuilder } from './helpers/string_builder.js'
 
@@ -14,6 +15,45 @@ import { StringBuilder } from './helpers/string_builder.js'
  * Generators used for scaffolding
  */
 const generators = {
+  /**
+   * Creates the entity path and name from the user
+   * input.
+   */
+  createEntity(entityName: string) {
+    /**
+     * Get rid of extensions
+     */
+    entityName = entityName.replace(new RegExp(`${extname(entityName)}$`), '')
+
+    /**
+     * Split to see if we are dealing with a path
+     */
+    const parts = entityName.split('/')
+
+    /**
+     * Last part is always the entity name
+     */
+    const [name] = parts.splice(-1)
+
+    /**
+     * Still have parts? Join them back
+     */
+    if (parts.length) {
+      return {
+        path: parts.join('/'),
+        name,
+      }
+    }
+
+    /**
+     * Use relative current dir
+     */
+    return {
+      path: './',
+      name,
+    }
+  },
+
   /**
    * Converts an entity name to database table name
    */
@@ -34,9 +74,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to model path
+   * Converts an entity name to model file name
    */
-  modelFilePath(entityName: string) {
+  modelFileName(entityName: string) {
     return new StringBuilder(
       this.modelName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -58,9 +98,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to a controller path
+   * Converts an entity name to a controller file name
    */
-  controllerPath(entityName: string) {
+  controllerFileName(entityName: string) {
     return new StringBuilder(
       this.controllerName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -77,9 +117,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to an event path
+   * Converts an entity name to an event file name
    */
-  eventPath(entityName: string) {
+  eventFileName(entityName: string) {
     return new StringBuilder(
       this.eventName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -96,9 +136,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to listener path
+   * Converts an entity name to listener file name
    */
-  listenerPath(entityName: string) {
+  listenerFileName(entityName: string) {
     return new StringBuilder(
       this.listenerName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -119,9 +159,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to middleware path
+   * Converts an entity name to middleware file name
    */
-  middlewarePath(entityName: string) {
+  middlewareFileName(entityName: string) {
     return new StringBuilder(
       this.middlewareName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -143,9 +183,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to provider path
+   * Converts an entity name to provider file name
    */
-  providerPath(entityName: string) {
+  providerFileName(entityName: string) {
     return new StringBuilder(
       this.providerName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -168,9 +208,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to policy path
+   * Converts an entity name to policy file name
    */
-  policyPath(entityName: string) {
+  policyFileName(entityName: string) {
     return new StringBuilder(
       this.policyName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -193,9 +233,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to factory path
+   * Converts an entity name to factory file name
    */
-  factoryPath(entityName: string) {
+  factoryFileName(entityName: string) {
     return new StringBuilder(
       this.factoryName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -218,9 +258,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to service path
+   * Converts an entity name to service file name
    */
-  servicePath(entityName: string) {
+  serviceFileName(entityName: string) {
     return new StringBuilder(
       this.serviceName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -243,9 +283,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to seeder path
+   * Converts an entity name to seeder file name
    */
-  seederPath(entityName: string) {
+  seederFileName(entityName: string) {
     return new StringBuilder(
       this.seederName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -262,9 +302,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to command path
+   * Converts an entity name to command file name
    */
-  commandPath(entityName: string) {
+  commandFileName(entityName: string) {
     return new StringBuilder(
       this.commandName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -286,9 +326,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to validator path
+   * Converts an entity name to validator file name
    */
-  validatorPath(entityName: string) {
+  validatorFileName(entityName: string) {
     return new StringBuilder(
       this.validatorName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -309,9 +349,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to exception path
+   * Converts an entity name to exception file name
    */
-  exceptionPath(entityName: string) {
+  exceptionFileName(entityName: string) {
     return new StringBuilder(
       this.exceptionName(new StringBuilder(entityName).removeExtension().toString())
     )
@@ -334,9 +374,9 @@ const generators = {
   },
 
   /**
-   * Converts an entity name to mailer path
+   * Converts an entity name to mailer file name
    */
-  mailerPath(entityName: string, type: 'notification' | 'provision' = 'notification') {
+  mailerFileName(entityName: string, type: 'notification' | 'provision' = 'notification') {
     return new StringBuilder(
       this.mailerName(new StringBuilder(entityName).removeExtension().toString(), type)
     )

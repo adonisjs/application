@@ -725,6 +725,9 @@ export class Application<
     return this.makePath(this.rcFile.directories.commands, ...paths)
   }
 
+  /**
+   * JSON representation of the application
+   */
   toJSON() {
     return {
       isReady: this.isReady,

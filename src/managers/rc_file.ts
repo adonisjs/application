@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import debug from '../debug.js'
 import type { RcFile } from '../types.js'
 import { readFileOptional } from '../helpers.js'
 import { RcFileParser } from '../rc_file_parser.js'
-import debug from '../debug.js'
 
 /**
  * RcFileManager is used to process the raw contents or the contents
