@@ -10,7 +10,33 @@
 import { test } from '@japa/runner'
 import generators from '../src/generators.js'
 
-test.group('Transforms', () => {
+test.group('Generator', () => {
+  test('convert user input to entity', ({ assert }) => {
+    assert.deepEqual(generators.createEntity('user'), { path: './', name: 'user' })
+  })
+
+  test('remove extension from user input', ({ assert }) => {
+    assert.deepEqual(generators.createEntity('user.ts'), { path: './', name: 'user' })
+  })
+
+  test('parse relative paths from user input', ({ assert }) => {
+    assert.deepEqual(generators.createEntity('invoicing/user'), { path: 'invoicing', name: 'user' })
+  })
+
+  test('make import path', ({ assert }) => {
+    assert.deepEqual(generators.importPath('user'), 'user')
+    assert.deepEqual(generators.importPath('#models', 'user'), '#models/user')
+    assert.deepEqual(generators.importPath('#models', './', 'user.js'), '#models/user.js')
+    assert.deepEqual(
+      generators.importPath('#models', '/invoicing', 'user.js'),
+      '#models/invoicing/user.js'
+    )
+    assert.deepEqual(
+      generators.importPath('#models', 'invoicing', 'user.js'),
+      '#models/invoicing/user.js'
+    )
+  })
+
   test('convert entity name to model name', ({ assert }) => {
     assert.equal(generators.modelName('user'), 'User')
     assert.equal(generators.modelName('userModel'), 'User')

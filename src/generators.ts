@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { extname } from 'node:path'
+import { extname, join } from 'node:path'
 import string from './helpers/string.js'
 import { StringBuilder } from './helpers/string_builder.js'
 
@@ -55,6 +55,13 @@ const generators = {
   },
 
   /**
+   * Construct paths to make an import path
+   */
+  importPath(...paths: string[]) {
+    return join(...paths)
+  },
+
+  /**
    * Converts an entity name to database table name
    */
   tableName(entityName: string) {
@@ -70,19 +77,19 @@ const generators = {
    * Converts an entity name to model name
    */
   modelName(entityName: string) {
-    return new StringBuilder(entityName).removeSuffix('model').singular().pascalCase().toString()
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix('model')
+      .singular()
+      .pascalCase()
+      .toString()
   },
 
   /**
    * Converts an entity name to model file name
    */
   modelFileName(entityName: string) {
-    return new StringBuilder(
-      this.modelName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.modelName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -90,6 +97,7 @@ const generators = {
    */
   controllerName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('controller')
       .plural()
       .pascalCase()
@@ -101,50 +109,43 @@ const generators = {
    * Converts an entity name to a controller file name
    */
   controllerFileName(entityName: string) {
-    return new StringBuilder(
-      this.controllerName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.controllerName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
    * Converts an entity name to an event name
    */
   eventName(entityName: string) {
-    return new StringBuilder(entityName).removeSuffix('event').pascalCase().toString()
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix('event')
+      .pascalCase()
+      .toString()
   },
 
   /**
    * Converts an entity name to an event file name
    */
   eventFileName(entityName: string) {
-    return new StringBuilder(
-      this.eventName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.eventName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
    * Converts an entity name to listener name
    */
   listenerName(entityName: string) {
-    return new StringBuilder(entityName).removeSuffix('listener').pascalCase().toString()
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix('listener')
+      .pascalCase()
+      .toString()
   },
 
   /**
    * Converts an entity name to listener file name
    */
   listenerFileName(entityName: string) {
-    return new StringBuilder(
-      this.listenerName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.listenerName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -152,6 +153,7 @@ const generators = {
    */
   middlewareName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('middleware')
       .pascalCase()
       .suffix('Middleware')
@@ -162,12 +164,7 @@ const generators = {
    * Converts an entity name to middleware file name
    */
   middlewareFileName(entityName: string) {
-    return new StringBuilder(
-      this.middlewareName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.middlewareName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -175,6 +172,7 @@ const generators = {
    */
   providerName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('provider')
       .singular()
       .pascalCase()
@@ -186,12 +184,7 @@ const generators = {
    * Converts an entity name to provider file name
    */
   providerFileName(entityName: string) {
-    return new StringBuilder(
-      this.providerName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.providerName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -199,6 +192,7 @@ const generators = {
    */
   policyName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('policy')
       .removeSuffix('model')
       .singular()
@@ -211,12 +205,7 @@ const generators = {
    * Converts an entity name to policy file name
    */
   policyFileName(entityName: string) {
-    return new StringBuilder(
-      this.policyName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.policyName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -224,6 +213,7 @@ const generators = {
    */
   factoryName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('factory')
       .removeSuffix('model')
       .singular()
@@ -236,12 +226,7 @@ const generators = {
    * Converts an entity name to factory file name
    */
   factoryFileName(entityName: string) {
-    return new StringBuilder(
-      this.factoryName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.factoryName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -249,6 +234,7 @@ const generators = {
    */
   serviceName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('service')
       .removeSuffix('model')
       .singular()
@@ -261,12 +247,7 @@ const generators = {
    * Converts an entity name to service file name
    */
   serviceFileName(entityName: string) {
-    return new StringBuilder(
-      this.serviceName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.serviceName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -274,6 +255,7 @@ const generators = {
    */
   seederName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('seeder')
       .removeSuffix('model')
       .singular()
@@ -286,31 +268,25 @@ const generators = {
    * Converts an entity name to seeder file name
    */
   seederFileName(entityName: string) {
-    return new StringBuilder(
-      this.seederName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.seederName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
    * Converts an entity name to command name
    */
   commandName(entityName: string) {
-    return new StringBuilder(entityName).removeSuffix('command').pascalCase().toString()
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix('command')
+      .pascalCase()
+      .toString()
   },
 
   /**
    * Converts an entity name to command file name
    */
   commandFileName(entityName: string) {
-    return new StringBuilder(
-      this.commandName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.commandName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -318,6 +294,7 @@ const generators = {
    */
   validatorName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('validator')
       .singular()
       .pascalCase()
@@ -329,12 +306,7 @@ const generators = {
    * Converts an entity name to validator file name
    */
   validatorFileName(entityName: string) {
-    return new StringBuilder(
-      this.validatorName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.validatorName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -342,6 +314,7 @@ const generators = {
    */
   exceptionName(entityName: string) {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('exception')
       .pascalCase()
       .suffix('Exception')
@@ -352,12 +325,7 @@ const generators = {
    * Converts an entity name to exception file name
    */
   exceptionFileName(entityName: string) {
-    return new StringBuilder(
-      this.exceptionName(new StringBuilder(entityName).removeExtension().toString())
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.exceptionName(entityName)).snakeCase().ext('.ts').toString()
   },
 
   /**
@@ -365,6 +333,7 @@ const generators = {
    */
   mailerName(entityName: string, type: 'notification' | 'provision' = 'notification') {
     return new StringBuilder(entityName)
+      .removeExtension()
       .removeSuffix('notification')
       .removeSuffix('provision')
       .removeSuffix('mailer')
@@ -377,12 +346,7 @@ const generators = {
    * Converts an entity name to mailer file name
    */
   mailerFileName(entityName: string, type: 'notification' | 'provision' = 'notification') {
-    return new StringBuilder(
-      this.mailerName(new StringBuilder(entityName).removeExtension().toString(), type)
-    )
-      .snakeCase()
-      .ext('.ts')
-      .toString()
+    return new StringBuilder(this.mailerName(entityName, type)).snakeCase().ext('.ts').toString()
   },
 }
 
