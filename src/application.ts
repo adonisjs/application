@@ -11,10 +11,12 @@ import { join } from 'node:path'
 import Hooks from '@poppinss/hooks'
 import { fileURLToPath } from 'node:url'
 import { Container } from '@adonisjs/fold'
+import { RuntimeException } from '@poppinss/utils'
 import type { HookHandler } from '@poppinss/hooks/types'
 import type { LoggerConfig } from '@adonisjs/logger/types'
 
 import debug from './debug.js'
+import { StubsManager } from './stubs/manager.js'
 import { ConfigManager } from './managers/config.js'
 import { RcFileManager } from './managers/rc_file.js'
 import { LoggerManager } from './managers/logger.js'
@@ -22,9 +24,7 @@ import { NodeEnvManager } from './managers/node_env.js'
 import { PreloadsManager } from './managers/preloads.js'
 import { ProvidersManager } from './managers/providers.js'
 import { MetaDataManager } from './managers/meta_data.js'
-import { CannotSwitchEnvironmentException } from './exceptions/cannot_switch_environment.js'
 import type { HooksState, SemverNode, AppEnvironments, ApplicationStates } from './types.js'
-import { StubsManager } from './stubs/manager.js'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes
@@ -275,7 +275,7 @@ export class Application<
    */
   setEnvironment(environment: AppEnvironments): this {
     if (this.#state !== 'created' && this.#state !== 'initiated') {
-      throw new CannotSwitchEnvironmentException()
+      throw new RuntimeException('Cannot switch environment once the app has been booted')
     }
 
     debug('switching environment { from:"%s", to: "%s" }', this.#environment, environment)

@@ -144,10 +144,7 @@ test.group('Application | providers', (group) => {
 
     await app.init()
 
-    await assert.rejects(
-      () => app.boot(),
-      'Providers must use default export. Missing default export from "./route_provider.js?v=4"'
-    )
+    await assert.rejects(() => app.boot(), 'Missing default export from "./route_provider.js?v=4"')
   })
 
   test('fail when default export is not a class', async ({ assert }) => {
@@ -181,7 +178,7 @@ test.group('Application | providers', (group) => {
 
     await assert.rejects(
       () => app.boot(),
-      'A provider must export a class. "{ register: [Function: register] }" exported by "./route_provider.js?v=5" is not a class'
+      '"{ register: [Function: register] }" exported by "./route_provider.js?v=5" is not a class'
     )
   })
 

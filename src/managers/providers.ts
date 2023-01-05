@@ -10,7 +10,7 @@
 import { inspect } from 'node:util'
 
 import debug from '../debug.js'
-import { InvalidProviderException } from '../exceptions/invalid_provider_exception.js'
+import * as errors from '../exceptions/main.js'
 import type { AppEnvironments, ContainerProviderContract, ProviderNode } from '../types.js'
 
 /**
@@ -74,9 +74,7 @@ export class ProvidersManager {
    */
   #ensureHasDefaultExport(providerPath: string, providerImport: any) {
     if (!providerImport || typeof providerImport !== 'object' || !providerImport['default']) {
-      throw new InvalidProviderException(
-        InvalidProviderException.defaultExportMessage(providerPath)
-      )
+      throw new errors.E_MISSING_DEFAULT_EXPORT([providerPath])
     }
   }
 
@@ -85,9 +83,7 @@ export class ProvidersManager {
    */
   #ensureIsClass(providerPath: string, providerClass: any) {
     if (typeof providerClass !== 'function' || !providerClass.toString().startsWith('class ')) {
-      throw new InvalidProviderException(
-        InvalidProviderException.invalidClassMessage(providerPath, inspect(providerClass))
-      )
+      throw new errors.E_NOT_A_CLASS([inspect(providerClass), providerPath])
     }
   }
 

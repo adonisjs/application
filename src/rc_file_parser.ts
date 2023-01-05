@@ -9,11 +9,8 @@
 
 import { inspect } from 'node:util'
 
+import * as errors from './exceptions/main.js'
 import { directories } from './directories.js'
-import { InvalidPreloadEntryException } from './exceptions/invalid_preload_entry_exception.js'
-import { InvalidTestSuiteEntryException } from './exceptions/invalid_suite_entry_exception.js'
-import { InvalidMetaFileEntryException } from './exceptions/invalid_metafile_entry_exception.js'
-import { InvalidProviderEntryException } from './exceptions/invalid_provider_entry_exception.js'
 import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from './types.js'
 
 /**
@@ -72,9 +69,7 @@ export class RcFileParser {
           : preload
 
       if (!normalizedPreload.file) {
-        throw new InvalidPreloadEntryException(
-          `Invalid preload entry ${inspect(preload)}. Missing file property`
-        )
+        throw new errors.E_MISSING_PRELOAD_FILE([inspect(preload)])
       }
 
       return {
@@ -99,9 +94,7 @@ export class RcFileParser {
           : provider
 
       if (!normalizedProvider.file) {
-        throw new InvalidProviderEntryException(
-          `Invalid provider entry ${inspect(provider)}. Missing file property`
-        )
+        throw new errors.E_MISSING_PROVIDER_FILE([inspect(provider)])
       }
 
       return {
@@ -115,19 +108,17 @@ export class RcFileParser {
    * Returns a nornalized array of meta files
    */
   #getMetaFiles(): MetaFileNode[] {
-    return this.#rcFile.metaFiles.map((file: MetaFileNode | string) => {
+    return this.#rcFile.metaFiles.map((pattern: MetaFileNode | string) => {
       const normalizeMetaFile =
-        typeof file === 'string'
+        typeof pattern === 'string'
           ? {
-              pattern: file,
+              pattern: pattern,
               reloadServer: true,
             }
-          : file
+          : pattern
 
       if (!normalizeMetaFile.pattern) {
-        throw new InvalidMetaFileEntryException(
-          `Invalid metafile entry ${inspect(file)}. Missing file property`
-        )
+        throw new errors.E_MISSING_METAFILE_PATTERN([inspect(pattern)])
       }
 
       return {
@@ -145,15 +136,11 @@ export class RcFileParser {
 
     return suites.map((suite) => {
       if (!suite.name) {
-        throw new InvalidTestSuiteEntryException(
-          `Invalid suite entry ${inspect(suite)}. Missing name property`
-        )
+        throw new errors.E_MISSING_SUITE_NAME([inspect(suite)])
       }
 
       if (!suite.files) {
-        throw new InvalidTestSuiteEntryException(
-          `Invalid suite entry ${inspect(suite)}. Missing files property`
-        )
+        throw new errors.E_MISSING_SUITE_FILES([inspect(suite)])
       }
 
       return {

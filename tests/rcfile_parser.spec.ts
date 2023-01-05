@@ -180,7 +180,7 @@ test.group('Rc Parser', () => {
     })
 
     const fn = () => parser.parse()
-    assert.throws(fn, "Invalid preload entry { path: 'foo' }. Missing file property")
+    assert.throws(fn, `Invalid preload entry "{ path: 'foo' }". Missing file property`)
   })
 
   test('define metaFiles as an array of strings', ({ assert }) => {
@@ -302,7 +302,7 @@ test.group('Rc Parser', () => {
     })
 
     const fn = () => parser.parse()
-    assert.throws(fn, "Invalid metafile entry { path: 'foo' }. Missing file property")
+    assert.throws(fn, `Invalid metafile entry "{ path: 'foo' }". Missing pattern property`)
   })
 
   test('raise error when test suite name is missing', ({ assert }) => {
@@ -313,7 +313,7 @@ test.group('Rc Parser', () => {
     })
 
     const fn = () => parser.parse()
-    assert.throws(fn, 'Invalid suite entry {}. Missing name property')
+    assert.throws(fn, 'Invalid suite entry "{}". Missing name property')
   })
 
   test('raise error when test suite files are missing', ({ assert }) => {
@@ -328,7 +328,7 @@ test.group('Rc Parser', () => {
     })
 
     const fn = () => parser.parse()
-    assert.throws(fn, "Invalid suite entry { name: 'unit' }. Missing files property")
+    assert.throws(fn, `Invalid suite entry "{ name: 'unit' }". Missing files property`)
   })
 
   test('parse test suites', ({ assert }) => {
@@ -477,7 +477,7 @@ test.group('Rc Parser', () => {
       providers: [{}],
     })
 
-    assert.throws(() => parser.parse(), 'Invalid provider entry {}. Missing file property')
+    assert.throws(() => parser.parse(), 'Invalid provider entry "{}". Missing file property')
   })
 
   test('define providers as an array of objects', ({ assert }) => {
