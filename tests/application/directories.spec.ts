@@ -98,5 +98,13 @@ test.group('Application | directories', () => {
 
     assert.equal(app.validatorsPath(), join(BASE_PATH, 'app/validators'))
     assert.equal(app.validatorsPath('create_user'), join(BASE_PATH, 'app/validators/create_user'))
+
+    assert.equal(app.eventsPath(), join(BASE_PATH, 'app/events'))
+    assert.equal(app.eventsPath('user.ts'), join(BASE_PATH, 'app/events/user.ts'))
+
+    assert.equal(app.listenersPath(), join(BASE_PATH, 'app/listeners'))
+    assert.equal(app.listenersPath('user.ts'), join(BASE_PATH, 'app/listeners/user.ts'))
+
+    assert.equal(app.relativePath(app.eventsPath('user.ts')), 'app/events/user.ts')
   })
 })

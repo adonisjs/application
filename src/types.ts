@@ -76,6 +76,8 @@ export interface DirectoriesNode {
   policies: string
   validators: string
   commands: string
+  events: string
+  listeners: string
   stubs: string
 }
 

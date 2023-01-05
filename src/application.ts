@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import Hooks from '@poppinss/hooks'
 import { fileURLToPath } from 'node:url'
 import { Container } from '@adonisjs/fold'
@@ -576,6 +576,13 @@ export class Application<
   }
 
   /**
+   * Returns relative path to a file from the app root
+   */
+  relativePath(absolutePath: string) {
+    return relative(fileURLToPath(this.appRoot), absolutePath)
+  }
+
+  /**
    * Returns URL to a path from the application root.
    */
   makeURL(...paths: string[]): URL {
@@ -734,6 +741,20 @@ export class Application<
    */
   commandsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.commands, ...paths)
+  }
+
+  /**
+   * Makes path to the events directory
+   */
+  eventsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.events, ...paths)
+  }
+
+  /**
+   * Makes path to the listeners directory
+   */
+  listenersPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.listeners, ...paths)
   }
 
   /**
