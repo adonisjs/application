@@ -54,6 +54,7 @@ export type HooksState<
  * directories
  */
 export interface DirectoriesNode {
+  [key: string]: string
   config: string
   public: string
   contracts: string
@@ -75,6 +76,7 @@ export interface DirectoriesNode {
   policies: string
   validators: string
   commands: string
+  stubs: string
 }
 
 /**
@@ -127,7 +129,7 @@ export type RcFile = {
   /**
    * List of configured directories
    */
-  directories: DirectoriesNode | { [key: string]: string }
+  directories: DirectoriesNode & { [key: string]: string }
 
   /**
    * An array of files to load after the application

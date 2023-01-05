@@ -34,4 +34,5 @@ export const directories: DirectoriesNode = {
   middleware: 'app/middleware',
   policies: 'app/policies',
   validators: 'app/validators',
+  stubs: 'stubs',
 }

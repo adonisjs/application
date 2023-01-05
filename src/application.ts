@@ -24,6 +24,7 @@ import { ProvidersManager } from './managers/providers.js'
 import { MetaDataManager } from './managers/meta_data.js'
 import { CannotSwitchEnvironmentException } from './exceptions/cannot_switch_environment.js'
 import type { HooksState, SemverNode, AppEnvironments, ApplicationStates } from './types.js'
+import { StubsManager } from './stubs/manager.js'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes
@@ -205,6 +206,8 @@ export class Application<
     return this.#surroundedEnvironment.pm2
   }
 
+  stubs!: StubsManager
+
   /**
    * Reference to the AdonisJS IoC container. The value is defined
    * after the "init" method call
@@ -248,6 +251,13 @@ export class Application<
    */
   #instantiateContainer() {
     this.container = new Container<ContainerBindings>()
+  }
+
+  /**
+   * Instantiates the stubs manager
+   */
+  #instantiateStubsManager() {
+    this.stubs = new StubsManager(this, this.makePath(this.rcFile.directories.stubs))
   }
 
   /**
@@ -411,6 +421,7 @@ export class Application<
      * Initiate essentials
      */
     await this.#rcFileManager.process()
+    this.#instantiateStubsManager()
     await this.#configManager.process(this.rcFile.directories.config)
     this.#loggerManager.configure(this.config.get('logger'))
 

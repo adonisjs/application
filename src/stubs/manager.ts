@@ -10,7 +10,7 @@
 import { copy } from 'fs-extra'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
-import { Exception, RuntimeException, fsReadAll } from '@poppinss/utils'
+import { RuntimeException, fsReadAll } from '@poppinss/utils'
 
 import debug from '../debug.js'
 import { Stub } from './stub.js'
@@ -26,7 +26,7 @@ export class StubsManager {
 
   /**
    * Absolute path to the directory where stubs should
-   * be published or read from at priority
+   * be published or read from with priority
    */
   #publishTarget: string
 
@@ -77,7 +77,7 @@ export class StubsManager {
      */
     const file = await readFileFromSources(stubName, sources)
     if (!file) {
-      throw new Exception(`Unable to find stub "${stubName}"`, {
+      throw new RuntimeException(`Unable to find stub "${stubName}"`, {
         cause: `Scanned locations: \n${sources.join('\n')}`,
       })
     }
