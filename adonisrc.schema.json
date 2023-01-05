@@ -93,25 +93,28 @@
         "config": {
           "type": "string"
         },
-        "public": {
+        "commands": {
           "type": "string"
         },
         "contracts": {
           "type": "string"
         },
+        "public": {
+          "type": "string"
+        },
         "providers": {
           "type": "string"
         },
-        "database": {
+        "languageFiles": {
           "type": "string"
         },
         "migrations": {
           "type": "string"
         },
-        "seeds": {
+        "seeders": {
           "type": "string"
         },
-        "resources": {
+        "factories": {
           "type": "string"
         },
         "views": {
@@ -124,6 +127,39 @@
           "type": "string"
         },
         "tests": {
+          "type": "string"
+        },
+        "httpControllers": {
+          "type": "string"
+        },
+        "models": {
+          "type": "string"
+        },
+        "services": {
+          "type": "string"
+        },
+        "exceptions": {
+          "type": "string"
+        },
+        "mailers": {
+          "type": "string"
+        },
+        "middleware": {
+          "type": "string"
+        },
+        "policies": {
+          "type": "string"
+        },
+        "validators": {
+          "type": "string"
+        },
+        "events": {
+          "type": "string"
+        },
+        "listeners": {
+          "type": "string"
+        },
+        "stubs": {
           "type": "string"
         }
       },
