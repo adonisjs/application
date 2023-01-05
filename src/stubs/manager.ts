@@ -10,7 +10,7 @@
 import { copy } from 'fs-extra'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
-import { RuntimeException, fsReadAll } from '@poppinss/utils'
+import { RuntimeException, fsReadAll, slash } from '@poppinss/utils'
 
 import debug from '../debug.js'
 import { Stub } from './stub.js'
@@ -39,7 +39,10 @@ export class StubsManager {
    * Returns the path to the stubs source directory of a package
    */
   async #getPackageSource(packageName: string) {
-    const packageJSON = await resolveOptional(join(packageName, 'package.json'), this.#app.appRoot)
+    const packageJSON = await resolveOptional(
+      slash(join(packageName, 'package.json')),
+      this.#app.appRoot
+    )
     if (!packageJSON) {
       throw new RuntimeException(
         `Cannot resolve stubs from package "${packageName}". Make sure the package exports the "package.json" file via exports map`

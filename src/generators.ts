@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { slash } from '@poppinss/utils'
 import { extname, join } from 'node:path'
 import string from './helpers/string.js'
 import { StringBuilder } from './helpers/string_builder.js'
@@ -58,7 +59,7 @@ const generators = {
    * Construct paths to make an import path
    */
   importPath(...paths: string[]) {
-    return join(...paths)
+    return slash(join(...paths))
   },
 
   /**
