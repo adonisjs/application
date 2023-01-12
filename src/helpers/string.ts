@@ -28,9 +28,9 @@ string.pluralize.addUncountableRule('api')
 string.pluralize.addUncountableRule('session')
 
 const stringHelpers: typeof string & {
-  toSentence: typeof string['sentence']
-  ordinalize: typeof string['ordinal']
-  generateRandom: typeof string['random']
+  toSentence: (typeof string)['sentence']
+  ordinalize: (typeof string)['ordinal']
+  generateRandom: (typeof string)['random']
   isEmpty(value: string): boolean
   escapeHTML(value: string, options?: { encodeSymbols?: boolean }): string
   encodeSymbols(value: string, options?: EncodeOptions): string
