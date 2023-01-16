@@ -32,6 +32,6 @@ test.group('Helpers', () => {
     await new Promise((resolve) => setTimeout(resolve, 1200))
     const endTime = process.hrtime(startTime)
 
-    assert.equal(stringHelpers.prettyHrTime(endTime), /^\d(\.\d+)? s$/)
+    assert.match(stringHelpers.prettyHrTime(endTime), /^\d(\.\d+)? s$/)
   })
 })
