@@ -22,7 +22,7 @@ import { readFileFromSources, resolveOptional } from '../helpers.js'
  * allows creating resources from pre-existing stubs
  */
 export class StubsManager {
-  #app: Application<any, any>
+  #app: Application<any>
 
   /**
    * Absolute path to the directory where stubs should
@@ -30,7 +30,7 @@ export class StubsManager {
    */
   #publishTarget: string
 
-  constructor(app: Application<any, any>, publishTarget: string) {
+  constructor(app: Application<any>, publishTarget: string) {
     this.#app = app
     this.#publishTarget = publishTarget
   }

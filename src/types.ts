@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import type { LoggerConfig } from '@adonisjs/logger/types'
 import type { Application } from './application.js'
 
 /**
@@ -44,10 +43,10 @@ export type ApplicationStates = 'created' | 'initiated' | 'booted' | 'ready' | '
 /**
  * State shared with hooks
  */
-export type HooksState<
-  ContainerBindings extends Record<any, any>,
-  KnownLoggers extends Record<string, LoggerConfig>
-> = [[Application<ContainerBindings, KnownLoggers>], [Application<ContainerBindings, KnownLoggers>]]
+export type HooksState<ContainerBindings extends Record<any, any>> = [
+  [Application<ContainerBindings>],
+  [Application<ContainerBindings>]
+]
 
 /**
  * Shape of directories object with known and unknown

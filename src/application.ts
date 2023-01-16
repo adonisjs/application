@@ -13,13 +13,11 @@ import { join, relative } from 'node:path'
 import { Container } from '@adonisjs/fold'
 import { RuntimeException } from '@poppinss/utils'
 import type { HookHandler } from '@poppinss/hooks/types'
-import type { LoggerConfig } from '@adonisjs/logger/types'
 
 import debug from './debug.js'
 import { StubsManager } from './stubs/manager.js'
 import { ConfigManager } from './managers/config.js'
 import { RcFileManager } from './managers/rc_file.js'
-import { LoggerManager } from './managers/logger.js'
 import { NodeEnvManager } from './managers/node_env.js'
 import { PreloadsManager } from './managers/preloads.js'
 import { ProvidersManager } from './managers/providers.js'
@@ -35,10 +33,7 @@ import type { HooksState, SemverNode, AppEnvironments, ApplicationStates } from 
  * - Registering an booting providers
  * - Invoking lifecycle methods on the providers and hooks
  */
-export class Application<
-  ContainerBindings extends Record<any, any>,
-  KnownLoggers extends Record<string, LoggerConfig>
-> {
+export class Application<ContainerBindings extends Record<any, any>> {
   /**
    * Flag to know when we have started the termination
    * process
@@ -77,16 +72,15 @@ export class Application<
   #metaDataManager: MetaDataManager
   #preloadsManager: PreloadsManager
   #providersManager: ProvidersManager
-  #loggerManager: LoggerManager<KnownLoggers>
 
   /**
    * Lifecycle hooks
    */
   #hooks = new Hooks<{
-    initiating: HooksState<ContainerBindings, KnownLoggers>
-    booted: HooksState<ContainerBindings, KnownLoggers>
-    ready: HooksState<ContainerBindings, KnownLoggers>
-    terminating: HooksState<ContainerBindings, KnownLoggers>
+    initiating: HooksState<ContainerBindings>
+    booted: HooksState<ContainerBindings>
+    ready: HooksState<ContainerBindings>
+    terminating: HooksState<ContainerBindings>
   }>()
 
   /**
@@ -155,14 +149,6 @@ export class Application<
   }
 
   /**
-   * Reference to application logger. The value is defined
-   * after the "init" method call
-   */
-  get logger() {
-    return this.#loggerManager.logger
-  }
-
-  /**
    * Reference to the parsed rc file. The value is defined
    * after the "init" method call
    */
@@ -217,7 +203,6 @@ export class Application<
   constructor(appRoot: URL, options: { environment: AppEnvironments }) {
     this.#appRoot = appRoot
     this.#environment = options.environment
-    this.#loggerManager = new LoggerManager()
     this.#nodeEnvManager = new NodeEnvManager()
     this.#configManager = new ConfigManager(this.appRoot)
     this.#rcFileManager = new RcFileManager(this.appRoot)
@@ -376,10 +361,7 @@ export class Application<
    * the initiating process
    */
   initiating(
-    handler: HookHandler<
-      [Application<ContainerBindings, KnownLoggers>],
-      [Application<ContainerBindings, KnownLoggers>]
-    >
+    handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
   ): this {
     this.#hooks.add('initiating', handler)
     return this
@@ -423,7 +405,6 @@ export class Application<
     await this.#rcFileManager.process()
     this.#instantiateStubsManager()
     await this.#configManager.process(this.rcFile.directories.config)
-    this.#loggerManager.configure(this.config.get('logger'))
 
     /**
      * Cleanup registered hooks
@@ -464,10 +445,7 @@ export class Application<
    * been booted.
    */
   async booted(
-    handler: HookHandler<
-      [Application<ContainerBindings, KnownLoggers>],
-      [Application<ContainerBindings, KnownLoggers>]
-    >
+    handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
   ): Promise<void> {
     if (this.isBooted) {
       await handler(this)
@@ -528,10 +506,7 @@ export class Application<
    * ready
    */
   async ready(
-    handler: HookHandler<
-      [Application<ContainerBindings, KnownLoggers>],
-      [Application<ContainerBindings, KnownLoggers>]
-    >
+    handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
   ): Promise<void> {
     if (this.isReady) {
       await handler(this)
@@ -545,10 +520,7 @@ export class Application<
    * terminated.
    */
   terminating(
-    handler: HookHandler<
-      [Application<ContainerBindings, KnownLoggers>],
-      [Application<ContainerBindings, KnownLoggers>]
-    >
+    handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
   ): this {
     this.#hooks.add('terminating', handler)
     return this

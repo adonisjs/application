@@ -43,9 +43,9 @@ export class Stub {
   /**
    * Application class reference
    */
-  #app: Application<any, any>
+  #app: Application<any>
 
-  constructor(app: Application<any, any>, stubContents: string, stubPath: string) {
+  constructor(app: Application<any>, stubContents: string, stubPath: string) {
     this.#app = app
     this.#stubPath = stubPath
     this.#stubContents = stubContents
