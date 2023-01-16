@@ -8,6 +8,7 @@
  */
 
 import he, { EncodeOptions } from 'he'
+import prettyHrTime from 'pretty-hrtime'
 import string from '@poppinss/utils/string'
 
 /**
@@ -31,6 +32,10 @@ const stringHelpers: typeof string & {
   toSentence: (typeof string)['sentence']
   ordinalize: (typeof string)['ordinal']
   generateRandom: (typeof string)['random']
+  prettyHrTime(
+    time: [number, number],
+    options?: { verbose?: boolean | undefined; precise?: boolean | undefined }
+  ): string
   isEmpty(value: string): boolean
   escapeHTML(value: string, options?: { encodeSymbols?: boolean }): string
   encodeSymbols(value: string, options?: EncodeOptions): string
@@ -39,6 +44,11 @@ const stringHelpers: typeof string & {
   toSentence: string.sentence,
   ordinalize: string.ordinal,
   generateRandom: string.random,
+
+  prettyHrTime(time, options) {
+    return prettyHrTime(time, options)
+  },
+
   isEmpty(value: string): boolean {
     return value.trim().length === 0
   },

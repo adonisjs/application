@@ -26,4 +26,12 @@ test.group('Helpers', () => {
       '&lt;p&gt; foo &#xA9; bar &lt;/p&gt;'
     )
   })
+
+  test('prettify hrtime', async ({ assert }) => {
+    const startTime = process.hrtime()
+    await new Promise((resolve) => setTimeout(resolve, 1200))
+    const endTime = process.hrtime(startTime)
+
+    assert.equal(stringHelpers.prettyHrTime(endTime), /^\d(\.\d+)? s$/)
+  })
 })
