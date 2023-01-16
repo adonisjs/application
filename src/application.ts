@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { join, relative } from 'node:path'
 import Hooks from '@poppinss/hooks'
 import { fileURLToPath } from 'node:url'
+import { join, relative } from 'node:path'
 import { Container } from '@adonisjs/fold'
 import { RuntimeException } from '@poppinss/utils'
 import type { HookHandler } from '@poppinss/hooks/types'

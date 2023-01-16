@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { readFile } from 'node:fs/promises'
 
 /**
  * Attempts to read a file from multiple sources and returns the contents
