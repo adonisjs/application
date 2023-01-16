@@ -215,9 +215,7 @@ export class Application<ContainerBindings extends Record<any, any>> {
       environment: this.#environment,
     })
 
-    this.#nodeEnvManager.process()
     this.#surroundedEnvironment.pm2 = !!process.env.pm2_id
-
     this.#debugState()
   }
 
@@ -403,6 +401,7 @@ export class Application<ContainerBindings extends Record<any, any>> {
      * Initiate essentials
      */
     await this.#rcFileManager.process()
+    this.#nodeEnvManager.process()
     this.#instantiateStubsManager()
     await this.#configManager.process(this.rcFile.directories.config)
 

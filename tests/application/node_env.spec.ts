@@ -22,6 +22,7 @@ test.group('Application | nodeEnv', () => {
     const app = new Application(BASE_URL, {
       environment: 'web',
     })
+    await app.init()
 
     assert.equal(app.nodeEnvironment, 'development')
     assert.isTrue(app.inDev)
@@ -38,6 +39,7 @@ test.group('Application | nodeEnv', () => {
     const app = new Application(BASE_URL, {
       environment: 'web',
     })
+    await app.init()
 
     assert.equal(app.nodeEnvironment, 'development')
     assert.isTrue(app.inDev)
@@ -54,6 +56,7 @@ test.group('Application | nodeEnv', () => {
     const app = new Application(BASE_URL, {
       environment: 'web',
     })
+    await app.init()
 
     assert.equal(app.nodeEnvironment, 'test')
     assert.isTrue(app.inTest)
@@ -70,6 +73,7 @@ test.group('Application | nodeEnv', () => {
     const app = new Application(BASE_URL, {
       environment: 'web',
     })
+    await app.init()
 
     assert.equal(app.nodeEnvironment, 'production')
     assert.isTrue(app.inProduction)
@@ -86,6 +90,7 @@ test.group('Application | nodeEnv', () => {
     const app = new Application(BASE_URL, {
       environment: 'web',
     })
+    await app.init()
 
     assert.equal(app.nodeEnvironment, 'staging')
     assert.isFalse(app.inProduction)
