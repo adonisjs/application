@@ -1,5 +1,5 @@
 /*
- * @adonisjs/app
+ * @adonisjs/application
  *
  * (c) AdonisJS
  *

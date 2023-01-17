@@ -15,6 +15,7 @@ import { RuntimeException } from '@poppinss/utils'
 import type { HookHandler } from '@poppinss/hooks/types'
 
 import debug from './debug.js'
+import generators from './generators.js'
 import { StubsManager } from './stubs/manager.js'
 import { ConfigManager } from './managers/config.js'
 import { RcFileManager } from './managers/rc_file.js'
@@ -190,6 +191,13 @@ export class Application<ContainerBindings extends Record<any, any>> {
    */
   get managedByPm2() {
     return this.#surroundedEnvironment.pm2
+  }
+
+  /**
+   * Reference to scaffolding generators
+   */
+  get generators() {
+    return generators
   }
 
   stubs!: StubsManager

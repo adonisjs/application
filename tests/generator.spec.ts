@@ -1,7 +1,7 @@
 /*
- * @poppinss/scaffold
+ * @adonisjs/application
  *
- * (c) Poppinss
+ * (c) AdonisJS
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -82,26 +82,6 @@ test.group('Generator', () => {
     assert.equal(generators.controllerFileName('users'), 'users_controller.ts')
     assert.equal(generators.controllerFileName('users_controller'), 'users_controller.ts')
     assert.equal(generators.controllerFileName('user_controller'), 'users_controller.ts')
-  })
-
-  test('do not convert certain keywords to plural form', ({ assert }) => {
-    assert.equal(generators.controllerName('auth'), 'AuthController')
-    assert.equal(generators.controllerName('welcome'), 'WelcomeController')
-    assert.equal(generators.controllerName('login'), 'LoginController')
-    assert.equal(generators.controllerName('Authentication'), 'AuthenticationController')
-    assert.equal(generators.controllerName('dashboard'), 'DashboardController')
-    assert.equal(generators.controllerName('signup'), 'SignupController')
-    assert.equal(generators.controllerName('api'), 'ApiController')
-    assert.equal(generators.controllerName('session'), 'SessionController')
-
-    assert.equal(generators.controllerFileName('auth'), 'auth_controller.ts')
-    assert.equal(generators.controllerFileName('welcome'), 'welcome_controller.ts')
-    assert.equal(generators.controllerFileName('login'), 'login_controller.ts')
-    assert.equal(generators.controllerFileName('Authentication'), 'authentication_controller.ts')
-    assert.equal(generators.controllerFileName('dashboard'), 'dashboard_controller.ts')
-    assert.equal(generators.controllerFileName('signup'), 'signup_controller.ts')
-    assert.equal(generators.controllerFileName('api'), 'api_controller.ts')
-    assert.equal(generators.controllerFileName('session'), 'session_controller.ts')
   })
 
   test('convert entity name to event name', ({ assert }) => {

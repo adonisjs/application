@@ -1,7 +1,7 @@
 /*
- * @poppinss/scaffold
+ * @adonisjs/application
  *
- * (c) Poppinss
+ * (c) AdonisJS
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,8 +9,8 @@
 
 import { slash } from '@poppinss/utils'
 import { extname, join } from 'node:path'
-import string from './helpers/string.js'
-import { StringBuilder } from './helpers/string_builder.js'
+import string from '@poppinss/utils/string'
+import StringBuilder from '@poppinss/utils/string_builder'
 
 /**
  * Generators used for scaffolding

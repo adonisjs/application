@@ -1,5 +1,5 @@
 /*
- * @adonisjs/app
+ * @adonisjs/application
  *
  * (c) AdonisJS
  *
@@ -12,14 +12,12 @@ import * as tempura from 'tempura'
 import { isAbsolute } from 'node:path'
 import { default as fm } from 'front-matter'
 import { pathExists, outputFile } from 'fs-extra'
+import string from '@poppinss/utils/string'
 import { RuntimeException } from '@poppinss/utils'
+import StringBuilder from '@poppinss/utils/string_builder'
 
 import debug from '../debug.js'
-import generators from '../generators.js'
-import { cuid } from '../helpers/main.js'
-import string from '../helpers/string.js'
 import type { Application } from '../application.js'
-import { StringBuilder } from '../helpers/string_builder.js'
 
 /**
  * The stub class uses tempura template engine to process
@@ -105,9 +103,8 @@ export class Stub {
   #getStubDefaults() {
     return {
       app: this.#app,
-      cuid: cuid,
-      generators: generators,
       randomString: string.random,
+      generators: this.#app.generators,
       string: (value: string | StringBuilder) => new StringBuilder(value),
     }
   }
