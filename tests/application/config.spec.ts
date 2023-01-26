@@ -40,6 +40,8 @@ test.group('Application | config', (group) => {
     })
 
     await app.init()
+    await app.boot()
+
     assert.deepEqual(app.config.all(), {
       app: {
         name: 'adonisjs',
@@ -81,6 +83,8 @@ test.group('Application | config', (group) => {
     })
 
     await app.init()
+    await app.boot()
+
     assert.deepEqual(app.config.all(), {
       app: {
         name: 'adonisjs',
@@ -128,6 +132,8 @@ test.group('Application | config', (group) => {
     })
 
     await app.init()
+    await app.boot()
+
     assert.deepEqual(app.config.all(), {
       app: {
         name: 'adonis_js',

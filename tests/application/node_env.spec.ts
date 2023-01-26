@@ -23,6 +23,7 @@ test.group('Application | nodeEnv', () => {
       environment: 'web',
     })
     await app.init()
+    await app.boot()
 
     assert.equal(app.nodeEnvironment, 'development')
     assert.isTrue(app.inDev)
@@ -40,6 +41,7 @@ test.group('Application | nodeEnv', () => {
       environment: 'web',
     })
     await app.init()
+    await app.boot()
 
     assert.equal(app.nodeEnvironment, 'development')
     assert.isTrue(app.inDev)
@@ -57,6 +59,7 @@ test.group('Application | nodeEnv', () => {
       environment: 'web',
     })
     await app.init()
+    await app.boot()
 
     assert.equal(app.nodeEnvironment, 'test')
     assert.isTrue(app.inTest)
@@ -74,6 +77,7 @@ test.group('Application | nodeEnv', () => {
       environment: 'web',
     })
     await app.init()
+    await app.boot()
 
     assert.equal(app.nodeEnvironment, 'production')
     assert.isTrue(app.inProduction)
@@ -91,6 +95,7 @@ test.group('Application | nodeEnv', () => {
       environment: 'web',
     })
     await app.init()
+    await app.boot()
 
     assert.equal(app.nodeEnvironment, 'staging')
     assert.isFalse(app.inProduction)

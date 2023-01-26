@@ -409,9 +409,7 @@ export class Application<ContainerBindings extends Record<any, any>> {
      * Initiate essentials
      */
     await this.#rcFileManager.process()
-    this.#nodeEnvManager.process()
     this.#instantiateStubsManager()
-    await this.#configManager.process(this.rcFile.directories.config)
 
     /**
      * Cleanup registered hooks
@@ -435,6 +433,8 @@ export class Application<ContainerBindings extends Record<any, any>> {
     }
 
     debug('booting app')
+    this.#nodeEnvManager.process()
+    await this.#configManager.process(this.rcFile.directories.config)
     this.#providersManager.use(this.rcFile.providers)
     await this.#providersManager.register()
     await this.#providersManager.boot()
