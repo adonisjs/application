@@ -79,6 +79,7 @@ export class Application<ContainerBindings extends Record<any, any>> {
    */
   #hooks = new Hooks<{
     initiating: HooksState<ContainerBindings>
+    booting: HooksState<ContainerBindings>
     booted: HooksState<ContainerBindings>
     ready: HooksState<ContainerBindings>
     terminating: HooksState<ContainerBindings>
@@ -419,6 +420,17 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }
 
   /**
+   * Register hooks that are called before the app boot
+   * process starts
+   */
+  booting(
+    handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
+  ): this {
+    this.#hooks.add('booting', handler)
+    return this
+  }
+
+  /**
    * Boot the application. Calling this method performs the following
    * operations.
    *
@@ -433,12 +445,29 @@ export class Application<ContainerBindings extends Record<any, any>> {
     }
 
     debug('booting app')
+
+    /**
+     * Execute booting hooks
+     */
+    await this.#hooks.runner('booting').run(this)
+    this.#hooks.clear('booting')
+
+    /**
+     * Process node env and config files
+     */
     this.#nodeEnvManager.process()
     await this.#configManager.process(this.rcFile.directories.config)
+
+    /**
+     * Boot providers
+     */
     this.#providersManager.use(this.rcFile.providers)
     await this.#providersManager.register()
     await this.#providersManager.boot()
 
+    /**
+     * Notify the app is booted
+     */
     await this.#hooks.runner('booted').run(this)
     this.#hooks.clear('booted')
     this.#state = 'booted'

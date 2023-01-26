@@ -37,4 +37,21 @@ test.group('Application | start', () => {
     assert.deepEqual(stack, ['starting', 'ready'])
     assert.equal(app.getState(), 'ready')
   })
+
+  test('invoke ready hook immediately when the app has been started', async ({ assert }) => {
+    const stack: string[] = []
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+    await app.boot()
+    await app.start(() => {})
+
+    app.ready(async () => {
+      stack.push('ready')
+    })
+
+    assert.deepEqual(stack, ['ready'])
+  })
 })
