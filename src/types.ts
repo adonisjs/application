@@ -86,7 +86,6 @@ export interface DirectoriesNode {
 export type PreloadNode = {
   file: string
   environment: Exclude<AppEnvironments, 'unknown'>[]
-  optional: boolean
 }
 
 /**
@@ -227,3 +226,12 @@ export interface ContainerProviderContract {
    */
   shutdown?(): void | Promise<void>
 }
+
+/**
+ * The importer is used to import modules in context of the
+ * an AdonisJS application.
+ *
+ * Anytime AdonisJS wants to import a module from a bare string, it
+ * will call this function
+ */
+export type Importer = (moduleIdentifier: string, options?: ImportCallOptions) => any

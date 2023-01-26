@@ -41,6 +41,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -62,6 +65,7 @@ test.group('Application | providers', (group) => {
   test('do not resolve providers outside of the current environment', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     app.rcContents({
@@ -81,6 +85,9 @@ test.group('Application | providers', (group) => {
   test('do not resolve providers outside in unknown environment', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'unknown',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -100,6 +107,9 @@ test.group('Application | providers', (group) => {
   test('fail when provider module is missing', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -131,6 +141,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -144,7 +157,10 @@ test.group('Application | providers', (group) => {
 
     await app.init()
 
-    await assert.rejects(() => app.boot(), 'Missing default export from "./route_provider.js?v=4"')
+    await assert.rejects(
+      () => app.boot(),
+      'Missing "export default" in module "./route_provider.js?v=4"'
+    )
   })
 
   test('fail when default export is not a class', async ({ assert }) => {
@@ -163,6 +179,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -178,7 +197,7 @@ test.group('Application | providers', (group) => {
 
     await assert.rejects(
       () => app.boot(),
-      '"{ register: [Function: register] }" exported by "./route_provider.js?v=5" is not a class'
+      'Default export from module "./route_provider.js?v=5" is not a class'
     )
   })
 
@@ -207,6 +226,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -238,6 +260,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -270,6 +295,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -320,6 +348,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -378,6 +409,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -440,6 +474,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -507,6 +544,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -571,6 +611,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -631,6 +674,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({
@@ -688,6 +734,9 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
     })
 
     app.rcContents({

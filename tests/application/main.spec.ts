@@ -7,140 +7,56 @@
  * file that was distributed with this source code.
  */
 
-import { join } from 'node:path'
+import { parse } from 'semver'
 import { test } from '@japa/runner'
-import { fileURLToPath } from 'node:url'
-import { outputFile, remove } from 'fs-extra'
 import { Application } from '../../src/application.js'
 
 const BASE_URL = new URL('./app/', import.meta.url)
-const BASE_PATH = fileURLToPath(BASE_URL)
 
-test.group('Application', (group) => {
-  group.each.setup(() => {
-    return () => remove(BASE_PATH)
-  })
-
-  test('use default name when package.json does not exists', async ({ assert }) => {
+test.group('Application', () => {
+  test('get info.appName from the appName property', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
+    app.info.set('appName', 'adonisjs_app')
     assert.equal(app.appName, 'adonisjs_app')
-    assert.equal(process.env.APP_NAME, 'adonisjs_app')
-    assert.isNull(app.version)
   })
 
-  test('use default name when package.json does not have name', async ({ assert }) => {
+  test('get info.version from the version property', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
-    await outputFile(join(BASE_PATH, 'package.json'), JSON.stringify({}))
-
     await app.init()
-    assert.equal(app.appName, 'adonisjs_app')
-    assert.equal(process.env.APP_NAME, 'adonisjs_app')
-    assert.isNull(app.version)
-  })
-
-  test('parse app name from package.json file', async ({ assert }) => {
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-    })
-
-    await outputFile(
-      join(BASE_PATH, 'package.json'),
-      JSON.stringify({
-        name: 'test-app',
-      })
-    )
-
-    await app.init()
-    assert.equal(app.appName, 'test-app')
-    assert.equal(process.env.APP_NAME, 'test-app')
-    assert.isNull(app.version)
-  })
-
-  test('parse app version from package.json file', async ({ assert }) => {
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-    })
-
-    await outputFile(
-      join(BASE_PATH, 'package.json'),
-      JSON.stringify({
-        name: 'test-app',
-        version: '1.0.0',
-      })
-    )
-
-    await app.init()
-    assert.equal(app.appName, 'test-app')
-    assert.equal(process.env.APP_NAME, 'test-app')
+    app.info.set('version', parse('1.0.0'))
     assert.equal(app.version?.major, 1)
     assert.equal(app.version?.minor, 0)
     assert.equal(app.version?.patch, 0)
     assert.equal(app.version?.toString(), '1.0.0')
-    assert.equal(process.env.APP_VERSION, '1.0.0')
   })
 
-  test('return null for @adonisjs/core version when not installed', async ({ assert }) => {
+  test('get info.adonisVersion from the adonisVersion property', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
-    assert.equal(app.appName, 'adonisjs_app')
-    assert.isNull(app.adonisVersion)
-  })
-
-  test('return null when @adonisjs/core does not have version', async ({ assert, cleanup }) => {
-    const pkgPath = join(BASE_PATH, '../../../node_modules/@adonisjs/core')
-    cleanup(async () => {
-      await remove(pkgPath)
-    })
-
-    await outputFile(join(pkgPath, 'package.json'), JSON.stringify({}))
-
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-    })
-
-    await app.init()
-    assert.isNull(app.adonisVersion)
-  })
-
-  test('return version of @adonisjs/core package', async ({ assert, cleanup }) => {
-    const pkgPath = join(BASE_PATH, '../../../node_modules/@adonisjs/core')
-    cleanup(async () => {
-      await remove(pkgPath)
-    })
-
-    await outputFile(
-      join(pkgPath, 'package.json'),
-      JSON.stringify({
-        version: '4.0.0',
-      })
-    )
-
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-    })
-
-    await app.init()
-    assert.equal(app.appName, 'adonisjs_app')
-    assert.equal(app.adonisVersion?.major, 4)
+    app.info.set('adonisVersion', parse('1.0.0'))
+    assert.equal(app.adonisVersion?.major, 1)
     assert.equal(app.adonisVersion?.minor, 0)
     assert.equal(app.adonisVersion?.patch, 0)
-    assert.equal(app.adonisVersion?.toString(), '4.0.0')
-    assert.equal(process.env.ADONIS_VERSION, '4.0.0')
+    assert.equal(app.adonisVersion?.toString(), '1.0.0')
   })
 
   test('get app JSON representation', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
@@ -164,6 +80,7 @@ test.group('Application', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
@@ -181,6 +98,7 @@ test.group('Application', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
@@ -198,6 +116,7 @@ test.group('Application', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
@@ -218,6 +137,7 @@ test.group('Application', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
@@ -236,37 +156,45 @@ test.group('Application', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
     assert.isFalse(app.managedByPm2)
 
     process.env.pm2_id = '1'
     const app1 = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
     assert.isTrue(app1.managedByPm2)
   })
 
-  test('raise exception when current version of Node does not satisify node engine', async ({
-    assert,
-  }) => {
+  test('use importer to import a file', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {
+        return {
+          foo: 'bar',
+        }
+      },
     })
 
-    await outputFile(
-      join(BASE_PATH, 'package.json'),
-      JSON.stringify({
-        name: 'test-app',
-        version: '1.0.0',
-        engines: {
-          node: '<=10.0.0',
-        },
-      })
-    )
+    await app.init()
+    assert.deepEqual(await app.import('foo'), { foo: 'bar' })
+  })
 
-    await assert.rejects(
-      () => app.init(),
-      `The installed Node.js version "${process.version}" does not satisfy the expected Node.js version "<=10.0.0" defined inside package.json file`
-    )
+  test('use importer to resolve module default export', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: () => {
+        return {
+          default: {
+            foo: 'bar',
+          },
+        }
+      },
+    })
+
+    await app.init()
+    assert.deepEqual(await app.importDefault('foo'), { foo: 'bar' })
   })
 })

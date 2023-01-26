@@ -38,7 +38,7 @@ test.group('Stubs Manager | build', (group) => {
     `
     )
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -71,7 +71,7 @@ test.group('Stubs Manager | build', (group) => {
     `
     )
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -87,7 +87,7 @@ test.group('Stubs Manager | build', (group) => {
     const originalSource = join(BASE_PATH, 'source/stubs')
     const publishTarget = join(BASE_PATH, 'custom/stubs')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -109,7 +109,7 @@ test.group('Stubs Manager | build', (group) => {
 
     const publishTarget = join(BASE_PATH, 'custom/stubs')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -122,25 +122,10 @@ test.group('Stubs Manager | build', (group) => {
     }
   })
 
-  test('build stub from a package', async ({ assert, cleanup }) => {
-    const pkgPath = join(BASE_PATH, '../../../node_modules/@dummy/core')
-    cleanup(async () => {
-      await remove(pkgPath)
-    })
-
+  test('build stub from a module', async ({ assert }) => {
     const publishTarget = join(BASE_PATH, 'custom/stubs')
     await outputFile(
-      join(pkgPath, 'package.json'),
-      JSON.stringify({
-        name: '@dummy/core',
-        exports: {
-          './package.json': './package.json',
-        },
-      })
-    )
-
-    await outputFile(
-      join(pkgPath, 'stubs/middleware/middleware.stub'),
+      join(BASE_PATH, 'some-package/stubs/middleware/middleware.stub'),
       dedent`
     ---
     to: /foo
@@ -149,35 +134,30 @@ test.group('Stubs Manager | build', (group) => {
     `
     )
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: async (filePath) => {
+        if (filePath === 'some-package') {
+          return {
+            stubsRoot: join(BASE_PATH, 'some-package', 'stubs'),
+          }
+        }
+      },
+    })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
-    const stub = await stubs.build('middleware/middleware.stub', { pkg: '@dummy/core' })
+    const stub = await stubs.build('middleware/middleware.stub', { pkg: 'some-package' })
     const { contents } = await stub.prepare({})
 
     assert.equal(contents, 'hello world')
   })
 
-  test('give priority to publish target over package', async ({ assert, cleanup }) => {
-    const pkgPath = join(BASE_PATH, '../../../node_modules/@dummy/core')
-    cleanup(async () => {
-      await remove(pkgPath)
-    })
-
+  test('give priority to publish target over module', async ({ assert }) => {
     const publishTarget = join(BASE_PATH, 'custom/stubs')
-    await outputFile(
-      join(pkgPath, 'package.json'),
-      JSON.stringify({
-        name: '@dummy/core',
-        exports: {
-          './package.json': './package.json',
-        },
-      })
-    )
 
     await outputFile(
-      join(pkgPath, 'stubs/middleware/middleware.stub'),
+      join(BASE_PATH, 'some-package/stubs/middleware/middleware.stub'),
       dedent`
     ---
     to: /foo
@@ -196,26 +176,41 @@ test.group('Stubs Manager | build', (group) => {
     `
     )
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: async (filePath) => {
+        if (filePath === 'some-package') {
+          return {
+            stubsRoot: join(BASE_PATH, 'some-package', 'stubs'),
+          }
+        }
+      },
+    })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
-    const stub = await stubs.build('middleware/middleware.stub', { pkg: '@dummy/core' })
+    const stub = await stubs.build('middleware/middleware.stub', { pkg: 'some-package' })
     const { contents } = await stub.prepare({})
 
     assert.equal(contents, 'hi world')
   })
 
-  test('error when unable to locate package', async ({ assert }) => {
+  test('error when module path does not export "stubsRoot"', async ({ assert }) => {
     const publishTarget = join(BASE_PATH, 'custom/stubs')
+    await outputFile(join(BASE_PATH, 'some-package/index.ts'), ``)
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: async () => {
+        return {}
+      },
+    })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
     await assert.rejects(
-      () => stubs.build('middleware/middleware.stub', { pkg: '@dummy/core' }),
-      'Cannot resolve stubs from package "@dummy/core". Make sure the package exports the "package.json" file via exports map'
+      () => stubs.build('middleware/middleware.stub', { pkg: 'some-package' }),
+      'Cannot resolve stubs from package "some-package". Make sure the package entrypoint exports "stubsRoot" variable'
     )
   })
 })
@@ -233,7 +228,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -253,7 +248,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -274,7 +269,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -295,7 +290,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -320,7 +315,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -335,7 +330,7 @@ test.group('Stubs Manager | copy', (group) => {
     const originalSource = join(BASE_PATH, 'source/stubs')
     const publishTarget = join(BASE_PATH, 'custom/stubs')
 
-    const app = new Application(BASE_URL, { environment: 'web' })
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -344,35 +339,27 @@ test.group('Stubs Manager | copy', (group) => {
     }, /ENOENT\: no such file or directory/)
   })
 
-  test('copy a specific file from package source to publish target', async ({
-    assert,
-    cleanup,
-  }) => {
-    const pkgPath = join(BASE_PATH, '../../../node_modules/@dummy/db')
-    cleanup(async () => {
-      await remove(pkgPath)
-    })
+  test('copy a specific file from package source to publish target', async ({ assert }) => {
+    const pkgSource = join(BASE_PATH, 'some-package/stubs')
     const publishTarget = join(BASE_PATH, 'custom/stubs')
 
-    await outputFile(
-      join(pkgPath, 'package.json'),
-      JSON.stringify({
-        name: '@dummy/db',
-        exports: {
-          './package.json': './package.json',
-        },
-      })
-    )
+    await outputFile(join(pkgSource, 'middleware/middleware.stub'), 'hello middleware')
+    await outputFile(join(pkgSource, 'controller/controller.stub'), 'hello controller')
+    await outputFile(join(pkgSource, 'config/app.stub'), 'hello config')
 
-    await outputFile(join(pkgPath, 'stubs/middleware/middleware.stub'), 'hello middleware')
-    await outputFile(join(pkgPath, 'stubs/controller/controller.stub'), 'hello controller')
-    await outputFile(join(pkgPath, 'stubs/config/app.stub'), 'hello config')
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: () => {
+        return {
+          stubsRoot: join(BASE_PATH, 'some-package', 'stubs'),
+        }
+      },
+    })
 
-    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
-    const files = await stubs.copy('middleware/middleware.stub', { pkg: '@dummy/db' })
+    const files = await stubs.copy('middleware/middleware.stub', { pkg: 'some-package' })
 
     assert.lengthOf(files, 1)
     assert.deepEqual(files, [join(publishTarget, 'middleware/middleware.stub')])

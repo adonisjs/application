@@ -7,11 +7,15 @@
  * file that was distributed with this source code.
  */
 
-import { inspect } from 'node:util'
+import { importDefault, RuntimeException } from '@poppinss/utils'
 
 import debug from '../debug.js'
-import * as errors from '../exceptions/main.js'
-import type { AppEnvironments, ContainerProviderContract, ProviderNode } from '../types.js'
+import type {
+  AppEnvironments,
+  ContainerProviderContract,
+  Importer,
+  ProviderNode,
+} from '../types.js'
 
 /**
  * The ProvidersManager class is used to resolve, import and execute lifecycle
@@ -43,7 +47,7 @@ export class ProvidersManager {
   /**
    * The application root path
    */
-  #appRoot: URL
+  #importer: Importer
 
   /**
    * The options accepted by the manager
@@ -53,8 +57,11 @@ export class ProvidersManager {
     providersState: any[]
   }
 
-  constructor(appRoot: URL, options: { environment: AppEnvironments; providersState: any[] }) {
-    this.#appRoot = appRoot
+  constructor(
+    importer: Importer,
+    options: { environment: AppEnvironments; providersState: any[] }
+  ) {
+    this.#importer = importer
     this.#options = options
   }
 
@@ -70,20 +77,11 @@ export class ProvidersManager {
   }
 
   /**
-   * Ensure provider has a default export
-   */
-  #ensureHasDefaultExport(providerPath: string, providerImport: any) {
-    if (!providerImport || typeof providerImport !== 'object' || !providerImport['default']) {
-      throw new errors.E_MISSING_DEFAULT_EXPORT([providerPath])
-    }
-  }
-
-  /**
    * Ensure the value is a valid ES class
    */
   #ensureIsClass(providerPath: string, providerClass: any) {
     if (typeof providerClass !== 'function' || !providerClass.toString().startsWith('class ')) {
-      throw new errors.E_NOT_A_CLASS([inspect(providerClass), providerPath])
+      throw new RuntimeException(`Default export from module "${providerPath}" is not a class`)
     }
   }
 
@@ -91,7 +89,7 @@ export class ProvidersManager {
    * Resolves a provider module path and imports it
    */
   async #importProvider(providerPath: string) {
-    return import(await import.meta.resolve!(providerPath, this.#appRoot))
+    return importDefault<{ default: any }>(() => this.#importer(providerPath), providerPath)
   }
 
   /**
@@ -103,10 +101,9 @@ export class ProvidersManager {
     new (...args: any[]): ContainerProviderContract
   }> {
     const providerClass = await this.#importProvider(provider.file)
-    this.#ensureHasDefaultExport(provider.file, providerClass)
-    this.#ensureIsClass(provider.file, providerClass.default)
+    this.#ensureIsClass(provider.file, providerClass)
 
-    return providerClass.default
+    return providerClass
   }
 
   /**

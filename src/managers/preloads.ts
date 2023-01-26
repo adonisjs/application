@@ -8,8 +8,7 @@
  */
 
 import debug from '../debug.js'
-import { resolveOptional } from '../helpers.js'
-import type { AppEnvironments, PreloadNode } from '../types.js'
+import type { AppEnvironments, Importer, PreloadNode } from '../types.js'
 
 /**
  * The PreloadsManager class is used to resolve and import preload modules.
@@ -26,7 +25,7 @@ export class PreloadsManager {
   /**
    * The application root path
    */
-  #appRoot: URL
+  #importer: Importer
 
   /**
    * The options accepted by the manager.
@@ -35,8 +34,8 @@ export class PreloadsManager {
     environment: AppEnvironments
   }
 
-  constructor(appRoot: URL, options: { environment: AppEnvironments }) {
-    this.#appRoot = appRoot
+  constructor(importer: Importer, options: { environment: AppEnvironments }) {
+    this.#importer = importer
     this.#options = options
   }
 
@@ -56,21 +55,8 @@ export class PreloadsManager {
    * on "--experimental-import-meta-resolve" flag to resolve paths from
    * the app root.
    */
-  async #importPreloadModule(preload: PreloadNode): Promise<void> {
-    /**
-     * Import preload paths which are not optional
-     */
-    if (!preload.optional) {
-      return import(await import.meta.resolve!(preload.file, this.#appRoot))
-    }
-
-    /**
-     * Optionally resolve module
-     */
-    const resolvedPath = await resolveOptional(preload.file, this.#appRoot)
-    if (resolvedPath) {
-      await import(resolvedPath)
-    }
+  #importPreloadModule(preload: PreloadNode): Promise<void> {
+    return this.#importer(preload.file)
   }
 
   /**

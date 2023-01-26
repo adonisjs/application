@@ -11,8 +11,8 @@ import Hooks from '@poppinss/hooks'
 import { fileURLToPath } from 'node:url'
 import { join, relative } from 'node:path'
 import { Container } from '@adonisjs/fold'
-import { RuntimeException } from '@poppinss/utils'
 import type { HookHandler } from '@poppinss/hooks/types'
+import { importDefault, RuntimeException } from '@poppinss/utils'
 
 import debug from './debug.js'
 import generators from './generators.js'
@@ -22,8 +22,13 @@ import { RcFileManager } from './managers/rc_file.js'
 import { NodeEnvManager } from './managers/node_env.js'
 import { PreloadsManager } from './managers/preloads.js'
 import { ProvidersManager } from './managers/providers.js'
-import { MetaDataManager } from './managers/meta_data.js'
-import type { HooksState, SemverNode, AppEnvironments, ApplicationStates } from './types.js'
+import type {
+  Importer,
+  SemverNode,
+  HooksState,
+  AppEnvironments,
+  ApplicationStates,
+} from './types.js'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes
@@ -35,6 +40,12 @@ import type { HooksState, SemverNode, AppEnvironments, ApplicationStates } from 
  * - Invoking lifecycle methods on the providers and hooks
  */
 export class Application<ContainerBindings extends Record<any, any>> {
+  /**
+   * Importer function to import modules from the application
+   * context
+   */
+  #importer: Importer
+
   /**
    * Flag to know when we have started the termination
    * process
@@ -70,7 +81,6 @@ export class Application<ContainerBindings extends Record<any, any>> {
   #configManager: ConfigManager
   #rcFileManager: RcFileManager
   #nodeEnvManager: NodeEnvManager
-  #metaDataManager: MetaDataManager
   #preloadsManager: PreloadsManager
   #providersManager: ProvidersManager
 
@@ -86,24 +96,29 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }>()
 
   /**
-   * The name of the application defined inside "package.json" file.
+   * Store info metadata about the app.
+   */
+  info: Map<'appName' | 'version' | 'adonisVersion' | string, any> = new Map()
+
+  /**
+   * Returns the application name from the info map
    */
   get appName() {
-    return this.#metaDataManager.appName
+    return this.info.get('appName') || 'adonisjs_app'
   }
 
   /**
-   * The parsed version of the application defined inside "package.json" file.
+   * Returns the application version from the info map
    */
   get version(): SemverNode | null {
-    return this.#metaDataManager.version
+    return this.info.get('version') || null
   }
 
   /**
    * The parsed version for the "@adonisjs/core" package.
    */
   get adonisVersion(): SemverNode | null {
-    return this.#metaDataManager.adonisVersion
+    return this.info.get('adonisVersion') || null
   }
 
   /**
@@ -209,18 +224,18 @@ export class Application<ContainerBindings extends Record<any, any>> {
    */
   container!: Container<ContainerBindings>
 
-  constructor(appRoot: URL, options: { environment: AppEnvironments }) {
+  constructor(appRoot: URL, options: { environment: AppEnvironments; importer: Importer }) {
     this.#appRoot = appRoot
+    this.#importer = options.importer
     this.#environment = options.environment
     this.#nodeEnvManager = new NodeEnvManager()
     this.#configManager = new ConfigManager(this.appRoot)
     this.#rcFileManager = new RcFileManager(this.appRoot)
-    this.#metaDataManager = new MetaDataManager(this.appRoot)
-    this.#providersManager = new ProvidersManager(this.appRoot, {
+    this.#providersManager = new ProvidersManager(options.importer, {
       environment: this.#environment,
       providersState: [this],
     })
-    this.#preloadsManager = new PreloadsManager(this.appRoot, {
+    this.#preloadsManager = new PreloadsManager(options.importer, {
       environment: this.#environment,
     })
 
@@ -397,9 +412,6 @@ export class Application<ContainerBindings extends Record<any, any>> {
      * of initiating the app
      */
     this.#instantiateContainer()
-    await this.#metaDataManager.process()
-    await this.#metaDataManager.verifyNodeEngine()
-    this.#metaDataManager.addMetaDataToEnv()
 
     /**
      * Notify we are about to initiate the app
@@ -763,6 +775,20 @@ export class Application<ContainerBindings extends Record<any, any>> {
    */
   listenersPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.listeners, ...paths)
+  }
+
+  /**
+   * Import a module by identifier
+   */
+  import(moduleIdentifier: string) {
+    return this.#importer(moduleIdentifier)
+  }
+
+  /**
+   * Import a module by identifier
+   */
+  importDefault<T extends object>(moduleIdentifier: string) {
+    return importDefault<T>(() => this.#importer(moduleIdentifier))
   }
 
   /**

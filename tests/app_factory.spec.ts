@@ -13,15 +13,15 @@ import { AppFactory } from '../test_factories/app.js'
 
 test.group('App factory', () => {
   test('create app instance using app factory', ({ assert }) => {
-    const app = new AppFactory().create(new URL('./app/', import.meta.url))
+    const app = new AppFactory().create(new URL('./app/', import.meta.url), () => {})
     assert.instanceOf(app, Application)
     assert.equal(app.getEnvironment(), 'web')
   })
 
   test('pass options using the factory', ({ assert }) => {
     const app = new AppFactory()
-      .merge({ options: { environment: 'console' } })
-      .create(new URL('./app/', import.meta.url))
+      .merge({ environment: 'console' })
+      .create(new URL('./app/', import.meta.url), () => {})
 
     assert.instanceOf(app, Application)
     assert.equal(app.getEnvironment(), 'console')

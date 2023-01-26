@@ -70,7 +70,6 @@ test.group('Rc Parser', () => {
         {
           file: './foo/bar',
           environment: ['web', 'console', 'test', 'repl'],
-          optional: false,
         },
       ],
       directories,
@@ -91,7 +90,6 @@ test.group('Rc Parser', () => {
       preloads: [
         {
           file: './foo/bar',
-          optional: true,
           environment: ['web'],
         },
       ],
@@ -102,7 +100,6 @@ test.group('Rc Parser', () => {
         preloads: [
           {
             file: './foo/bar',
-            optional: true,
             environment: ['web'],
           },
         ],
@@ -111,7 +108,6 @@ test.group('Rc Parser', () => {
       preloads: [
         {
           file: './foo/bar',
-          optional: true,
           environment: ['web'],
         },
       ],
@@ -154,7 +150,6 @@ test.group('Rc Parser', () => {
         {
           file: 'foo',
           environment: ['web', 'console', 'test', 'repl'],
-          optional: false,
         },
       ],
       directories,

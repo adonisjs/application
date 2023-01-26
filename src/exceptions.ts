@@ -28,24 +28,6 @@ export const E_MISSING_PRELOAD_FILE = createError<[preloadProperty: string]>(
 )
 
 /**
- * The exception is raised when a module is missing a default
- * export
- */
-export const E_MISSING_DEFAULT_EXPORT = createError<[importPath: string]>(
-  'Missing default export from "%s"',
-  'E_MISSING_DEFAULT_EXPORT'
-)
-
-/**
- * The exception is raised when a default export of a module is not
- * a class constructor
- */
-export const E_NOT_A_CLASS = createError<[value: string, importPath: string]>(
-  '"%s" exported by "%s" is not a class',
-  'E_NOT_A_CLASS'
-)
-
-/**
  * The exception is raised when the "file" property is missing
  * in the provider object
  */

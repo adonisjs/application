@@ -9,7 +9,7 @@
 
 import { inspect } from 'node:util'
 
-import * as errors from './exceptions/main.js'
+import * as errors from './exceptions.js'
 import { directories } from './directories.js'
 import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from './types.js'
 
@@ -74,7 +74,6 @@ export class RcFileParser {
 
       return {
         file: normalizedPreload.file,
-        optional: normalizedPreload.optional ?? false,
         environment: normalizedPreload.environment ?? this.#knownEnvironments(),
       }
     })

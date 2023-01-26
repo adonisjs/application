@@ -1,5 +1,5 @@
 /*
- * @adonisjs/app
+ * @adonisjs/application
  *
  * (c) AdonisJS
  *
@@ -8,25 +8,19 @@
  */
 
 import { Application } from '../src/application.js'
-import type { AppEnvironments } from '../src/types.js'
+import type { AppEnvironments, Importer } from '../src/types.js'
 
 /**
  * App factory is used to generate application class instances for
  * testing
  */
 export class AppFactory {
-  #parameters: Partial<{
-    options: { environment: AppEnvironments }
-  }> = {}
+  #parameters: Partial<{ environment: AppEnvironments; importer: Importer }> = {}
 
   /**
    * Merge parameters accepted by the AppFactory
    */
-  merge(
-    params: Partial<{
-      options: { environment: AppEnvironments }
-    }>
-  ) {
+  merge(params: Partial<{ environment: AppEnvironments; importer: Importer }>) {
     Object.assign(this.#parameters, params)
     return this
   }
@@ -34,7 +28,10 @@ export class AppFactory {
   /**
    * Create application class instance
    */
-  create(appRoot: URL) {
-    return new Application(appRoot, this.#parameters.options || { environment: 'web' })
+  create(appRoot: URL, importer: Importer) {
+    return new Application(
+      appRoot,
+      Object.assign({ importer }, { environment: 'web' as const }, this.#parameters)
+    )
   }
 }

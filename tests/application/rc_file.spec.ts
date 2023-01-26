@@ -26,6 +26,7 @@ test.group('Application | rcFile', (group) => {
   test('parse rc file contents', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     app.rcContents({
@@ -70,6 +71,7 @@ test.group('Application | rcFile', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()
@@ -103,6 +105,7 @@ test.group('Application | rcFile', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await assert.rejects(() => app.init())
@@ -111,6 +114,7 @@ test.group('Application | rcFile', (group) => {
   test('use default rc file when no .adonisrc.json file exists', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
+      importer: () => {},
     })
 
     await app.init()

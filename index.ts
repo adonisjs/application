@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-export * as errors from './src/exceptions/main.js'
+export * as errors from './src/exceptions.js'
 export { Application } from './src/application.js'
 export { RcFileParser } from './src/rc_file_parser.js'

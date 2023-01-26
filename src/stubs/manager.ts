@@ -8,14 +8,13 @@
  */
 
 import { copy } from 'fs-extra'
-import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
-import { RuntimeException, fsReadAll, slash } from '@poppinss/utils'
+import { join } from 'node:path'
+import { RuntimeException, fsReadAll } from '@poppinss/utils'
 
 import debug from '../debug.js'
 import { Stub } from './stub.js'
 import { Application } from '../application.js'
-import { readFileFromSources, resolveOptional } from '../helpers.js'
+import { readFileFromSources } from '../helpers.js'
 
 /**
  * Stub Manager is used to read and copy stubs from different sources. Also
@@ -39,21 +38,18 @@ export class StubsManager {
    * Returns the path to the stubs source directory of a package
    */
   async #getPackageSource(packageName: string) {
-    const packageJSON = await resolveOptional(
-      slash(join(packageName, 'package.json')),
-      this.#app.appRoot
-    )
-    if (!packageJSON) {
+    const pkgMainExports = await this.#app.import(packageName)
+    if (!pkgMainExports.stubsRoot) {
       throw new RuntimeException(
-        `Cannot resolve stubs from package "${packageName}". Make sure the package exports the "package.json" file via exports map`
+        `Cannot resolve stubs from package "${packageName}". Make sure the package entrypoint exports "stubsRoot" variable`
       )
     }
 
-    return join(dirname(fileURLToPath(packageJSON)), 'stubs')
+    return pkgMainExports.stubsRoot
   }
 
   /**
-   * Create an instance of stub by its name. The lookup is performed inside
+   * Creates an instance of stub by its name. The lookup is performed inside
    * the publishTarget and the optional source or pkg destination.
    */
   async build(stubName: string, options?: { source?: string; pkg?: string }) {

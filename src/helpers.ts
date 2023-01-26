@@ -47,22 +47,3 @@ export async function readFileOptional(filePath: URL | string): Promise<string |
     return null
   }
 }
-
-/**
- * Optionally resolve a module from a parent URL
- */
-export async function resolveOptional(filePath: string, parent: URL): Promise<string | null> {
-  try {
-    return await import.meta.resolve!(filePath, parent)
-  } catch (error) {
-    /* c8 ignore next 3 */
-    if (
-      !error.message.includes('Cannot find') &&
-      !error.message.includes('ERR_PACKAGE_PATH_NOT_EXPORTED')
-    ) {
-      throw error
-    }
-  }
-
-  return null
-}
