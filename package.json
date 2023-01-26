@@ -15,7 +15,7 @@
     ".": "./build/index.js",
     "./types": "./build/src/types.js",
     "./generators": "./build/src/generators.js",
-    "./test_factories/*": "./build/test_factories/*.js"
+    "./factories": "./build/test_factories/main.js"
   },
   "scripts": {
     "pretest": "npm run lint",
@@ -38,7 +38,7 @@
   "author": "virk,adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/config": "^4.1.4-0",
+    "@adonisjs/config": "^4.2.0-0",
     "@adonisjs/fold": "^9.9.1-0",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
@@ -78,7 +78,7 @@
     "tempura": "^0.4.0"
   },
   "peerDependencies": {
-    "@adonisjs/config": "^4.1.4-0",
+    "@adonisjs/config": "^4.2.0-0",
     "@adonisjs/fold": "^9.9.1-0"
   },
   "repository": {
