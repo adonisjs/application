@@ -75,6 +75,12 @@ test.group('Generator', () => {
     assert.equal(generators.controllerName('user_controller'), 'UsersController')
   })
 
+  test('keep certain controller names always singular', ({ assert }) => {
+    assert.equal(generators.controllerName('AdminController'), 'AdminController')
+    assert.equal(generators.controllerName('ApiController'), 'ApiController')
+    assert.equal(generators.controllerName('api'), 'ApiController')
+  })
+
   test('make singular controller name', ({ assert }) => {
     assert.equal(generators.controllerName('user', true), 'UserController')
     assert.equal(generators.controllerName('admin', true), 'AdminController')

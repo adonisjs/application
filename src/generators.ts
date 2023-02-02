@@ -17,6 +17,26 @@ import StringBuilder from '@poppinss/utils/string_builder'
  */
 const generators = {
   /**
+   * The given controller names will always be generated
+   * in singular form
+   */
+  singularControllerNames: [
+    'home',
+    'admin',
+    'session',
+    'application',
+    'money',
+    'signup',
+    'login',
+    'auth',
+    'authentication',
+    'adonis',
+    'adonisjs',
+    'dashboard',
+    'api',
+  ],
+
+  /**
    * Creates the entity path and name from the user
    * input.
    */
@@ -97,12 +117,11 @@ const generators = {
    * Converts an entity name to a controller name
    */
   controllerName(entityName: string, singular: boolean = false) {
-    const controller = new StringBuilder(entityName)
-      .removeExtension()
-      .removeSuffix('controller')
-      .plural()
+    const controller = new StringBuilder(entityName).removeExtension().removeSuffix('controller')
 
-    if (singular) {
+    if (this.singularControllerNames.includes(controller.toString().toLowerCase())) {
+      controller.singular()
+    } else if (singular) {
       controller.singular()
     } else {
       controller.plural()
