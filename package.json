@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/application",
-  "version": "7.0.0-0",
+  "version": "7.0.1-0",
   "description": "AdonisJS application class to read app related data",
   "type": "module",
   "main": "build/index.js",
