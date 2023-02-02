@@ -96,21 +96,29 @@ const generators = {
   /**
    * Converts an entity name to a controller name
    */
-  controllerName(entityName: string) {
-    return new StringBuilder(entityName)
+  controllerName(entityName: string, singular: boolean = false) {
+    const controller = new StringBuilder(entityName)
       .removeExtension()
       .removeSuffix('controller')
       .plural()
-      .pascalCase()
-      .suffix('Controller')
-      .toString()
+
+    if (singular) {
+      controller.singular()
+    } else {
+      controller.plural()
+    }
+
+    return controller.pascalCase().suffix('Controller').toString()
   },
 
   /**
    * Converts an entity name to a controller file name
    */
-  controllerFileName(entityName: string) {
-    return new StringBuilder(this.controllerName(entityName)).snakeCase().ext('.ts').toString()
+  controllerFileName(entityName: string, singular: boolean = false) {
+    return new StringBuilder(this.controllerName(entityName, singular))
+      .snakeCase()
+      .ext('.ts')
+      .toString()
   },
 
   /**

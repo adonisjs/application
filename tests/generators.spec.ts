@@ -75,6 +75,16 @@ test.group('Generator', () => {
     assert.equal(generators.controllerName('user_controller'), 'UsersController')
   })
 
+  test('make singular controller name', ({ assert }) => {
+    assert.equal(generators.controllerName('user', true), 'UserController')
+    assert.equal(generators.controllerName('admin', true), 'AdminController')
+  })
+
+  test('make singular controller filename', ({ assert }) => {
+    assert.equal(generators.controllerFileName('user', true), 'user_controller.ts')
+    assert.equal(generators.controllerFileName('admin', true), 'admin_controller.ts')
+  })
+
   test('convert entity name to controller filename', ({ assert }) => {
     assert.equal(generators.controllerFileName('user'), 'users_controller.ts')
     assert.equal(generators.controllerFileName('usersController'), 'users_controller.ts')
