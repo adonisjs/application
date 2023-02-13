@@ -300,6 +300,20 @@ const generators = {
   },
 
   /**
+   * Converts an entity name to command terminal name
+   */
+  commandTerminalName(entityName: string) {
+    const snakeCaseName = new StringBuilder(this.commandName(entityName)).snakeCase().toString()
+
+    const [namespace, ...rest] = snakeCaseName.split('_')
+    if (!rest.length) {
+      return namespace
+    }
+
+    return `${namespace}:${rest.join('_')}`
+  },
+
+  /**
    * Converts an entity name to command name
    */
   commandName(entityName: string) {

@@ -238,6 +238,14 @@ test.group('Generator', () => {
     assert.equal(generators.commandFileName('create_users_command'), 'create_users.ts')
   })
 
+  test('convert entity name to command terminal name', ({ assert }) => {
+    assert.equal(generators.commandTerminalName('makeController'), 'make:controller')
+    assert.equal(generators.commandTerminalName('publish_asset'), 'publish:asset')
+    assert.equal(generators.commandTerminalName('publish_config_command'), 'publish:config')
+    assert.equal(generators.commandTerminalName('create_users_command'), 'create:users')
+    assert.equal(generators.commandTerminalName('create_admin_users_command'), 'create:admin_users')
+  })
+
   test('convert entity name to validator name', ({ assert }) => {
     assert.equal(generators.validatorName('createUser'), 'CreateUserValidator')
     assert.equal(generators.validatorName('updateUser'), 'UpdateUserValidator')
