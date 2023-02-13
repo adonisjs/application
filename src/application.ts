@@ -174,6 +174,14 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }
 
   /**
+   * Reference to the rcFile editor. The value is defined
+   * after the "init" method call
+   */
+  get rcFileEditor() {
+    return this.#rcFileManager.rcFileEditor
+  }
+
+  /**
    * Normalized current NODE_ENV
    */
   get nodeEnvironment() {

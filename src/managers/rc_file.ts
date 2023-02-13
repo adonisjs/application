@@ -10,7 +10,8 @@
 import debug from '../debug.js'
 import type { RcFile } from '../types.js'
 import { readFileOptional } from '../helpers.js'
-import { RcFileParser } from '../rc_file_parser.js'
+import { RcFileParser } from '../rc_file/parser.js'
+import { RcFileEditor } from '../rc_file/editor.js'
 
 /**
  * RcFileManager is used to process the raw contents or the contents
@@ -30,6 +31,12 @@ export class RcFileManager {
    */
   rcFile!: RcFile
 
+  /**
+   * Reference to the RC file editor. The value is defined
+   * after the "init" method call
+   */
+  rcFileEditor!: RcFileEditor
+
   constructor(appRoot: URL) {
     this.#appRoot = appRoot
   }
@@ -48,6 +55,7 @@ export class RcFileManager {
    * Process the contents for the rcFile
    */
   async process() {
+    const rcFilePath = new URL('.adonisrc.json', this.#appRoot)
     if (!this.#rcContents) {
       const contents = await readFileOptional(new URL('.adonisrc.json', this.#appRoot))
       this.#rcContents = contents ? JSON.parse(contents) : {}
@@ -55,6 +63,7 @@ export class RcFileManager {
     }
 
     this.rcFile = new RcFileParser(this.#rcContents!).parse()
+    this.rcFileEditor = new RcFileEditor(rcFilePath, this.rcFile.raw)
     this.#rcContents = undefined
   }
 }

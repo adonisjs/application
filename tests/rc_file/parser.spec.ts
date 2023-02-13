@@ -9,7 +9,7 @@
 
 import { test } from '@japa/runner'
 import { directories } from '../src/directories.js'
-import { RcFileParser } from '../src/rc_file_parser.js'
+import { RcFileParser } from '../src/rc_file/parser.js'
 
 test.group('Rc Parser', () => {
   test('parse empty object to rcfile node', ({ assert }) => {
