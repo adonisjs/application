@@ -134,4 +134,22 @@ test.group('Application | rcFile', (group) => {
       },
     })
   })
+
+  test('initiate rc file editor', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: () => {},
+    })
+
+    app.rcContents({
+      typescript: true,
+      providers: ['@adonisjs/core'],
+    })
+
+    await app.init()
+    assert.deepEqual(app.rcFileEditor.toJSON(), {
+      typescript: true,
+      providers: ['@adonisjs/core'],
+    })
+  })
 })
