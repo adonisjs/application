@@ -7,7 +7,7 @@
   "files": [
     "build/adonis-typings",
     "build/src",
-    "build/test_factories",
+    "build/factories",
     "build/index.d.ts",
     "build/index.js"
   ],
@@ -15,7 +15,7 @@
     ".": "./build/index.js",
     "./types": "./build/src/types.js",
     "./generators": "./build/src/generators.js",
-    "./factories": "./build/test_factories/main.js"
+    "./factories": "./build/factories/main.js"
   },
   "scripts": {
     "pretest": "npm run lint",
