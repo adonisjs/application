@@ -9,7 +9,7 @@
 
 import { test } from '@japa/runner'
 import { Application } from '../index.js'
-import { AppFactory } from '../test_factories/app.js'
+import { AppFactory } from '../factories/app.js'
 
 test.group('App factory', () => {
   test('create app instance using app factory', ({ assert }) => {
