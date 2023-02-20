@@ -396,9 +396,13 @@ test.group('RCFile editor | save', () => {
     await assert.fileExists('.adonisrc.json')
     await assert.fileEquals(
       '.adonisrc.json',
-      JSON.stringify({
-        commands: ['@adonisjs/core/commands'],
-      })
+      JSON.stringify(
+        {
+          commands: ['@adonisjs/core/commands'],
+        },
+        null,
+        2
+      )
     )
   })
 
@@ -409,19 +413,27 @@ test.group('RCFile editor | save', () => {
     await rcFile.save()
     await assert.fileEquals(
       '.adonisrc.json',
-      JSON.stringify({
-        commands: ['@adonisjs/core/commands'],
-      })
+      JSON.stringify(
+        {
+          commands: ['@adonisjs/core/commands'],
+        },
+        null,
+        2
+      )
     )
 
     rcFile.addPreloadFile('#start/kernel', ['web'])
     await rcFile.save()
     await assert.fileEquals(
       '.adonisrc.json',
-      JSON.stringify({
-        commands: ['@adonisjs/core/commands'],
-        preloads: [{ file: '#start/kernel', environment: ['web'] }],
-      })
+      JSON.stringify(
+        {
+          commands: ['@adonisjs/core/commands'],
+          preloads: [{ file: '#start/kernel', environment: ['web'] }],
+        },
+        null,
+        2
+      )
     )
   })
 })

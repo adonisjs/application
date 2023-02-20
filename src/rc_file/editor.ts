@@ -165,6 +165,6 @@ export class RcFileEditor {
    * Writes updated rcFile to the disk
    */
   async save() {
-    await outputFile(fileURLToPath(this.#filePath), JSON.stringify(this.toJSON()))
+    await outputFile(fileURLToPath(this.#filePath), JSON.stringify(this.toJSON(), null, 2))
   }
 }
