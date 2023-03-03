@@ -6,6 +6,16 @@
       "description": "Is project written in TypeScript or not",
       "type": "boolean"
     },
+    "assetsBundler": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "devServerCommand": { "type": "string" },
+        "buildCommand": { "type": "string" }
+      },
+      "required": ["name", "devServerCommand", "buildCommand"],
+      "additionalProperties": false
+    },
     "preloads": {
       "type": "array",
       "uniqueItems": true,

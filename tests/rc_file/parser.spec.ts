@@ -503,4 +503,26 @@ test.group('Rc Parser', () => {
       },
     })
   })
+
+  test('parse assetsBundler property', ({ assert }) => {
+    const parser = new RcFileParser({
+      assetsBundler: {},
+    })
+
+    assert.deepEqual(parser.parse(), {
+      raw: {},
+      typescript: true,
+      preloads: [],
+      directories,
+      metaFiles: [],
+      commands: [],
+      commandsAliases: {},
+      providers: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
+    })
+  })
 })

@@ -225,4 +225,39 @@ test.group('JSON Schema', () => {
       ['requires property "files"']
     )
   })
+
+  test('define assetsBundler config', ({ assert }) => {
+    const validator = new Validator()
+    const config = {
+      exceptionHandlerNamespace: '',
+      typescript: true,
+      providers: [],
+      assetsBundler: {
+        name: 'vite',
+        devServerCommand: 'vite',
+        buildCommand: 'vite build',
+      },
+    }
+    const result = validator.validate(config, schema)
+    assert.lengthOf(result.errors, 0)
+  })
+
+  test('fail when assetsBundler is missing one or more properties', ({ assert }) => {
+    const validator = new Validator()
+    const config = {
+      exceptionHandlerNamespace: '',
+      typescript: true,
+      providers: [],
+      assetsBundler: {
+        name: 'vite',
+        buildCommand: 'vite build',
+      },
+    }
+
+    const result = validator.validate(config, schema)
+    assert.deepEqual(
+      result.errors.map(({ message }) => message),
+      ['requires property "devServerCommand"']
+    )
+  })
 })

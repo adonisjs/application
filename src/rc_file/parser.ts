@@ -156,6 +156,9 @@ export class RcFileParser {
   parse(): RcFile {
     return {
       typescript: this.#rcFile.typescript,
+      ...(this.#rcFile.assetsBundler
+        ? { assetsBundler: Object.assign({}, this.#rcFile.assetsBundler) }
+        : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
       commands: [...this.#rcFile.commands],

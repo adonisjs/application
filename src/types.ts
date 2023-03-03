@@ -122,6 +122,19 @@ export type MetaFileNode = {
  */
 export type RcFile = {
   /**
+   * Configure a custom assets bundler to bundle and serve
+   * assets.
+   *
+   * This config can be used to configure assets bundler apart from
+   * vite and encore (since both are auto-detected)
+   */
+  assetsBundler?: {
+    name: string
+    devServerCommand: string
+    buildCommand: string
+  }
+
+  /**
    * Is it a TypeScript project
    */
   typescript: boolean
