@@ -53,3 +53,30 @@ export const E_MISSING_SUITE_FILES = createError<[suiteProperty: string]>(
   'Invalid suite entry "%s". Missing files property',
   'E_MISSING_SUITE_FILES'
 )
+
+/**
+ * The exception is raised when the "devServerCommand" is missing
+ * in assetsBundler object
+ */
+export const E_MISSING_BUNDLER_DEV_COMMAND = createError(
+  'Invalid assetsBundler entry. Missing devServerCommand property',
+  'E_MISSING_BUNDLER_DEV_COMMAND'
+)
+
+/**
+ * The exception is raised when the "buildCommand" is missing
+ * in assetsBundler object
+ */
+export const E_MISSING_BUNDLER_BUILD_COMMAND = createError(
+  'Invalid assetsBundler entry. Missing buildCommand property',
+  'E_MISSING_BUNDLER_BUILD_COMMAND'
+)
+
+/**
+ * The exception is raised when the "name" is missing
+ * in assetsBundler object
+ */
+export const E_MISSING_BUNDLER_NAME = createError(
+  'Invalid assetsBundler entry. Missing name property',
+  'E_MISSING_BUNDLER_NAME'
+)

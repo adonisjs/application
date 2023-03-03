@@ -55,6 +55,33 @@ export class RcFileParser {
   }
 
   /**
+   * Returns the assets bundler object
+   */
+  #getAssetsBundler() {
+    if (!this.#rcFile.assetsBundler) {
+      return
+    }
+
+    if (!this.#rcFile.assetsBundler.name) {
+      throw new errors.E_MISSING_BUNDLER_NAME()
+    }
+
+    if (!this.#rcFile.assetsBundler.devServerCommand) {
+      throw new errors.E_MISSING_BUNDLER_DEV_COMMAND()
+    }
+
+    if (!this.#rcFile.assetsBundler.buildCommand) {
+      throw new errors.E_MISSING_BUNDLER_BUILD_COMMAND()
+    }
+
+    return {
+      name: this.#rcFile.assetsBundler.name,
+      devServerCommand: this.#rcFile.assetsBundler.devServerCommand,
+      buildCommand: this.#rcFile.assetsBundler.buildCommand,
+    }
+  }
+
+  /**
    * Returns a normalized array of preload files
    */
   #getPreloads(): PreloadNode[] {
@@ -156,9 +183,7 @@ export class RcFileParser {
   parse(): RcFile {
     return {
       typescript: this.#rcFile.typescript,
-      ...(this.#rcFile.assetsBundler
-        ? { assetsBundler: Object.assign({}, this.#rcFile.assetsBundler) }
-        : {}),
+      ...(this.#rcFile.assetsBundler ? { assetsBundler: this.#getAssetsBundler() } : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
       commands: [...this.#rcFile.commands],

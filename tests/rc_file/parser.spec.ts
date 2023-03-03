@@ -506,12 +506,27 @@ test.group('Rc Parser', () => {
 
   test('parse assetsBundler property', ({ assert }) => {
     const parser = new RcFileParser({
-      assetsBundler: {},
+      assetsBundler: {
+        name: 'vite',
+        devServerCommand: 'vite',
+        buildCommand: 'vite build',
+      },
     })
 
     assert.deepEqual(parser.parse(), {
-      raw: {},
+      raw: {
+        assetsBundler: {
+          name: 'vite',
+          devServerCommand: 'vite',
+          buildCommand: 'vite build',
+        },
+      },
       typescript: true,
+      assetsBundler: {
+        name: 'vite',
+        devServerCommand: 'vite',
+        buildCommand: 'vite build',
+      },
       preloads: [],
       directories,
       metaFiles: [],
@@ -524,5 +539,39 @@ test.group('Rc Parser', () => {
         forceExit: true,
       },
     })
+  })
+
+  test('raise error when assetsBundler properties are missing', ({ assert }) => {
+    assert.throws(
+      () =>
+        new RcFileParser({
+          assetsBundler: {
+            name: 'vite',
+          },
+        }).parse(),
+      'Invalid assetsBundler entry. Missing devServerCommand property'
+    )
+
+    assert.throws(
+      () =>
+        new RcFileParser({
+          assetsBundler: {
+            name: 'vite',
+            devServerCommand: 'vite',
+          },
+        }).parse(),
+      'Invalid assetsBundler entry. Missing buildCommand property'
+    )
+
+    assert.throws(
+      () =>
+        new RcFileParser({
+          assetsBundler: {
+            devServerCommand: 'vite',
+            buildCommand: 'vite build',
+          },
+        }).parse(),
+      'Invalid assetsBundler entry. Missing name property'
+    )
   })
 })
