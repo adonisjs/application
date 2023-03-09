@@ -688,13 +688,6 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }
 
   /**
-   * Makes path to the tests directory
-   */
-  testsPath(...paths: string[]): string {
-    return this.makePath(this.rcFile.directories.tests, ...paths)
-  }
-
-  /**
    * Makes path to the tmp directory
    */
   tmpPath(...paths: string[]): string {

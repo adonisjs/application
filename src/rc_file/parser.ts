@@ -9,6 +9,7 @@
 
 import { inspect } from 'node:util'
 
+import globParent from 'glob-parent'
 import * as errors from '../exceptions.js'
 import { directories } from '../directories.js'
 import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from '../types.js'
@@ -169,9 +170,11 @@ export class RcFileParser {
         throw new errors.E_MISSING_SUITE_FILES([inspect(suite)])
       }
 
+      const files = Array.isArray(suite.files) ? [...suite.files] : [suite.files]
       return {
         name: suite.name,
-        files: Array.isArray(suite.files) ? [...suite.files] : [suite.files],
+        files: files,
+        directories: files.map((file) => globParent(file)),
         timeout: suite.timeout,
       }
     })

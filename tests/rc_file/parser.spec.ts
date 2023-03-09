@@ -360,6 +360,7 @@ test.group('Rc Parser', () => {
         suites: [
           {
             name: 'unit',
+            directories: ['tests'],
             files: ['tests/**/*.spec.ts'],
             timeout: undefined,
           },
@@ -400,7 +401,7 @@ test.group('Rc Parser', () => {
         suites: [
           {
             name: 'unit',
-            files: 'tests/**/*.spec.ts',
+            files: 'tests/unit/**/*.spec.ts',
           },
         ],
       },
@@ -412,7 +413,7 @@ test.group('Rc Parser', () => {
           suites: [
             {
               name: 'unit',
-              files: 'tests/**/*.spec.ts',
+              files: 'tests/unit/**/*.spec.ts',
             },
           ],
         },
@@ -428,7 +429,8 @@ test.group('Rc Parser', () => {
         suites: [
           {
             name: 'unit',
-            files: ['tests/**/*.spec.ts'],
+            directories: ['tests/unit'],
+            files: ['tests/unit/**/*.spec.ts'],
             timeout: undefined,
           },
         ],

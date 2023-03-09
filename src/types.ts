@@ -65,7 +65,6 @@ export interface DirectoriesNode {
   views: string
   start: string
   tmp: string
-  tests: string
   httpControllers: string
   models: string
   services: string
@@ -180,7 +179,12 @@ export type RcFile = {
    * Register test suites
    */
   tests: {
-    suites: { name: string; files: string | string[]; timeout?: number }[]
+    suites: {
+      name: string
+      files: string | string[]
+      directories: string[]
+      timeout?: number
+    }[]
     forceExit: boolean
     timeout: number
   }
