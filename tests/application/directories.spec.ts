@@ -70,9 +70,6 @@ test.group('Application | directories', () => {
     assert.equal(app.tmpPath(), join(BASE_PATH, 'tmp'))
     assert.equal(app.tmpPath('app.log'), join(BASE_PATH, 'tmp/app.log'))
 
-    assert.equal(app.testsPath(), join(BASE_PATH, 'tests'))
-    assert.equal(app.testsPath('unit/app.ts'), join(BASE_PATH, 'tests/unit/app.ts'))
-
     assert.equal(app.httpControllersPath(), join(BASE_PATH, 'app/controllers'))
     assert.equal(
       app.httpControllersPath('users_controller.ts'),
