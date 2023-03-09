@@ -312,4 +312,40 @@ test.group('Generator', () => {
     )
     assert.equal(generators.mailerFileName('team_invite', 'provision'), 'team_invite_provision.ts')
   })
+
+  test('convert entity to test group name', ({ assert }) => {
+    assert.equal(
+      generators.testGroupName(generators.createEntity('users/send_email')),
+      'Users send email'
+    )
+
+    assert.equal(
+      generators.testGroupName(generators.createEntity('rc_file/parser')),
+      'Rc file parser'
+    )
+
+    assert.equal(generators.testGroupName(generators.createEntity('posts/create')), 'Posts create')
+  })
+
+  test('convert entity name to test file name', ({ assert }) => {
+    assert.equal(
+      generators.testFileName(generators.createEntity('users/send_email').name),
+      'send_email.spec.ts'
+    )
+
+    assert.equal(
+      generators.testFileName(generators.createEntity('users/send_email.spec').name),
+      'send_email.spec.ts'
+    )
+
+    assert.equal(
+      generators.testFileName(generators.createEntity('users/send_email.spec.ts').name),
+      'send_email.spec.ts'
+    )
+
+    assert.equal(
+      generators.testFileName(generators.createEntity('users/send_email.ts').name),
+      'send_email.spec.ts'
+    )
+  })
 })

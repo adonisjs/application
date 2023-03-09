@@ -390,6 +390,29 @@ const generators = {
   mailerFileName(entityName: string, type: 'notification' | 'provision' = 'notification') {
     return new StringBuilder(this.mailerName(entityName, type)).snakeCase().ext('.ts').toString()
   },
+
+  /**
+   * Converts an entity to test group name
+   */
+  testGroupName(entity: { path: string; name: string }) {
+    return new StringBuilder(`${entity.path}/${entity.name}`)
+      .removeExtension()
+      .removeSuffix('.spec')
+      .sentenceCase()
+      .toString()
+  },
+
+  /**
+   * Converts an entity name to test file name
+   */
+  testFileName(entityName: string) {
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix('.spec')
+      .snakeCase()
+      .ext('.spec.ts')
+      .toString()
+  },
 }
 
 export default generators
