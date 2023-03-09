@@ -184,9 +184,11 @@ export class RcFileParser {
    * Parse and validate file contents and merge them with defaults
    */
   parse(): RcFile {
+    const assetsBundler = this.#getAssetsBundler()
+
     return {
       typescript: this.#rcFile.typescript,
-      ...(this.#rcFile.assetsBundler ? { assetsBundler: this.#getAssetsBundler() } : {}),
+      ...(assetsBundler ? { assetsBundler } : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
       commands: [...this.#rcFile.commands],
