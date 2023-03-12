@@ -7,8 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { outputFile } from 'fs-extra'
 import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
+import { mkdir, writeFile } from 'node:fs/promises'
 import lodash from '@poppinss/utils/lodash'
 import type { AppEnvironments, PreloadNode, ProviderNode, RcFile } from '../types.js'
 
@@ -165,6 +166,8 @@ export class RcFileEditor {
    * Writes updated rcFile to the disk
    */
   async save() {
-    await outputFile(fileURLToPath(this.#filePath), JSON.stringify(this.toJSON(), null, 2))
+    const filePath = fileURLToPath(this.#filePath)
+    await mkdir(dirname(filePath), { recursive: true })
+    await writeFile(filePath, JSON.stringify(this.toJSON(), null, 2))
   }
 }

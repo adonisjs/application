@@ -9,15 +9,25 @@
 
 // @ts-expect-error
 import * as tempura from 'tempura'
-import { isAbsolute } from 'node:path'
+import { dirname, isAbsolute } from 'node:path'
 import string from '@poppinss/utils/string'
 import { default as fm } from 'front-matter'
-import { pathExists, outputFile } from 'fs-extra'
+import type { PathLike } from 'node:fs'
+import { access, mkdir, writeFile } from 'node:fs/promises'
 import { RuntimeException } from '@poppinss/utils'
 import StringBuilder from '@poppinss/utils/string_builder'
 
 import debug from '../debug.js'
 import type { Application } from '../application.js'
+
+async function pathExists(path: PathLike): Promise<boolean> {
+  try {
+    await access(path)
+    return true
+  } catch {
+    return false
+  }
+}
 
 /**
  * The stub class uses tempura template engine to process
@@ -162,10 +172,12 @@ export class Stub {
   async generate(stubData: Record<string, any>) {
     const { force, ...stub } = await this.prepare(stubData)
     const hasFile = await pathExists(stub.destination)
+    const directory = dirname(stub.destination)
 
     if (!hasFile) {
       debug('writing file to %s', stub.destination)
-      await outputFile(stub.destination, stub.contents)
+      await mkdir(directory, { recursive: true })
+      await writeFile(stub.destination, stub.contents)
       return {
         status: 'created' as const,
         skipReason: null,
@@ -178,7 +190,8 @@ export class Stub {
      */
     if (hasFile && force) {
       debug('overwriting file to %s', stub.destination)
-      await outputFile(stub.destination, stub.contents)
+      await mkdir(directory, { recursive: true })
+      await writeFile(stub.destination, stub.contents)
       return {
         status: 'force_created' as const,
         skipReason: null,

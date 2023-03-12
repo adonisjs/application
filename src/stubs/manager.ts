@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { copy } from 'fs-extra'
 import { join } from 'node:path'
 import { RuntimeException, fsReadAll } from '@poppinss/utils'
 
@@ -15,6 +14,7 @@ import debug from '../debug.js'
 import { Stub } from './stub.js'
 import { Application } from '../application.js'
 import { readFileFromSources } from '../helpers.js'
+import { cp } from 'node:fs/promises'
 
 /**
  * Stub Manager is used to read and copy stubs from different sources. Also
@@ -96,7 +96,7 @@ export class StubsManager {
     const filesCopied: string[] = []
     const copyOptions = {
       recursive: true,
-      overwrite: options.overwrite === true ? true : false,
+      force: options.overwrite === true ? true : false,
     }
 
     /**
@@ -120,7 +120,7 @@ export class StubsManager {
     for (let filePath of files) {
       const sourcePath = join(source, filePath)
       const destinationPath = join(this.#publishTarget, stubPath, filePath)
-      await copy(sourcePath, destinationPath, copyOptions)
+      await cp(sourcePath, destinationPath, copyOptions)
       filesCopied.push(destinationPath)
     }
 
