@@ -9,25 +9,16 @@
 
 // @ts-expect-error
 import * as tempura from 'tempura'
-import { dirname, isAbsolute } from 'node:path'
 import string from '@poppinss/utils/string'
 import { default as fm } from 'front-matter'
-import type { PathLike } from 'node:fs'
-import { access, mkdir, writeFile } from 'node:fs/promises'
+import { dirname, isAbsolute } from 'node:path'
 import { RuntimeException } from '@poppinss/utils'
+import { mkdir, writeFile } from 'node:fs/promises'
 import StringBuilder from '@poppinss/utils/string_builder'
 
 import debug from '../debug.js'
+import { pathExists } from '../helpers.js'
 import type { Application } from '../application.js'
-
-async function pathExists(path: PathLike): Promise<boolean> {
-  try {
-    await access(path)
-    return true
-  } catch {
-    return false
-  }
-}
 
 /**
  * The stub class uses tempura template engine to process

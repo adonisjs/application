@@ -8,7 +8,8 @@
  */
 
 import { join } from 'node:path'
-import { readFile } from 'node:fs/promises'
+import type { PathLike } from 'node:fs'
+import { access, readFile } from 'node:fs/promises'
 
 /**
  * Attempts to read a file from multiple sources and returns the contents
@@ -45,5 +46,17 @@ export async function readFileOptional(filePath: URL | string): Promise<string |
     }
 
     return null
+  }
+}
+
+/**
+ * Check if a file for the given path exists
+ */
+export async function pathExists(path: PathLike): Promise<boolean> {
+  try {
+    await access(path)
+    return true
+  } catch {
+    return false
   }
 }
