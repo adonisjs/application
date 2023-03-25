@@ -8,13 +8,13 @@
  */
 
 import { join } from 'node:path'
+import { cp } from 'node:fs/promises'
 import { RuntimeException, fsReadAll } from '@poppinss/utils'
 
 import debug from '../debug.js'
 import { Stub } from './stub.js'
 import { Application } from '../application.js'
 import { readFileFromSources } from '../helpers.js'
-import { cp } from 'node:fs/promises'
 
 /**
  * Stub Manager is used to read and copy stubs from different sources. Also

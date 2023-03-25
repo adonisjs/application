@@ -11,10 +11,10 @@ import { importDefault, RuntimeException } from '@poppinss/utils'
 
 import debug from '../debug.js'
 import type {
-  AppEnvironments,
-  ContainerProviderContract,
   Importer,
   ProviderNode,
+  AppEnvironments,
+  ContainerProviderContract,
 } from '../types.js'
 
 /**

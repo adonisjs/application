@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
 import lodash from '@poppinss/utils/lodash'
+import { mkdir, writeFile } from 'node:fs/promises'
 import type { AppEnvironments, PreloadNode, ProviderNode, RcFile } from '../types.js'
 
 /**

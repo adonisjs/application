@@ -8,8 +8,8 @@
  */
 
 import { inspect } from 'node:util'
-
 import globParent from 'glob-parent'
+
 import * as errors from '../exceptions.js'
 import { directories } from '../directories.js'
 import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from '../types.js'
