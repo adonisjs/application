@@ -5,10 +5,13 @@
   "type": "module",
   "main": "build/index.js",
   "files": [
-    "build/adonis-typings",
+    "src",
+    "factories",
+    "index.ts",
     "build/src",
     "build/factories",
     "build/index.d.ts",
+    "build/index.d.ts.map",
     "build/index.js"
   ],
   "exports": {
