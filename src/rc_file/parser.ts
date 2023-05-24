@@ -192,7 +192,7 @@ export class RcFileParser {
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
       commands: [...this.#rcFile.commands],
-      directories: { ...this.#rcFile.directories },
+      directories: { ...directories, ...this.#rcFile.directories },
       commandsAliases: { ...this.#rcFile.commandsAliases },
       providers: this.#getProviders(),
       tests: {

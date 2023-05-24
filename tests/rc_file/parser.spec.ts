@@ -576,4 +576,35 @@ test.group('Rc Parser', () => {
       'Invalid assetsBundler entry. Missing name property'
     )
   })
+
+  test('merge directories with default directories list', ({ assert }) => {
+    const parser = new RcFileParser({
+      directories: {
+        views: './templates',
+      },
+    })
+
+    assert.deepEqual(parser.parse(), {
+      raw: {
+        directories: {
+          views: './templates',
+        },
+      },
+      typescript: true,
+      preloads: [],
+      directories: {
+        ...directories,
+        views: './templates',
+      },
+      metaFiles: [],
+      commands: [],
+      commandsAliases: {},
+      providers: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
+    })
+  })
 })
