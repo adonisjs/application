@@ -91,6 +91,7 @@ export class Application<ContainerBindings extends Record<any, any>> {
     initiating: HooksState<ContainerBindings>
     booting: HooksState<ContainerBindings>
     booted: HooksState<ContainerBindings>
+    starting: HooksState<ContainerBindings>
     ready: HooksState<ContainerBindings>
     terminating: HooksState<ContainerBindings>
   }>()
@@ -511,6 +512,16 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }
 
   /**
+   * Register hooks that are called when the app is starting
+   */
+  starting(
+    handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
+  ): this {
+    this.#hooks.add('starting', handler)
+    return this
+  }
+
+  /**
    * Start the application. Calling this method performs the following
    * operations.
    *
@@ -531,6 +542,9 @@ export class Application<ContainerBindings extends Record<any, any>> {
      * Pre start phase
      */
     await this.#providersManager.start()
+    await this.#hooks.runner('starting').run(this)
+    this.#hooks.clear('starting')
+
     await this.#preloadsManager.use(this.rcFile.preloads).import()
 
     /**

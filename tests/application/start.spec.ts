@@ -39,6 +39,33 @@ test.group('Application | start', () => {
     assert.equal(app.getState(), 'ready')
   })
 
+  test('call starting hook when the app is starting', async ({ assert }) => {
+    const stack: string[] = []
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: () => {},
+    })
+
+    await app.init()
+    await app.boot()
+
+    app.ready(() => {
+      stack.push('ready')
+    })
+
+    app.starting(() => {
+      stack.push('starting')
+    })
+
+    await app.start(() => {
+      stack.push('start')
+    })
+
+    assert.deepEqual(stack, ['starting', 'start', 'ready'])
+    assert.equal(app.getState(), 'ready')
+  })
+
   test('invoke ready hook immediately when the app has been started', async ({ assert }) => {
     const stack: string[] = []
     const app = new Application(BASE_URL, {
