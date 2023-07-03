@@ -24,6 +24,7 @@
     "pretest": "npm run lint",
     "test": "cross-env NODE_DEBUG=adonisjs:app c8 npm run vscode:test",
     "clean": "del-cli build",
+    "typecheck": "tsc --noEmit",
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
     "release": "np",
@@ -42,7 +43,10 @@
   "license": "MIT",
   "devDependencies": {
     "@adonisjs/config": "^4.2.1-2",
+    "@adonisjs/eslint-config": "^1.1.7",
     "@adonisjs/fold": "^9.9.3-5",
+    "@adonisjs/prettier-config": "^1.1.7",
+    "@adonisjs/tsconfig": "^1.1.7",
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
     "@japa/assert": "^2.0.0-1",
@@ -58,9 +62,6 @@
     "cross-env": "^7.0.3",
     "del-cli": "^5.0.0",
     "eslint": "^8.44.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-adonis": "^3.0.3",
-    "eslint-plugin-prettier": "^4.2.1",
     "fs-extra": "^11.1.1",
     "github-label-sync": "^2.3.1",
     "husky": "^8.0.3",
@@ -91,36 +92,6 @@
     "url": "https://github.com/adonisjs/application/issues"
   },
   "homepage": "https://github.com/adonisjs/application#readme",
-  "eslintConfig": {
-    "extends": [
-      "plugin:adonis/typescriptPackage",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "build"
-  ],
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "useTabs": false,
-    "quoteProps": "consistent",
-    "bracketSpacing": true,
-    "arrowParens": "always",
-    "printWidth": 100
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -144,5 +115,9 @@
     "exclude": [
       "tests/**"
     ]
-  }
+  },
+  "eslintConfig": {
+    "extends": "@adonisjs/eslint-config/package"
+  },
+  "prettier": "@adonisjs/prettier-config"
 }
