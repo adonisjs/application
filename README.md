@@ -2,7 +2,7 @@
 
 <br />
 
-[![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url] [![synk-image]][synk-url]
+[![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url]
 
 ## Introduction
 AdonisJS application packages manages the lifecycle of an app in different runtime environments. Also, this package configures the `logger`, `environment variables`, and the `IoC container` to be used by rest of the application.
@@ -21,8 +21,8 @@ In order to ensure that the AdonisJS community is welcoming to all, please revie
 ## License
 AdonisJS application is open-sourced software licensed under the [MIT license](LICENSE.md).
 
-[gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/adonisjs/application/test.yml?style=for-the-badge
-[gh-workflow-url]: https://github.com/adonisjs/application/actions/workflows/test.yml "Github action"
+[gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/adonisjs/application/checks.yml?style=for-the-badge
+[gh-workflow-url]: https://github.com/adonisjs/application/actions/workflows/checks.yml "Github action"
 
 [typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript
 [typescript-url]:  "typescript"
@@ -32,6 +32,3 @@ AdonisJS application is open-sourced software licensed under the [MIT license](L
 
 [license-image]: https://img.shields.io/npm/l/@adonisjs/application?color=blueviolet&style=for-the-badge
 [license-url]: LICENSE.md "license"
-
-[synk-image]: https://img.shields.io/snyk/vulnerabilities/github/adonisjs/application?label=Synk%20Vulnerabilities&style=for-the-badge
-[synk-url]: https://snyk.io/test/github/adonisjs/application?targetFile=package.json "synk"
