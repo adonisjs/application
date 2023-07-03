@@ -58,7 +58,7 @@ export class RcFileParser {
   /**
    * Returns the assets bundler object
    */
-  #getAssetsBundler() {
+  #getAssetsBundler(): RcFile['assetsBundler'] {
     if (!this.#rcFile.assetsBundler) {
       return
     }
@@ -67,18 +67,18 @@ export class RcFileParser {
       throw new errors.E_MISSING_BUNDLER_NAME()
     }
 
-    if (!this.#rcFile.assetsBundler.devServerCommand) {
+    if (!this.#rcFile.assetsBundler.devServer) {
       throw new errors.E_MISSING_BUNDLER_DEV_COMMAND()
     }
 
-    if (!this.#rcFile.assetsBundler.buildCommand) {
+    if (!this.#rcFile.assetsBundler.build) {
       throw new errors.E_MISSING_BUNDLER_BUILD_COMMAND()
     }
 
     return {
       name: this.#rcFile.assetsBundler.name,
-      devServerCommand: this.#rcFile.assetsBundler.devServerCommand,
-      buildCommand: this.#rcFile.assetsBundler.buildCommand,
+      devServer: this.#rcFile.assetsBundler.devServer,
+      build: this.#rcFile.assetsBundler.build,
     }
   }
 

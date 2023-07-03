@@ -21,7 +21,7 @@
   },
   "scripts": {
     "pretest": "npm run lint",
-    "test": "cross-env NODE_DEBUG=adonisjs:app c8 npm run vscode:test",
+    "test": "cross-env NODE_DEBUG=adonisjs:app c8 npm run quick:test",
     "clean": "del-cli build",
     "typecheck": "tsc --noEmit",
     "compile": "npm run lint && npm run clean && tsc",
@@ -32,7 +32,7 @@
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/application",
-    "vscode:test": "node --loader=ts-node/esm bin/test.ts"
+    "quick:test": "node --loader=ts-node/esm bin/test.ts"
   },
   "keywords": [
     "adonisjs",

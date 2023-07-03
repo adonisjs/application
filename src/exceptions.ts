@@ -59,7 +59,7 @@ export const E_MISSING_SUITE_FILES = createError<[suiteProperty: string]>(
  * in assetsBundler object
  */
 export const E_MISSING_BUNDLER_DEV_COMMAND = createError(
-  'Invalid assetsBundler entry. Missing devServerCommand property',
+  'Invalid assetsBundler entry. Missing devServer property',
   'E_MISSING_BUNDLER_DEV_COMMAND'
 )
 
@@ -68,7 +68,7 @@ export const E_MISSING_BUNDLER_DEV_COMMAND = createError(
  * in assetsBundler object
  */
 export const E_MISSING_BUNDLER_BUILD_COMMAND = createError(
-  'Invalid assetsBundler entry. Missing buildCommand property',
+  'Invalid assetsBundler entry. Missing build property',
   'E_MISSING_BUNDLER_BUILD_COMMAND'
 )
 

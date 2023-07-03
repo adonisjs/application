@@ -129,8 +129,14 @@ export type RcFile = {
    */
   assetsBundler?: {
     name: string
-    devServerCommand: string
-    buildCommand: string
+    devServer: {
+      command: string
+      args?: string[]
+    }
+    build: {
+      command: string
+      args?: string[]
+    }
   }
 
   /**
