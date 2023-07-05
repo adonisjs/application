@@ -768,4 +768,84 @@ test.group('Application | providers', (group) => {
 
     assert.isTrue(app.isTerminated)
   })
+
+  test('terminate after from initiated state', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, './route_provider.ts'),
+      `
+      export default class RouteProvider {
+        constructor(private app) {}
+
+        register() {
+          throw new Error('Do not invoke')
+        }
+
+        async boot() {
+          throw new Error('Do not invoke')
+        }
+
+        async start() {
+          throw new Error('Do not invoke')
+        }
+
+        async ready() {
+          throw new Error('Do not invoke')
+        }
+
+        async shutdown() {
+          throw new Error('Do not invoke')
+        }
+      }
+    `
+    )
+
+    const stack: string[] = []
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: './route_provider.js?v=16',
+          environment: ['web'],
+        },
+      ],
+    })
+
+    await app.init()
+    app.terminating(async () => {
+      assert.isTrue(app.isTerminating)
+      stack.push('terminating')
+    })
+    await app.terminate()
+
+    assert.deepEqual(stack, ['terminating'])
+
+    assert.isTrue(app.isTerminated)
+  })
+
+  test('do not terminate if not initiated', async ({ assert }) => {
+    const stack: string[] = []
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
+    })
+
+    app.terminating(async () => {
+      assert.isTrue(app.isTerminating)
+      stack.push('terminating')
+    })
+    await app.terminate()
+
+    assert.deepEqual(stack, [])
+    assert.isFalse(app.isTerminated)
+  })
 })

@@ -604,7 +604,7 @@ export class Application<ContainerBindings extends Record<any, any>> {
    * - Run "terminating" app lifecycle hooks
    */
   async terminate() {
-    if (!this.isBooted || this.#state === 'terminated') {
+    if (this.#state === 'created' || this.#state === 'terminated') {
       debug('cannot terminate app from state "%s"', this.#state)
       return
     }
