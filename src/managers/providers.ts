@@ -125,6 +125,19 @@ export class ProvidersManager {
   }
 
   /**
+   * Switch the environment in which the app is running.
+   */
+  setEnvironment(environment: AppEnvironments): this {
+    debug(
+      'switching environment for providers { from:"%s", to: "%s" }',
+      this.#options.environment,
+      environment
+    )
+    this.#options.environment = environment
+    return this
+  }
+
+  /**
    * Invoke register method on the providers.
    */
   async register() {

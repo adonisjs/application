@@ -142,6 +142,38 @@ test.group('Application | preloads', (group) => {
     assert.isUndefined(process.env.HAS_ROUTES)
   })
 
+  test('switch environment before preloading files', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, './routes.ts'),
+      `
+      process.env.HAS_ROUTES = 'true'
+      `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
+    })
+
+    app.rcContents({
+      preloads: [
+        {
+          file: './routes.js?v=6',
+          environment: ['web'],
+          optional: false,
+        },
+      ],
+    })
+
+    await app.init()
+    app.setEnvironment('console')
+    await app.boot()
+    await app.start(() => {})
+    assert.isUndefined(process.env.HAS_ROUTES)
+  })
+
   test('import optional preloads', async ({ assert, cleanup }) => {
     cleanup(() => {
       delete process.env.HAS_ROUTES

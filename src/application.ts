@@ -296,6 +296,8 @@ export class Application<ContainerBindings extends Record<any, any>> {
 
     debug('switching environment { from:"%s", to: "%s" }', this.#environment, environment)
     this.#environment = environment
+    this.#preloadsManager.setEnvironment(environment)
+    this.#providersManager.setEnvironment(environment)
     return this
   }
 

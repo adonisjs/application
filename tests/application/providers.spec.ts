@@ -104,6 +104,27 @@ test.group('Application | providers', (group) => {
     assert.isFalse(app.container.hasBinding('route'))
   })
 
+  test('switch environment before importing providers', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'console',
+      importer: () => {},
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: './route_provider.js?v=2',
+          environment: ['console'],
+        },
+      ],
+    })
+
+    await app.init()
+    app.setEnvironment('web')
+    await app.boot()
+    assert.isFalse(app.container.hasBinding('route'))
+  })
+
   test('fail when provider module is missing', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
