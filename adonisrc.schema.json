@@ -10,10 +10,26 @@
       "type": "object",
       "properties": {
         "name": { "type": "string" },
-        "devServerCommand": { "type": "string" },
-        "buildCommand": { "type": "string" }
+        "devServer": {
+           "type": "object",
+           "properties": {
+              "command": { "type": "string" },
+              "args": { "type": "array", "items": { "type": "string" } }
+           },
+           "required": ["command", "args"],
+           "additionalProperties": false
+        },
+        "build": {
+           "type": "object",
+           "properties": {
+              "command": { "type": "string" },
+              "args": { "type": "array", "items": { "type": "string" } }
+           },
+           "required": ["command", "args"],
+           "additionalProperties": false
+        }
       },
-      "required": ["name", "devServerCommand", "buildCommand"],
+      "required": ["name", "devServer", "build"],
       "additionalProperties": false
     },
     "preloads": {

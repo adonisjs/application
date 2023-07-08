@@ -234,15 +234,22 @@ test.group('JSON Schema', () => {
       providers: [],
       assetsBundler: {
         name: 'vite',
-        devServerCommand: 'vite',
-        buildCommand: 'vite build',
+        devServer: {
+          command: 'vite',
+          args: [],
+        },
+        build: {
+          command: 'vite',
+          args: ['build'],
+        },
       },
     }
+
     const result = validator.validate(config, schema)
     assert.lengthOf(result.errors, 0)
   })
 
-  test('fail when assetsBundler is missing one or more properties', ({ assert }) => {
+  test('fail when assetsBundler is missing devServer property', ({ assert }) => {
     const validator = new Validator()
     const config = {
       exceptionHandlerNamespace: '',
@@ -250,14 +257,89 @@ test.group('JSON Schema', () => {
       providers: [],
       assetsBundler: {
         name: 'vite',
-        buildCommand: 'vite build',
+        build: {
+          command: 'vite',
+          args: ['build'],
+        },
       },
     }
 
     const result = validator.validate(config, schema)
     assert.deepEqual(
       result.errors.map(({ message }) => message),
-      ['requires property "devServerCommand"']
+      ['requires property "devServer"']
+    )
+  })
+
+  test('fail when assetsBundler is missing build property', ({ assert }) => {
+    const validator = new Validator()
+    const config = {
+      exceptionHandlerNamespace: '',
+      typescript: true,
+      providers: [],
+      assetsBundler: {
+        name: 'vite',
+        devServer: {
+          command: 'vite',
+          args: ['build'],
+        },
+      },
+    }
+
+    const result = validator.validate(config, schema)
+    assert.deepEqual(
+      result.errors.map(({ message }) => message),
+      ['requires property "build"']
+    )
+  })
+
+  test('fail when assetsBundler.devServer is missing command property', ({ assert }) => {
+    const validator = new Validator()
+    const config = {
+      exceptionHandlerNamespace: '',
+      typescript: true,
+      providers: [],
+      assetsBundler: {
+        name: 'vite',
+        devServer: {
+          args: ['build'],
+        },
+        build: {
+          command: 'vite',
+          args: ['build'],
+        },
+      },
+    }
+
+    const result = validator.validate(config, schema)
+    assert.deepEqual(
+      result.errors.map(({ message }) => message),
+      ['requires property "command"']
+    )
+  })
+
+  test('fail when assetsBundler.build is missing command property', ({ assert }) => {
+    const validator = new Validator()
+    const config = {
+      exceptionHandlerNamespace: '',
+      typescript: true,
+      providers: [],
+      assetsBundler: {
+        name: 'vite',
+        devServer: {
+          command: 'vite',
+          args: ['build'],
+        },
+        build: {
+          args: ['build'],
+        },
+      },
+    }
+
+    const result = validator.validate(config, schema)
+    assert.deepEqual(
+      result.errors.map(({ message }) => message),
+      ['requires property "command"']
     )
   })
 })
