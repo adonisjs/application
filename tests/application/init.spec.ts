@@ -27,7 +27,7 @@ test.group('Application | init', () => {
     assert.equal(app.getState(), 'initiated')
   })
 
-  test('configure stubs manager', async ({ assert }) => {
+  test('create stubs manager', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
       importer: () => {},
@@ -35,7 +35,7 @@ test.group('Application | init', () => {
 
     await app.init()
 
-    assert.instanceOf(app.stubs, StubsManager)
+    assert.instanceOf(await app.stubs.create(), StubsManager)
     assert.equal(app.getState(), 'initiated')
   })
 

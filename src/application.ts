@@ -16,7 +16,6 @@ import { importDefault, RuntimeException } from '@poppinss/utils'
 
 import debug from './debug.js'
 import generators from './generators.js'
-import { StubsManager } from './stubs/manager.js'
 import { ConfigManager } from './managers/config.js'
 import { RcFileManager } from './managers/rc_file.js'
 import { NodeEnvManager } from './managers/node_env.js'
@@ -225,7 +224,12 @@ export class Application<ContainerBindings extends Record<any, any>> {
     return generators
   }
 
-  stubs!: StubsManager
+  stubs = {
+    create: async () => {
+      const { StubsManager } = await import('./stubs/manager.js')
+      return new StubsManager(this, this.makePath(this.rcFile.directories.stubs))
+    },
+  }
 
   /**
    * Reference to the AdonisJS IoC container. The value is defined
@@ -267,13 +271,6 @@ export class Application<ContainerBindings extends Record<any, any>> {
    */
   #instantiateContainer() {
     this.container = new Container<ContainerBindings>()
-  }
-
-  /**
-   * Instantiates the stubs manager
-   */
-  #instantiateStubsManager() {
-    this.stubs = new StubsManager(this, this.makePath(this.rcFile.directories.stubs))
   }
 
   /**
@@ -433,7 +430,6 @@ export class Application<ContainerBindings extends Record<any, any>> {
      * Initiate essentials
      */
     await this.#rcFileManager.process()
-    this.#instantiateStubsManager()
 
     /**
      * Cleanup registered hooks
