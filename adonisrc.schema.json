@@ -11,22 +11,22 @@
       "properties": {
         "name": { "type": "string" },
         "devServer": {
-           "type": "object",
-           "properties": {
-              "command": { "type": "string" },
-              "args": { "type": "array", "items": { "type": "string" } }
-           },
-           "required": ["command", "args"],
-           "additionalProperties": false
+          "type": "object",
+          "properties": {
+            "command": { "type": "string" },
+            "args": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["command", "args"],
+          "additionalProperties": false
         },
         "build": {
-           "type": "object",
-           "properties": {
-              "command": { "type": "string" },
-              "args": { "type": "array", "items": { "type": "string" } }
-           },
-           "required": ["command", "args"],
-           "additionalProperties": false
+          "type": "object",
+          "properties": {
+            "command": { "type": "string" },
+            "args": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["command", "args"],
+          "additionalProperties": false
         }
       },
       "required": ["name", "devServer", "build"],

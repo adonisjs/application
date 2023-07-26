@@ -45,7 +45,7 @@ export type ApplicationStates = 'created' | 'initiated' | 'booted' | 'ready' | '
  */
 export type HooksState<ContainerBindings extends Record<any, any>> = [
   [Application<ContainerBindings>],
-  [Application<ContainerBindings>]
+  [Application<ContainerBindings>],
 ]
 
 /**
