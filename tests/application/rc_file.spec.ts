@@ -14,6 +14,7 @@ import { outputFile, remove } from 'fs-extra'
 
 import { directories } from '../../src/directories.js'
 import { Application } from '../../src/application.js'
+import { RcFileEditor } from '../../src/rc_file/editor.js'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
@@ -147,9 +148,12 @@ test.group('Application | rcFile', (group) => {
     })
 
     await app.init()
-    assert.deepEqual(app.rcFileEditor.toJSON(), {
-      typescript: true,
-      providers: ['@adonisjs/core'],
-    })
+    assert.deepEqual(
+      new RcFileEditor(new URL('.adonisrc.json', app.appRoot), app.rcFile.raw).toJSON(),
+      {
+        typescript: true,
+        providers: ['@adonisjs/core'],
+      }
+    )
   })
 })
