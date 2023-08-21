@@ -10,3 +10,4 @@
 export * as errors from './src/exceptions.js'
 export { Application } from './src/application.js'
 export { RcFileParser } from './src/rc_file/parser.js'
+export { defineConfig } from './src/define_config.js'

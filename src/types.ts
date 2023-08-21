@@ -203,6 +203,26 @@ export type RcFile = {
   raw: Record<string, any>
 }
 
+export interface RcFileInput {
+  assetsBundler?: RcFile['assetsBundler']
+  typescript?: RcFile['typescript']
+  directories?: RcFile['directories']
+  preloads?: (PreloadNode | PreloadNode['file'])[]
+  metaFiles?: RcFile['metaFiles']
+  commands?: RcFile['commands']
+  commandsAliases?: RcFile['commandsAliases']
+  tests?: {
+    suites: {
+      name: string
+      files: string | string[]
+      timeout?: number
+    }[]
+    forceExit?: boolean
+    timeout?: number
+  }
+  providers?: (ProviderNode | ProviderNode['file'])[]
+}
+
 /**
  * Shape of the container provider class instance.
  */
