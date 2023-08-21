@@ -208,4 +208,40 @@ test.group('Application | preloads', (group) => {
     await app.start(() => {})
     assert.equal(process.env.HAS_ROUTES, 'true')
   })
+
+  test('import preload using lazy import', async ({ assert, cleanup }) => {
+    cleanup(() => {
+      delete process.env.HAS_ROUTES
+    })
+
+    await outputFile(
+      join(BASE_PATH, './routes.ts'),
+      `
+      process.env.HAS_ROUTES = 'true'
+      `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
+    })
+
+    app.rcContents({
+      preloads: [
+        {
+          file: () => import(new URL('./routes.js?v=20', BASE_URL).href),
+          environment: ['web'],
+          optional: false,
+        },
+      ],
+    })
+
+    await app.init()
+    await app.boot()
+    await app.start(() => {})
+
+    assert.equal(process.env.HAS_ROUTES, 'true')
+  })
 })

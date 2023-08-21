@@ -83,7 +83,7 @@ export interface DirectoriesNode {
  * Shape of preload files
  */
 export type PreloadNode = {
-  file: string
+  file: string | (() => Promise<any>)
   environment: Exclude<AppEnvironments, 'unknown'>[]
 }
 
@@ -91,7 +91,9 @@ export type PreloadNode = {
  * Shape of provider modules
  */
 export type ProviderNode = {
-  file: string
+  file:
+    | string
+    | (() => Promise<{ default: new (app: Application<any>) => ContainerProviderContract }>)
   environment: Exclude<AppEnvironments, 'unknown'>[]
 }
 
@@ -172,7 +174,7 @@ export type RcFile = {
   /**
    * An array of commands to register
    */
-  commands: string[]
+  commands: (string | (() => Promise<any>))[]
 
   /**
    * Custom command aliases

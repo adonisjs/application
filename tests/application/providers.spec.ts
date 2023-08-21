@@ -869,4 +869,45 @@ test.group('Application | providers', (group) => {
     assert.deepEqual(stack, [])
     assert.isFalse(app.isTerminated)
   })
+
+  test('resolve provider using lazy import', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, './route_provider.ts'),
+      `
+      export default class RouteProvider {
+        constructor(private app) {}
+
+        register() {
+          this.app.container.singleton('route', () => {
+            return {
+              isBooted: false
+            }
+          })
+        }
+      }
+    `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: () => import(new URL('./route_provider.js?v=20', BASE_URL).href),
+          environment: ['web'],
+        },
+      ],
+    })
+
+    await app.init()
+    await app.boot()
+    assert.deepEqual(await app.container.make('route'), {
+      isBooted: false,
+    })
+  })
 })

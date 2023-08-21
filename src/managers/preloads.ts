@@ -56,6 +56,9 @@ export class PreloadsManager {
    * the app root.
    */
   #importPreloadModule(preload: PreloadNode): Promise<void> {
+    if (typeof preload.file === 'function') {
+      return preload.file()
+    }
     return this.#importer(preload.file)
   }
 

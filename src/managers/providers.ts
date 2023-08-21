@@ -100,6 +100,11 @@ export class ProvidersManager {
   async #resolveProvider(provider: ProviderNode): Promise<{
     new (...args: any[]): ContainerProviderContract
   }> {
+    if (typeof provider.file === 'function') {
+      const providerClass = await provider.file()
+      return providerClass.default
+    }
+
     const providerClass = await this.#importProvider(provider.file)
     this.#ensureIsClass(provider.file, providerClass)
 
