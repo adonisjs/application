@@ -413,6 +413,13 @@ const generators = {
       .ext('.spec.ts')
       .toString()
   },
+
+  /**
+   * Converts an entity name to the view template file
+   */
+  viewFileName(entityName: string) {
+    return new StringBuilder(entityName).removeExtension().snakeCase().ext('.edge').toString()
+  },
 }
 
 export default generators

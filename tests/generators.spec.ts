@@ -348,4 +348,16 @@ test.group('Generator', () => {
       'send_email.spec.ts'
     )
   })
+
+  test('convert entity name to template file name', ({ assert }) => {
+    assert.equal(
+      generators.viewFileName(generators.createEntity('pages/posts/index').name),
+      'index.edge'
+    )
+
+    assert.equal(
+      generators.viewFileName(generators.createEntity('createPost').name),
+      'create_post.edge'
+    )
+  })
 })
