@@ -14,7 +14,6 @@ import { outputFile, remove } from 'fs-extra'
 
 import { directories } from '../../src/directories.js'
 import { Application } from '../../src/application.js'
-import { RcFileEditor } from '../../src/rc_file/editor.js'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
@@ -101,59 +100,23 @@ test.group('Application | rcFile', (group) => {
     })
   })
 
-  test('report error when .adonisrc.json file is not valid json', async ({ assert }) => {
-    await outputFile(join(BASE_PATH, '.adonisrc.json'), 'hello world')
-
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-      importer: () => {},
-    })
-
-    await assert.rejects(() => app.init())
-  })
-
-  test('use default rc file when no .adonisrc.json file exists', async ({ assert }) => {
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-      importer: () => {},
-    })
-
-    await app.init()
-    assert.deepEqual(app.rcFile, {
-      raw: {},
-      typescript: true,
-      preloads: [],
-      directories: directories,
-      metaFiles: [],
-      commands: [],
-      commandsAliases: {},
-      providers: [],
-      tests: {
-        suites: [],
-        timeout: 2000,
-        forceExit: true,
-      },
-    })
-  })
-
-  test('initiate rc file editor', async ({ assert }) => {
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-      importer: () => {},
-    })
-
-    app.rcContents({
-      typescript: true,
-      providers: ['@adonisjs/core'],
-    })
-
-    await app.init()
-    assert.deepEqual(
-      new RcFileEditor(new URL('.adonisrc.json', app.appRoot), app.rcFile.raw).toJSON(),
-      {
+  test('parse adonisrc.ts file by reading from the disk', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, 'adonisrc.ts'),
+      `export default {
         typescript: true,
-        providers: ['@adonisjs/core'],
-      }
+        providers: [() => import('@adonisjs/core')]
+      }`
     )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: () => {},
+    })
+
+    await app.init()
+
+    assert.isFunction(app.rcFile.providers[0].file)
+    assert.isFunction(app.rcFile.raw.providers[0])
   })
 })

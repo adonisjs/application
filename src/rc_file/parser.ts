@@ -88,7 +88,7 @@ export class RcFileParser {
   #getPreloads(): PreloadNode[] {
     return this.#rcFile.preloads.map((preload: PreloadNode | string) => {
       const normalizedPreload =
-        typeof preload === 'string'
+        typeof preload === 'string' || typeof preload === 'function'
           ? {
               file: preload,
               optional: false,
@@ -113,7 +113,7 @@ export class RcFileParser {
   #getProviders(): ProviderNode[] {
     return this.#rcFile.providers.map((provider: ProviderNode | string) => {
       const normalizedProvider =
-        typeof provider === 'string'
+        typeof provider === 'string' || typeof provider === 'function'
           ? {
               file: provider,
               environment: this.#knownEnvironments(),

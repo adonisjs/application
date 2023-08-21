@@ -7,9 +7,11 @@
  * file that was distributed with this source code.
  */
 
+import { readFile } from 'node:fs/promises'
+
 import debug from '../debug.js'
 import type { RcFile } from '../types.js'
-import { readFileOptional } from '../helpers.js'
+import { pathExists } from '../helpers.js'
 import { RcFileParser } from '../rc_file/parser.js'
 
 /**
@@ -49,9 +51,18 @@ export class RcFileManager {
    */
   async process() {
     if (!this.#rcContents) {
-      const contents = await readFileOptional(new URL('.adonisrc.json', this.#appRoot))
-      this.#rcContents = contents ? JSON.parse(contents) : {}
-      debug('.adonisrc.json file contents: %O', this.#rcContents)
+      const rcTSFile = new URL('adonisrc.ts', this.#appRoot)
+      const rcJSONFile = new URL('.adonisrc.json', this.#appRoot)
+
+      if (await pathExists(rcTSFile)) {
+        const rcExports = await import(rcTSFile.href)
+        this.#rcContents = rcExports.default
+        debug('adonisrc.ts file contents: %O', this.#rcContents)
+      } else if (await pathExists(rcJSONFile)) {
+        const rcContents = await readFile(rcJSONFile, 'utf-8')
+        this.#rcContents = JSON.parse(rcContents)
+        debug('.adonisrc.json file contents: %O', this.#rcContents)
+      }
     }
 
     this.rcFile = new RcFileParser(this.#rcContents!).parse()
