@@ -14,7 +14,6 @@
     ".": "./build/index.js",
     "./types": "./build/src/types.js",
     "./generators": "./build/src/generators.js",
-    "./rc_file_editor": "./build/src/rc_file/editor.js",
     "./factories": "./build/factories/main.js"
   },
   "engines": {
