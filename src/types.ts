@@ -93,7 +93,7 @@ export type PreloadNode = {
 export type ProviderNode = {
   file:
     | string
-    | (() => Promise<{ default: new (app: Application<any>) => ContainerProviderContract }>)
+    | (() => Promise<{ default?: new (app: Application<any>) => ContainerProviderContract }>)
   environment: Exclude<AppEnvironments, 'unknown'>[]
 }
 

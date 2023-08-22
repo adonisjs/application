@@ -180,7 +180,7 @@ test.group('Application | providers', (group) => {
 
     await assert.rejects(
       () => app.boot(),
-      'Missing "export default" in module "./route_provider.js?v=4"'
+      'Default export from module "./route_provider.js?v=4" is not a class'
     )
   })
 
@@ -909,5 +909,35 @@ test.group('Application | providers', (group) => {
     assert.deepEqual(await app.container.make('route'), {
       isBooted: false,
     })
+  })
+
+  test('allow providers without any exports', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, './route_provider.ts'),
+      `
+      global.ROUTE_PROVIDER = true
+    `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+      importer: (filePath) => {
+        return import(new URL(filePath, BASE_URL).href)
+      },
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: './route_provider.js?v=21',
+          environment: ['web'],
+        },
+      ],
+    })
+
+    await app.init()
+    await app.boot()
+
+    assert.isTrue('ROUTE_PROVIDER' in global)
   })
 })

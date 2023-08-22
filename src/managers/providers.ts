@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { importDefault, RuntimeException } from '@poppinss/utils'
+import { RuntimeException } from '@poppinss/utils'
 
 import debug from '../debug.js'
 import type {
@@ -45,7 +45,7 @@ export class ProvidersManager {
   #list: ProviderNode[] = []
 
   /**
-   * The application root path
+   * The application importer
    */
   #importer: Importer
 
@@ -89,7 +89,7 @@ export class ProvidersManager {
    * Resolves a provider module path and imports it
    */
   async #importProvider(providerPath: string) {
-    return importDefault<{ default: any }>(() => this.#importer(providerPath), providerPath)
+    return this.#importer(providerPath)
   }
 
   /**
@@ -99,16 +99,25 @@ export class ProvidersManager {
    */
   async #resolveProvider(provider: ProviderNode): Promise<{
     new (...args: any[]): ContainerProviderContract
-  }> {
+  } | null> {
     if (typeof provider.file === 'function') {
       const providerClass = await provider.file()
-      return providerClass.default
+      return providerClass.default || null
     }
 
-    const providerClass = await this.#importProvider(provider.file)
-    this.#ensureIsClass(provider.file, providerClass)
+    const providerExports = await this.#importProvider(provider.file)
 
-    return providerClass
+    /**
+     * Return null when service provider does not have any
+     * exports
+     */
+    const hasExports = Object.keys(providerExports).length
+    if (!hasExports) {
+      return null
+    }
+
+    this.#ensureIsClass(provider.file, providerExports.default)
+    return providerExports.default
   }
 
   /**
@@ -150,15 +159,17 @@ export class ProvidersManager {
     this.#list = []
 
     providers.forEach((provider) => {
-      const providerInstance = new provider(...this.#options.providersState)
-      this.#providers.push(providerInstance)
+      if (provider) {
+        const providerInstance = new provider(...this.#options.providersState)
+        this.#providers.push(providerInstance)
 
-      if (providerInstance.shutdown) {
-        this.#providersWithShutdownListeners.push(providerInstance)
-      }
+        if (providerInstance.shutdown) {
+          this.#providersWithShutdownListeners.push(providerInstance)
+        }
 
-      if (providerInstance.register) {
-        providerInstance.register()
+        if (providerInstance.register) {
+          providerInstance.register()
+        }
       }
     })
   }
