@@ -33,7 +33,7 @@ import type {
  * Application class manages the state of an AdonisJS application. It includes
  *
  * - Setting up the base features like importing config and setting up logger.
- * - Parsing the ".adonisrc.json" file
+ * - Parsing the "adonisrc.js" file
  * - Setting up the IoC container
  * - Registering an booting providers
  * - Invoking lifecycle methods on the providers and hooks
@@ -298,9 +298,9 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }
 
   /**
-   * Specify the contents of the ".adonisrc.json" file as
+   * Specify the contents of the "adonisrc.js" file as
    * an object. Calling this method will disable loading
-   * the ".adonisrc.json" file from the disk.
+   * the "adonisrc.js" file from the disk.
    */
   rcContents(value: Record<string, any>): this {
     this.#rcFileManager.rcContents(value)
@@ -393,7 +393,7 @@ export class Application<ContainerBindings extends Record<any, any>> {
    * Initiate the application. Calling this method performs following
    * operations.
    *
-   * - Parses the ".adonisrc.json" file
+   * - Parses the "adonisrc.js" file
    * - Validate and set environment variables
    * - Loads the application config from the configured config dir.
    * - Configures the logger

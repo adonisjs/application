@@ -15,7 +15,7 @@ import { directories } from '../directories.js'
 import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from '../types.js'
 
 /**
- * Rc file parser is used to parse and validate the `.adonisrc.json` file contents.
+ * Rc file parser is used to parse and validate the `adonisrc.js` file contents.
  */
 export class RcFileParser {
   /**

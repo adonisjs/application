@@ -111,7 +111,7 @@ export type SemverNode = {
 
 /**
  * Shape of the meta file inside the `metaFiles` array inside
- * `.adonisrc.json` file.
+ * `adonisrc.js` file.
  */
 export type MetaFileNode = {
   pattern: string
@@ -119,7 +119,7 @@ export type MetaFileNode = {
 }
 
 /**
- * Shape of the .adonisrc.json file
+ * Shape of the adonisrc.js file
  */
 export type RcFile = {
   /**
@@ -198,7 +198,7 @@ export type RcFile = {
   }
 
   /**
-   * Reference to `.adonisrc.json` file raw contents
+   * Reference to `adonisrc.js` file raw contents
    */
   raw: Record<string, any>
 }

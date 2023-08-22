@@ -7,16 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { readFile } from 'node:fs/promises'
-
 import debug from '../debug.js'
 import type { RcFile } from '../types.js'
-import { pathExists } from '../helpers.js'
 import { RcFileParser } from '../rc_file/parser.js'
 
 /**
  * RcFileManager is used to process the raw contents or the contents
- * of ".adonisrc.json" file.
+ * of "adonisrc.js" file.
  */
 export class RcFileManager {
   #appRoot: URL
@@ -37,9 +34,9 @@ export class RcFileManager {
   }
 
   /**
-   * Specify the contents of the ".adonisrc.json" file as
+   * Specify the contents of the "adonisrc.js" file as
    * an object. Calling this method will disable loading
-   * the ".adonisrc.json" file from the disk.
+   * the "adonisrc.js" file from the disk.
    */
   rcContents(value: Record<string, any>): this {
     this.#rcContents = value
@@ -51,17 +48,16 @@ export class RcFileManager {
    */
   async process() {
     if (!this.#rcContents) {
-      const rcTSFile = new URL('adonisrc.ts', this.#appRoot)
-      const rcJSONFile = new URL('.adonisrc.json', this.#appRoot)
+      const rcTSFile = new URL('adonisrc.js', this.#appRoot)
 
-      if (await pathExists(rcTSFile)) {
+      try {
         const rcExports = await import(rcTSFile.href)
         this.#rcContents = rcExports.default
         debug('adonisrc.ts file contents: %O', this.#rcContents)
-      } else if (await pathExists(rcJSONFile)) {
-        const rcContents = await readFile(rcJSONFile, 'utf-8')
-        this.#rcContents = JSON.parse(rcContents)
-        debug('.adonisrc.json file contents: %O', this.#rcContents)
+      } catch (error) {
+        if (!/Cannot find module/.test(error.message)) {
+          throw error
+        }
       }
     }
 

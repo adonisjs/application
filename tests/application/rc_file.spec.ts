@@ -62,11 +62,11 @@ test.group('Application | rcFile', (group) => {
 
   test('parse rc file by reading from the disk', async ({ assert }) => {
     await outputFile(
-      join(BASE_PATH, '.adonisrc.json'),
-      JSON.stringify({
+      join(BASE_PATH, 'adonisrc.ts'),
+      `export default {
         typescript: true,
-        providers: ['@adonisjs/core'],
-      })
+        providers: ['@adonisjs/core']
+      }`
     )
 
     const app = new Application(BASE_URL, {
@@ -98,25 +98,5 @@ test.group('Application | rcFile', (group) => {
         forceExit: true,
       },
     })
-  })
-
-  test('parse adonisrc.ts file by reading from the disk', async ({ assert }) => {
-    await outputFile(
-      join(BASE_PATH, 'adonisrc.ts'),
-      `export default {
-        typescript: true,
-        providers: [() => import('@adonisjs/core')]
-      }`
-    )
-
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-      importer: () => {},
-    })
-
-    await app.init()
-
-    assert.isFunction(app.rcFile.providers[0].file)
-    assert.isFunction(app.rcFile.raw.providers[0])
   })
 })
