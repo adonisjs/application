@@ -208,7 +208,7 @@ export interface RcFileInput {
   typescript?: RcFile['typescript']
   directories?: RcFile['directories']
   preloads?: (PreloadNode | PreloadNode['file'])[]
-  metaFiles?: RcFile['metaFiles']
+  metaFiles?: string[] | RcFile['metaFiles']
   commands?: RcFile['commands']
   commandsAliases?: RcFile['commandsAliases']
   tests?: {

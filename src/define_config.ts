@@ -13,8 +13,5 @@ import type { RcFileInput } from './types.js'
  * Define rcFile config
  */
 export function defineConfig(config: RcFileInput): RcFileInput {
-  return {
-    typescript: true,
-    ...config,
-  }
+  return config
 }

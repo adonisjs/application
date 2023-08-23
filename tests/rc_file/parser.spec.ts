@@ -9,11 +9,12 @@
 
 import { test } from '@japa/runner'
 import { directories } from '../../src/directories.js'
+import { defineConfig } from '../../src/define_config.js'
 import { RcFileParser } from '../../src/rc_file/parser.js'
 
 test.group('Rc Parser', () => {
   test('parse empty object to rcfile node', ({ assert }) => {
-    const parser = new RcFileParser({})
+    const parser = new RcFileParser(defineConfig({}))
 
     assert.deepEqual(parser.parse(), {
       raw: {},
@@ -33,9 +34,11 @@ test.group('Rc Parser', () => {
   })
 
   test('parse partial object to rcfile node', ({ assert }) => {
-    const parser = new RcFileParser({
-      commands: ['./foo/bar'],
-    })
+    const parser = new RcFileParser(
+      defineConfig({
+        commands: ['./foo/bar'],
+      })
+    )
 
     assert.deepEqual(parser.parse(), {
       raw: {
@@ -57,9 +60,11 @@ test.group('Rc Parser', () => {
   })
 
   test('define preloads as an array of strings', ({ assert }) => {
-    const parser = new RcFileParser({
-      preloads: ['./foo/bar'],
-    })
+    const parser = new RcFileParser(
+      defineConfig({
+        preloads: ['./foo/bar'],
+      })
+    )
 
     assert.deepEqual(parser.parse(), {
       raw: {
@@ -86,14 +91,16 @@ test.group('Rc Parser', () => {
   })
 
   test('define preloads as an array of objects', ({ assert }) => {
-    const parser = new RcFileParser({
-      preloads: [
-        {
-          file: './foo/bar',
-          environment: ['web'],
-        },
-      ],
-    })
+    const parser = new RcFileParser(
+      defineConfig({
+        preloads: [
+          {
+            file: './foo/bar',
+            environment: ['web'],
+          },
+        ],
+      })
+    )
 
     assert.deepEqual(parser.parse(), {
       raw: {
@@ -179,9 +186,11 @@ test.group('Rc Parser', () => {
   })
 
   test('define metaFiles as an array of strings', ({ assert }) => {
-    const parser = new RcFileParser({
-      metaFiles: ['public/**'],
-    })
+    const parser = new RcFileParser(
+      defineConfig({
+        metaFiles: ['public/**'],
+      })
+    )
 
     assert.deepEqual(parser.parse(), {
       raw: {
@@ -208,14 +217,16 @@ test.group('Rc Parser', () => {
   })
 
   test('define metaFiles as an array of objects', ({ assert }) => {
-    const parser = new RcFileParser({
-      metaFiles: [
-        {
-          pattern: 'public/**',
-          reloadServer: false,
-        },
-      ],
-    })
+    const parser = new RcFileParser(
+      defineConfig({
+        metaFiles: [
+          {
+            pattern: 'public/**',
+            reloadServer: false,
+          },
+        ],
+      })
+    )
 
     assert.deepEqual(parser.parse(), {
       raw: {
