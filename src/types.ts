@@ -206,7 +206,7 @@ export type RcFile = {
 export interface RcFileInput {
   assetsBundler?: RcFile['assetsBundler']
   typescript?: RcFile['typescript']
-  directories?: RcFile['directories']
+  directories?: Partial<DirectoriesNode> & { [key: string]: string }
   preloads?: (PreloadNode | PreloadNode['file'])[]
   metaFiles?: string[] | RcFile['metaFiles']
   commands?: RcFile['commands']
