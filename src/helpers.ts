@@ -10,6 +10,7 @@
 import { join } from 'node:path'
 import type { PathLike } from 'node:fs'
 import { access, readFile } from 'node:fs/promises'
+import { EOL } from 'node:os'
 
 /**
  * Attempts to read a file from multiple sources and returns the contents
@@ -65,7 +66,7 @@ export async function pathExists(path: PathLike): Promise<boolean> {
  * Parses frontend matter as JSON from a text string.
  */
 export function parseJSONFrontMatter(contents: string) {
-  const chunks = contents.split(/\n|\r\n/g)
+  const chunks = contents.split(EOL)
 
   const frontmatter: string[] = []
   const body: string[] = []
@@ -91,6 +92,6 @@ export function parseJSONFrontMatter(contents: string) {
     body.push(line)
   })
 
-  const attributes = frontmatter.length ? JSON.parse(frontmatter.join('\n')) : {}
-  return { attributes, body: body.join('\n') }
+  const attributes = frontmatter.length ? JSON.parse(frontmatter.join(EOL)) : {}
+  return { attributes, body: body.join(EOL) }
 }
