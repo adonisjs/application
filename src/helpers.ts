@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { EOL } from 'node:os'
 import { join } from 'node:path'
 import type { PathLike } from 'node:fs'
 import { access, readFile } from 'node:fs/promises'
@@ -63,11 +62,23 @@ export async function pathExists(path: PathLike): Promise<boolean> {
 }
 
 /**
+ * Escapes a JSON string, so that it can be safely parsed.
+ *
+ * This is done because the JSON written within the frontmatter
+ * block might not be escaped when using helper methods to
+ * generate values.
+ *
+ * Therefore, we have to escape it at the time of parsing it.
+ */
+export function escapeJSON(jsonString: string) {
+  return jsonString.replace('\\', '\\\\')
+}
+
+/**
  * Parses frontend matter as JSON from a text string.
  */
 export function parseJSONFrontMatter(contents: string) {
   const chunks = contents.split(/\n|\r\n/)
-  console.log(chunks)
 
   const frontmatter: string[] = []
   const body: string[] = []
@@ -93,9 +104,6 @@ export function parseJSONFrontMatter(contents: string) {
     body.push(line)
   })
 
-  console.log(frontmatter)
-  console.log(body)
-
-  const attributes = frontmatter.length ? JSON.parse(frontmatter.join(EOL)) : {}
-  return { attributes, body: body.join(EOL) }
+  const attributes = frontmatter.length ? JSON.parse(escapeJSON(frontmatter.join(' '))) : {}
+  return { attributes, body: body.join('\n') }
 }

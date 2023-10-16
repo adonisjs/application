@@ -93,4 +93,27 @@ test.group('Front matter', () => {
 
     parseJSONFrontMatter(contents)
   }).throws(new RegExp(/Unexpected token/))
+
+  test('escape JSON before parsing it', ({ assert }) => {
+    const contents = `
+    ---
+    {
+      "to": "foo\\bar"
+    }
+    ---
+    hello world
+    `
+
+    const { body, attributes } = parseJSONFrontMatter(contents)
+    assert.equal(
+      body,
+      `
+    hello world
+    `
+    )
+
+    assert.deepEqual(attributes, {
+      to: 'foo\\bar',
+    })
+  })
 })
