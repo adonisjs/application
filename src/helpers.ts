@@ -60,3 +60,37 @@ export async function pathExists(path: PathLike): Promise<boolean> {
     return false
   }
 }
+
+/**
+ * Parses frontend matter as JSON from a text string.
+ */
+export function parseJSONFrontMatter(contents: string) {
+  const chunks = contents.split(/\n|\r\n/g)
+
+  const frontmatter: string[] = []
+  const body: string[] = []
+  let parsingState: 'pending' | 'started' | 'completed' = 'pending'
+
+  chunks.forEach((line) => {
+    if (line.trim() === '---') {
+      if (parsingState === 'completed') {
+        body.push(line)
+      } else if (parsingState === 'pending') {
+        parsingState = 'started'
+      } else if (parsingState === 'started') {
+        parsingState = 'completed'
+      }
+      return
+    }
+
+    if (parsingState === 'started') {
+      frontmatter.push(line)
+      return
+    }
+
+    body.push(line)
+  })
+
+  const attributes = frontmatter.length ? JSON.parse(frontmatter.join('\n')) : {}
+  return { attributes, body: body.join('\n') }
+}

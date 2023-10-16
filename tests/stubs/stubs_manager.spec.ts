@@ -32,7 +32,9 @@ test.group('Stubs Manager | build', (group) => {
       join(originalSource, 'middleware/middleware.stub'),
       dedent`
     ---
-    to: /foo
+    {
+      "to": "/foo"
+    }
     ---
     hello world
     `
@@ -55,7 +57,9 @@ test.group('Stubs Manager | build', (group) => {
       join(originalSource, 'middleware/middleware.stub'),
       dedent`
     ---
-    to: /foo
+    {
+      "to": "/foo"
+    }
     ---
     hello world
     `
@@ -65,7 +69,9 @@ test.group('Stubs Manager | build', (group) => {
       join(publishTarget, 'middleware/middleware.stub'),
       dedent`
     ---
-    to: /foo
+    {
+      "to": "/foo"
+    }
     ---
     hi world
     `
@@ -128,7 +134,9 @@ test.group('Stubs Manager | build', (group) => {
       join(BASE_PATH, 'some-package/stubs/middleware/middleware.stub'),
       dedent`
     ---
-    to: /foo
+    {
+      "to": "/foo"
+    }
     ---
     hello world
     `
@@ -160,7 +168,9 @@ test.group('Stubs Manager | build', (group) => {
       join(BASE_PATH, 'some-package/stubs/middleware/middleware.stub'),
       dedent`
     ---
-    to: /foo
+    {
+      "to": "/foo"
+    }
     ---
     hello world
     `
@@ -170,7 +180,9 @@ test.group('Stubs Manager | build', (group) => {
       join(publishTarget, 'middleware/middleware.stub'),
       dedent`
     ---
-    to: /foo
+    {
+      "to": "/foo"
+    }
     ---
     hi world
     `

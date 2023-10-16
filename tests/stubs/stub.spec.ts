@@ -36,7 +36,9 @@ test.group('Stubs', (group) => {
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
     ---
-    to: {{ app.middlewarePath(entity.path, middlewareFileName) }}
+    {
+      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}"
+    }
     ---
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
@@ -123,7 +125,9 @@ test.group('Stubs', (group) => {
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
     ---
-    to: ./foo
+    {
+      "to": "./foo"
+    }
     ---`
 
     const stub = new Stub(app, stubContents, './make/middleware.stub')
@@ -236,7 +240,9 @@ test.group('Stubs', (group) => {
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
     ---
-    to: {{ app.middlewarePath(entity.path, middlewareFileName) }}
+    {
+      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}"
+    }
     ---
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
@@ -275,7 +281,9 @@ test.group('Stubs', (group) => {
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
     ---
-    to: {{ app.middlewarePath(entity.path, middlewareFileName) }}
+    {
+      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}"
+    }
     ---
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
@@ -317,8 +325,10 @@ test.group('Stubs', (group) => {
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
     ---
-    to: {{ app.middlewarePath(entity.path, middlewareFileName) }}
-    force: true
+    {
+      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}",
+      "force": true
+    }
     ---
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
@@ -359,8 +369,10 @@ test.group('Stubs', (group) => {
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
     ---
-    to: {{ app.middlewarePath(entity.path, middlewareFileName) }}
-    force: true
+    {
+      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}",
+      "force": true
+    }
     ---
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
@@ -402,7 +414,9 @@ test.group('Stubs', (group) => {
 
     const stubContents = dedent`
     ---
-    to: {{ app.middlewarePath(entity.path, string(entity.name).snakeCase().toString()) }}
+    {
+      "to": "{{ app.middlewarePath(entity.path, string(entity.name).snakeCase().toString()) }}"
+    }
     ---`
 
     const stub = new Stub(app, stubContents, './make/middleware.stub')

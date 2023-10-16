@@ -10,14 +10,13 @@
 // @ts-expect-error
 import * as tempura from 'tempura'
 import string from '@poppinss/utils/string'
-import { default as fm } from 'front-matter'
 import { dirname, isAbsolute } from 'node:path'
 import { RuntimeException } from '@poppinss/utils'
 import { mkdir, writeFile } from 'node:fs/promises'
 import StringBuilder from '@poppinss/utils/string_builder'
 
 import debug from '../debug.js'
-import { pathExists } from '../helpers.js'
+import { parseJSONFrontMatter, pathExists } from '../helpers.js'
 import type { Application } from '../application.js'
 
 /**
@@ -85,7 +84,6 @@ export class Stub {
   #validateToAttribute(attributes: Record<string, any>) {
     if (!attributes.to) {
       const error = new RuntimeException(`Missing "to" attribute in stub yaml front matter`)
-      this.#patchErrorStack(error)
       throw error
     }
 
@@ -93,7 +91,6 @@ export class Stub {
       const error = new RuntimeException(
         `The value for "to" attribute must be an absolute file path`
       )
-      this.#patchErrorStack(error)
       throw error
     }
   }
@@ -129,11 +126,14 @@ export class Stub {
    * Parsers the front-matter stub
    */
   #parseFrontMatter(stubOutput: string) {
-    // @ts-expect-error (the typings of the package are messedup)
-    const { attributes, body } = fm<Record<string, any>>(stubOutput)
-    this.#validateToAttribute(attributes)
-
-    return { attributes, body }
+    try {
+      const { body, attributes } = parseJSONFrontMatter(stubOutput)
+      this.#validateToAttribute(attributes)
+      return { attributes, body: body }
+    } catch (error) {
+      this.#patchErrorStack(error)
+      throw error
+    }
   }
 
   /**
