@@ -16,8 +16,8 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import StringBuilder from '@poppinss/utils/string_builder'
 
 import debug from '../debug.js'
-import { parseJSONFrontMatter, pathExists } from '../helpers.js'
 import type { Application } from '../application.js'
+import { parseStubExports, pathExists } from '../helpers.js'
 
 /**
  * The stub class uses tempura template engine to process
@@ -83,7 +83,7 @@ export class Stub {
    */
   #validateToAttribute(attributes: Record<string, any>) {
     if (!attributes.to) {
-      const error = new RuntimeException(`Missing "to" attribute in stub yaml front matter`)
+      const error = new RuntimeException(`Missing "to" attribute in stub exports`)
       throw error
     }
 
@@ -103,6 +103,9 @@ export class Stub {
       app: this.#app,
       randomString: string.random,
       generators: this.#app.generators,
+      exports: (value: any) => {
+        return `<!--EXPORT_START-->${JSON.stringify(value)}<!--EXPORT_END-->`
+      },
       string: (value: string | StringBuilder) => new StringBuilder(value),
     }
   }
@@ -123,11 +126,11 @@ export class Stub {
   }
 
   /**
-   * Parsers the front-matter stub
+   * Parsers the stub exports
    */
-  #parseFrontMatter(stubOutput: string) {
+  #parseExports(stubOutput: string) {
     try {
-      const { body, attributes } = parseJSONFrontMatter(stubOutput)
+      const { body, attributes } = parseStubExports(stubOutput)
       this.#validateToAttribute(attributes)
       return { attributes, body: body }
     } catch (error) {
@@ -145,7 +148,7 @@ export class Stub {
       ...stubData,
     }
 
-    const { attributes, body } = this.#parseFrontMatter(await this.#renderStub(data))
+    const { attributes, body } = this.#parseExports(await this.#renderStub(data))
     debug('prepared stub %s', body)
     debug('stub attributes %O', attributes)
 

@@ -31,11 +31,9 @@ test.group('Stubs Manager | build', (group) => {
     await outputFile(
       join(originalSource, 'middleware/middleware.stub'),
       dedent`
-    ---
-    {
-      "to": "/foo"
-    }
-    ---
+    {{{
+      exports({ to: '/foo' })
+    }}}
     hello world
     `
     )
@@ -56,11 +54,9 @@ test.group('Stubs Manager | build', (group) => {
     await outputFile(
       join(originalSource, 'middleware/middleware.stub'),
       dedent`
-    ---
-    {
-      "to": "/foo"
-    }
-    ---
+    {{{
+      exports({ to: '/foo' })
+    }}}
     hello world
     `
     )
@@ -68,11 +64,9 @@ test.group('Stubs Manager | build', (group) => {
     await outputFile(
       join(publishTarget, 'middleware/middleware.stub'),
       dedent`
-    ---
-    {
-      "to": "/foo"
-    }
-    ---
+    {{{
+      exports({ to: '/foo' })
+    }}}
     hi world
     `
     )
@@ -133,11 +127,9 @@ test.group('Stubs Manager | build', (group) => {
     await outputFile(
       join(BASE_PATH, 'some-package/stubs/middleware/middleware.stub'),
       dedent`
-    ---
-    {
-      "to": "/foo"
-    }
-    ---
+    {{{
+      exports({ to: '/foo' })
+    }}}
     hello world
     `
     )
@@ -167,11 +159,9 @@ test.group('Stubs Manager | build', (group) => {
     await outputFile(
       join(BASE_PATH, 'some-package/stubs/middleware/middleware.stub'),
       dedent`
-    ---
-    {
-      "to": "/foo"
-    }
-    ---
+    {{{
+      exports({ to: '/foo' })
+    }}}
     hello world
     `
     )
@@ -179,11 +169,9 @@ test.group('Stubs Manager | build', (group) => {
     await outputFile(
       join(publishTarget, 'middleware/middleware.stub'),
       dedent`
-    ---
-    {
-      "to": "/foo"
-    }
-    ---
+    {{{
+      exports({ to: '/foo' })
+    }}}
     hi world
     `
     )

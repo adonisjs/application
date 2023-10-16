@@ -35,11 +35,11 @@ test.group('Stubs', (group) => {
 
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
-    ---
-    {
-      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}"
-    }
-    ---
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, middlewareFileName)
+      })
+    }}}
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
 
@@ -98,9 +98,7 @@ test.group('Stubs', (group) => {
     await app.init()
 
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
-    {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
-    ---
-    ---`
+    {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}`
 
     const stub = new Stub(app, stubContents, './make/middleware.stub')
     try {
@@ -109,7 +107,7 @@ test.group('Stubs', (group) => {
       })
     } catch (error) {
       assert.equal(error.stack.split('\n')[1], `    at anonymous (./make/middleware.stub:0:0)`)
-      assert.equal(error.message, 'Missing "to" attribute in stub yaml front matter')
+      assert.equal(error.message, 'Missing "to" attribute in stub exports')
     }
   })
 
@@ -124,11 +122,11 @@ test.group('Stubs', (group) => {
 
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
-    ---
-    {
-      "to": "./foo"
-    }
-    ---`
+    {{{
+      exports({
+        to: './foo'
+      })
+    }}}`
 
     const stub = new Stub(app, stubContents, './make/middleware.stub')
     try {
@@ -141,7 +139,7 @@ test.group('Stubs', (group) => {
     }
   })
 
-  test('fail when yaml frontmatter is missing', async ({ assert }) => {
+  test('fail when stub exports are missing', async ({ assert }) => {
     assert.plan(2)
 
     const app = new Application(BASE_URL, {
@@ -160,7 +158,7 @@ test.group('Stubs', (group) => {
       })
     } catch (error) {
       assert.equal(error.stack.split('\n')[1], `    at anonymous (./make/middleware.stub:0:0)`)
-      assert.equal(error.message, 'Missing "to" attribute in stub yaml front matter')
+      assert.equal(error.message, 'Missing "to" attribute in stub exports')
     }
   })
 
@@ -239,11 +237,11 @@ test.group('Stubs', (group) => {
 
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
-    ---
-    {
-      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}"
-    }
-    ---
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, middlewareFileName)
+      })
+    }}}
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
 
@@ -280,11 +278,11 @@ test.group('Stubs', (group) => {
 
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
-    ---
-    {
-      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}"
-    }
-    ---
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, middlewareFileName)
+      })
+    }}}
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
 
@@ -315,7 +313,7 @@ test.group('Stubs', (group) => {
     assert.equal(await readFile(destination, 'utf-8'), 'hello world')
   })
 
-  test('overwrite resource when yaml frontmatter forces it', async ({ assert }) => {
+  test('overwrite resource when stub exports forces it', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
       importer: () => {},
@@ -324,12 +322,12 @@ test.group('Stubs', (group) => {
 
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
-    ---
-    {
-      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}",
-      "force": true
-    }
-    ---
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, middlewareFileName),
+        force: true,
+      })
+    }}}
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
 
@@ -368,12 +366,12 @@ test.group('Stubs', (group) => {
 
     const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
     {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
-    ---
-    {
-      "to": "{{ app.middlewarePath(entity.path, middlewareFileName) }}",
-      "force": true
-    }
-    ---
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, middlewareFileName),
+        force: true,
+      })
+    }}}
     import { HttpContext } from '@adonisjs/core/http'
     import { NextFn } from '@adonisjs/core/types/http'
 
@@ -413,11 +411,12 @@ test.group('Stubs', (group) => {
     await app.init()
 
     const stubContents = dedent`
-    ---
-    {
-      "to": "{{ app.middlewarePath(entity.path, string(entity.name).snakeCase().toString()) }}"
-    }
-    ---`
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, string(entity.name).snakeCase().toString())
+      })
+    }}}
+    `
 
     const stub = new Stub(app, stubContents, './make/middleware.stub')
     const { destination, attributes } = await stub.prepare({

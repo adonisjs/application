@@ -62,48 +62,28 @@ export async function pathExists(path: PathLike): Promise<boolean> {
 }
 
 /**
- * Escapes a JSON string, so that it can be safely parsed.
- *
- * This is done because the JSON written within the frontmatter
- * block might not be escaped when using helper methods to
- * generate values.
- *
- * Therefore, we have to escape it at the time of parsing it.
+ * Parsers exports from a stub
  */
-export function escapeJSON(jsonString: string) {
-  return jsonString.replace('\\', '\\\\')
-}
-
-/**
- * Parses frontend matter as JSON from a text string.
- */
-export function parseJSONFrontMatter(contents: string) {
-  const chunks = contents.split(/\n|\r\n/)
-
-  const frontmatter: string[] = []
+export function parseStubExports(contents: string) {
+  const chunks = contents.split(/\r\n|\n/)
   const body: string[] = []
-  let parsingState: 'pending' | 'started' | 'completed' = 'pending'
+  const exportedBlocks: string[] = []
 
   chunks.forEach((line) => {
-    if (line.trim() === '---') {
-      if (parsingState === 'completed') {
-        body.push(line)
-      } else if (parsingState === 'pending') {
-        parsingState = 'started'
-      } else if (parsingState === 'started') {
-        parsingState = 'completed'
-      }
-      return
+    if (line.trim().startsWith('<!--EXPORT_START-->')) {
+      exportedBlocks.push(line.replace('<!--EXPORT_START-->', '').replace('<!--EXPORT_END-->', ''))
+    } else {
+      body.push(line)
     }
-
-    if (parsingState === 'started') {
-      frontmatter.push(line)
-      return
-    }
-
-    body.push(line)
   })
 
-  const attributes = frontmatter.length ? JSON.parse(escapeJSON(frontmatter.join(' '))) : {}
+  const attributes = exportedBlocks.reduce(
+    (result, block) => {
+      Object.assign(result, JSON.parse(block))
+      return result
+    },
+    {} as Record<string, any>
+  )
+
   return { attributes, body: body.join('\n') }
 }
