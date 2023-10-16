@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import { EOL } from 'node:os'
 import { join } from 'node:path'
 import type { PathLike } from 'node:fs'
 import { access, readFile } from 'node:fs/promises'
-import { EOL } from 'node:os'
 
 /**
  * Attempts to read a file from multiple sources and returns the contents
@@ -67,6 +67,7 @@ export async function pathExists(path: PathLike): Promise<boolean> {
  */
 export function parseJSONFrontMatter(contents: string) {
   const chunks = contents.split(EOL)
+  console.log(chunks)
 
   const frontmatter: string[] = []
   const body: string[] = []
@@ -91,6 +92,9 @@ export function parseJSONFrontMatter(contents: string) {
 
     body.push(line)
   })
+
+  console.log(frontmatter)
+  console.log(body)
 
   const attributes = frontmatter.length ? JSON.parse(frontmatter.join(EOL)) : {}
   return { attributes, body: body.join(EOL) }
