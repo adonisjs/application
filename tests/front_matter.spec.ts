@@ -92,5 +92,8 @@ test.group('Front matter', () => {
     `
 
     parseJSONFrontMatter(contents)
-  }).throws(`Unexpected token 'o', "    to: 'foo'" is not valid JSON`)
+  }).throws(
+    new RegExp(`Unexpected token 'o', "    to: 'foo'" is not valid JSON|Unexpected token o in JSON at position 5
+  `)
+  )
 })
