@@ -66,7 +66,7 @@ export async function pathExists(path: PathLike): Promise<boolean> {
  * Parses frontend matter as JSON from a text string.
  */
 export function parseJSONFrontMatter(contents: string) {
-  const chunks = contents.split(EOL)
+  const chunks = contents.split(/\n|\r\n/)
   console.log(chunks)
 
   const frontmatter: string[] = []
