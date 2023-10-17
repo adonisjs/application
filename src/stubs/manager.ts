@@ -107,23 +107,31 @@ export class StubsManager {
         ? join(options.source, stubPath)
         : join(await this.#getPackageSource(options.pkg), stubPath)
 
-    const files = await fsReadAll(source, {
-      filter: (path) => path === '' || path.endsWith('.stub'),
-    })
+    try {
+      const files = await fsReadAll(source, {
+        filter: (path) => path === '' || path.endsWith('.stub'),
+      })
 
-    debug('copying stubs from "%s" with options %O', source, copyOptions)
-    debug('preparing to copy stubs "%s"', files)
+      debug('copying stubs from "%s" with options %O', source, copyOptions)
+      debug('preparing to copy stubs "%s"', files)
 
-    /**
-     * Copy all files one by one and maintain the files structure
-     */
-    for (let filePath of files) {
-      const sourcePath = join(source, filePath)
-      const destinationPath = join(this.#publishTarget, stubPath, filePath)
-      await cp(sourcePath, destinationPath, copyOptions)
-      filesCopied.push(destinationPath)
+      /**
+       * Copy all files one by one and maintain the files structure
+       */
+      for (let filePath of files) {
+        const sourcePath = join(source, filePath)
+        const destinationPath = join(this.#publishTarget, stubPath, filePath)
+        await cp(sourcePath, destinationPath, copyOptions)
+        filesCopied.push(destinationPath)
+      }
+
+      return filesCopied
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        const readingSource = 'source' in options ? options.source : options.pkg
+        throw new Error(`Cannot find "${stubPath}" stub in "${readingSource}" destination`)
+      }
+      throw error
     }
-
-    return filesCopied
   }
 }

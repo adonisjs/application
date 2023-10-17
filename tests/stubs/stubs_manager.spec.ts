@@ -336,7 +336,22 @@ test.group('Stubs Manager | copy', (group) => {
     const stubs = new StubsManager(app, publishTarget)
     await assert.rejects(async () => {
       await stubs.copy('make', { source: originalSource })
-    }, /ENOENT\: no such file or directory/)
+    }, /Cannot find "make" stub/)
+  })
+
+  test('raise error when mentioned file is missing', async ({ assert }) => {
+    const originalSource = join(BASE_PATH, 'source/stubs')
+    const publishTarget = join(BASE_PATH, 'custom/stubs')
+
+    await outputFile(join(originalSource, 'make/middleware/middleware.stub'), 'hello middleware')
+
+    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    await app.init()
+
+    const stubs = new StubsManager(app, publishTarget)
+    await assert.rejects(async () => {
+      await stubs.copy('make/controller.stub', { source: originalSource })
+    }, /Cannot find "make\/controller\.stub"/)
   })
 
   test('copy a specific file from package source to publish target', async ({ assert }) => {
