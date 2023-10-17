@@ -10,7 +10,6 @@
   "exports": {
     ".": "./build/index.js",
     "./types": "./build/src/types.js",
-    "./generators": "./build/src/generators.js",
     "./factories": "./build/factories/main.js"
   },
   "engines": {
@@ -119,7 +118,6 @@
     "entry": [
       "./index.ts",
       "./src/types.ts",
-      "./src/generators.ts",
       "./factories/main.ts"
     ],
     "outDir": "./build",
