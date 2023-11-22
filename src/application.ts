@@ -224,6 +224,18 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }
 
   /**
+   * A flag to know if VineJS provider is configured. When set
+   * to true, you may import `@vinejs/vine` package
+   */
+  usingVineJS: boolean = false
+
+  /**
+   * A flag to know if Edge provider is configured. When set
+   * to true, you may import `edge.js` package
+   */
+  usingEdgeJS: boolean = false
+
+  /**
    * Reference to the AdonisJS IoC container. The value is defined
    * after the "init" method call
    */
