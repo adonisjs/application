@@ -31,6 +31,7 @@ export const directories: DirectoriesNode = {
   services: 'app/services',
   exceptions: 'app/exceptions',
   mailers: 'app/mailers',
+  mails: 'app/mails',
   middleware: 'app/middleware',
   policies: 'app/policies',
   validators: 'app/validators',

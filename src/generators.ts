@@ -392,6 +392,27 @@ const generators = {
   },
 
   /**
+   * Converts an entity name to class-based mail name
+   */
+  mailName(entityName: string, type: string = 'notification') {
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix(type)
+      .removeSuffix('mailer')
+      .removeSuffix('mail')
+      .pascalCase()
+      .suffix(string.pascalCase(type))
+      .toString()
+  },
+
+  /**
+   * Converts an entity name to class-name mail filename
+   */
+  mailFileName(entityName: string, type: string = 'notification') {
+    return new StringBuilder(this.mailName(entityName, type)).snakeCase().ext('.ts').toString()
+  },
+
+  /**
    * Converts an entity to test group name
    */
   testGroupName(entity: { path: string; name: string }) {

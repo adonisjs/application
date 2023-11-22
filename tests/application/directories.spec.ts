@@ -88,6 +88,9 @@ test.group('Application | directories', () => {
     assert.equal(app.mailersPath(), join(BASE_PATH, 'app/mailers'))
     assert.equal(app.mailersPath('verify_email.ts'), join(BASE_PATH, 'app/mailers/verify_email.ts'))
 
+    assert.equal(app.mailsPath(), join(BASE_PATH, 'app/mails'))
+    assert.equal(app.mailsPath('verify_email.ts'), join(BASE_PATH, 'app/mails/verify_email.ts'))
+
     assert.equal(app.middlewarePath(), join(BASE_PATH, 'app/middleware'))
     assert.equal(app.middlewarePath('auth.ts'), join(BASE_PATH, 'app/middleware/auth.ts'))
 

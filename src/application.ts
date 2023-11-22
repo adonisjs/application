@@ -753,6 +753,13 @@ export class Application<ContainerBindings extends Record<any, any>> {
   }
 
   /**
+   * Makes path to the mails directory
+   */
+  mailsPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.mails, ...paths)
+  }
+
+  /**
    * Makes path to the middleware directory
    */
   middlewarePath(...paths: string[]): string {

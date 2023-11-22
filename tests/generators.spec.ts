@@ -360,4 +360,29 @@ test.group('Generator', () => {
       'create_post.edge'
     )
   })
+
+  test('convert entity name to mail name', ({ assert }) => {
+    assert.equal(generators.mailName('email_verified'), 'EmailVerifiedNotification')
+    assert.equal(generators.mailName('email_verified_mailer'), 'EmailVerifiedNotification')
+    assert.equal(
+      generators.mailName('emailVerifiedMailerNotification'),
+      'EmailVerifiedNotification'
+    )
+    assert.equal(generators.mailName('password_reset', 'provision'), 'PasswordResetProvision')
+    assert.equal(generators.mailName('team_invite', 'provision'), 'TeamInviteProvision')
+  })
+
+  test('convert entity name to mail filename', ({ assert }) => {
+    assert.equal(generators.mailFileName('email_verified'), 'email_verified_notification.ts')
+    assert.equal(generators.mailFileName('email_verified_mailer'), 'email_verified_notification.ts')
+    assert.equal(
+      generators.mailFileName('emailVerifiedMailerNotification'),
+      'email_verified_notification.ts'
+    )
+    assert.equal(
+      generators.mailFileName('password_reset', 'provision'),
+      'password_reset_provision.ts'
+    )
+    assert.equal(generators.mailFileName('team_invite', 'provision'), 'team_invite_provision.ts')
+  })
 })
