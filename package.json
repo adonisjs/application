@@ -73,6 +73,7 @@
   },
   "dependencies": {
     "@poppinss/hooks": "^7.2.2",
+    "@poppinss/macroable": "^1.0.1",
     "@poppinss/utils": "^6.7.0",
     "glob-parent": "^6.0.2",
     "tempura": "^0.4.0"

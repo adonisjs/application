@@ -11,6 +11,7 @@ import Hooks from '@poppinss/hooks'
 import { fileURLToPath } from 'node:url'
 import { join, relative } from 'node:path'
 import { Container } from '@adonisjs/fold'
+import Macroable from '@poppinss/macroable'
 import type { HookHandler } from '@poppinss/hooks/types'
 import { importDefault, RuntimeException } from '@poppinss/utils'
 
@@ -38,7 +39,7 @@ import type {
  * - Registering an booting providers
  * - Invoking lifecycle methods on the providers and hooks
  */
-export class Application<ContainerBindings extends Record<any, any>> {
+export class Application<ContainerBindings extends Record<any, any>> extends Macroable {
   /**
    * Importer function to import modules from the application
    * context
@@ -242,6 +243,8 @@ export class Application<ContainerBindings extends Record<any, any>> {
   container!: Container<ContainerBindings>
 
   constructor(appRoot: URL, options: { environment: AppEnvironments; importer: Importer }) {
+    super()
+
     this.#appRoot = appRoot
     this.#importer = options.importer
     this.#environment = options.environment
