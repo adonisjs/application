@@ -40,9 +40,9 @@
   "author": "virk,adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/config": "^4.2.1-5",
+    "@adonisjs/config": "^4.2.1-7",
     "@adonisjs/eslint-config": "^1.2.0",
-    "@adonisjs/fold": "^9.9.3-10",
+    "@adonisjs/fold": "^9.9.3-12",
     "@adonisjs/prettier-config": "^1.2.0",
     "@adonisjs/tsconfig": "^1.2.0",
     "@commitlint/cli": "^18.4.3",
@@ -78,8 +78,8 @@
     "tempura": "^0.4.0"
   },
   "peerDependencies": {
-    "@adonisjs/config": "^4.2.1-5",
-    "@adonisjs/fold": "^9.9.3-10"
+    "@adonisjs/config": "^4.2.1-7",
+    "@adonisjs/fold": "^9.9.3-12"
   },
   "repository": {
     "type": "git",
