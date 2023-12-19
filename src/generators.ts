@@ -340,7 +340,18 @@ const generators = {
       .removeSuffix('validator')
       .singular()
       .pascalCase()
-      .suffix('Validator')
+      .toString()
+  },
+
+  /**
+   * Converts an entity name to validator action
+   * name
+   */
+  validatorActionName(entityName: string, action: string) {
+    return new StringBuilder(this.validatorName(entityName))
+      .prefix(`${action}_`)
+      .suffix('_validator')
+      .camelCase()
       .toString()
   },
 

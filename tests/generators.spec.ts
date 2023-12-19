@@ -248,18 +248,19 @@ test.group('Generator', () => {
   })
 
   test('convert entity name to validator name', ({ assert }) => {
-    assert.equal(generators.validatorName('createUser'), 'CreateUserValidator')
-    assert.equal(generators.validatorName('updateUser'), 'UpdateUserValidator')
-    assert.equal(generators.validatorName('createCommentValidator'), 'CreateCommentValidator')
+    assert.equal(generators.validatorName('user'), 'User')
+    assert.equal(generators.validatorName('comments'), 'Comment')
   })
 
   test('convert entity name to validator filename', ({ assert }) => {
-    assert.equal(generators.validatorFileName('createUser'), 'create_user_validator.ts')
-    assert.equal(generators.validatorFileName('updateUser'), 'update_user_validator.ts')
-    assert.equal(
-      generators.validatorFileName('createCommentValidator'),
-      'create_comment_validator.ts'
-    )
+    assert.equal(generators.validatorFileName('user'), 'user.ts')
+    assert.equal(generators.validatorFileName('comments'), 'comment.ts')
+  })
+
+  test('convert entity name to validator action name', ({ assert }) => {
+    assert.equal(generators.validatorActionName('user', 'create'), 'createUserValidator')
+    assert.equal(generators.validatorActionName('user', 'update'), 'updateUserValidator')
+    assert.equal(generators.validatorActionName('comment', 'delete'), 'deleteCommentValidator')
   })
 
   test('convert entity name to exception name', ({ assert }) => {
