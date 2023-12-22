@@ -42,7 +42,7 @@
   "devDependencies": {
     "@adonisjs/config": "^4.2.1-7",
     "@adonisjs/eslint-config": "^1.2.0",
-    "@adonisjs/fold": "^9.9.3-13",
+    "@adonisjs/fold": "^9.9.3-14",
     "@adonisjs/prettier-config": "^1.2.0",
     "@adonisjs/tsconfig": "^1.2.0",
     "@commitlint/cli": "^18.4.3",
@@ -80,7 +80,7 @@
   },
   "peerDependencies": {
     "@adonisjs/config": "^4.2.1-7",
-    "@adonisjs/fold": "^9.9.3-12"
+    "@adonisjs/fold": "^9.9.3-14"
   },
   "repository": {
     "type": "git",
