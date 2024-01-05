@@ -715,6 +715,7 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
 
   /**
    * Makes path to the contracts directory
+   * @deprecated
    */
   contractsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.contracts, ...paths)
