@@ -44,10 +44,10 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * Importer function to import modules from the application
    * context
    */
-  #importer: Importer
+  #importer?: Importer
 
   /**
-   * Flag to know when we have started the termination
+   * Flag to know if we have started the termination
    * process
    */
   #terminating: boolean = false
@@ -217,6 +217,10 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
     return generators
   }
 
+  /**
+   * Reference to the stubs module to scaffold
+   * resources or eject stubs
+   */
   stubs = {
     create: async () => {
       const { StubsManager } = await import('./stubs/manager.js')
@@ -240,9 +244,9 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * Reference to the AdonisJS IoC container. The value is defined
    * after the "init" method call
    */
-  container!: Container<ContainerBindings>
+  declare container: Container<ContainerBindings>
 
-  constructor(appRoot: URL, options: { environment: AppEnvironments; importer: Importer }) {
+  constructor(appRoot: URL, options: { environment: AppEnvironments; importer?: Importer }) {
     super()
 
     this.#appRoot = appRoot
@@ -251,19 +255,15 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
     this.#nodeEnvManager = new NodeEnvManager()
     this.#configManager = new ConfigManager(this.appRoot)
     this.#rcFileManager = new RcFileManager(this.appRoot)
-    this.#providersManager = new ProvidersManager(options.importer, {
+    this.#providersManager = new ProvidersManager({
       environment: this.#environment,
       providersState: [this],
     })
-    this.#preloadsManager = new PreloadsManager(options.importer, {
+    this.#preloadsManager = new PreloadsManager({
       environment: this.#environment,
     })
-
     this.#surroundedEnvironment.pm2 = !!process.env.pm2_id
-    this.#debugState()
-  }
 
-  #debugState() {
     if (debug.enabled) {
       debug('app environment :%O', {
         pm2: this.#surroundedEnvironment.pm2,
@@ -805,17 +805,32 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
   }
 
   /**
-   * Import a module by identifier
+   * Import a module by identifier. This method uses the importer function
+   * defined at the time of creating the application instance and throws
+   * an error if no importer was defined.
    */
   import(moduleIdentifier: string) {
+    if (!this.#importer) {
+      throw new RuntimeException(
+        `Cannot import "${moduleIdentifier}". Register a module importer with the application first.`
+      )
+    }
     return this.#importer(moduleIdentifier)
   }
 
   /**
-   * Import a module by identifier
+   * Import a module by identifier. This method uses the importer function
+   * defined at the time of creating the application instance and throws
+   * an error if no importer was defined.
    */
   importDefault<T extends object>(moduleIdentifier: string) {
-    return importDefault<T>(() => this.#importer(moduleIdentifier))
+    if (!this.#importer) {
+      throw new RuntimeException(
+        `Cannot import "${moduleIdentifier}". Register a module importer with the application first.`
+      )
+    }
+
+    return importDefault<T>(() => this.#importer!(moduleIdentifier))
   }
 
   /**

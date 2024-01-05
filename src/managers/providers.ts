@@ -10,12 +10,7 @@
 import { RuntimeException } from '@poppinss/utils'
 
 import debug from '../debug.js'
-import type {
-  Importer,
-  ProviderNode,
-  AppEnvironments,
-  ContainerProviderContract,
-} from '../types.js'
+import type { ProviderNode, AppEnvironments, ContainerProviderContract } from '../types.js'
 
 /**
  * The ProvidersManager class is used to resolve, import and execute lifecycle
@@ -40,14 +35,10 @@ export class ProvidersManager {
   #providersWithShutdownListeners: ContainerProviderContract[] = []
 
   /**
-   * An array of providers modules
+   * An array of providers modules picked from the ".adonisrc.ts"
+   * file.
    */
   #list: ProviderNode[] = []
-
-  /**
-   * The application importer
-   */
-  #importer: Importer
 
   /**
    * The options accepted by the manager
@@ -57,11 +48,7 @@ export class ProvidersManager {
     providersState: any[]
   }
 
-  constructor(
-    importer: Importer,
-    options: { environment: AppEnvironments; providersState: any[] }
-  ) {
-    this.#importer = importer
+  constructor(options: { environment: AppEnvironments; providersState: any[] }) {
     this.#options = options
   }
 
@@ -77,19 +64,10 @@ export class ProvidersManager {
   }
 
   /**
-   * Ensure the value is a valid ES class
+   * Check if value is a class
    */
-  #ensureIsClass(providerPath: string, providerClass: any) {
-    if (typeof providerClass !== 'function' || !providerClass.toString().startsWith('class ')) {
-      throw new RuntimeException(`Default export from module "${providerPath}" is not a class`)
-    }
-  }
-
-  /**
-   * Resolves a provider module path and imports it
-   */
-  async #importProvider(providerPath: string) {
-    return this.#importer(providerPath)
+  #isAClass(providerClass: any) {
+    return typeof providerClass === 'function' && providerClass.toString().startsWith('class ')
   }
 
   /**
@@ -100,23 +78,36 @@ export class ProvidersManager {
   async #resolveProvider(provider: ProviderNode): Promise<{
     new (...args: any[]): ContainerProviderContract
   } | null> {
-    if (typeof provider.file === 'function') {
-      const providerClass = await provider.file()
-      return providerClass.default || null
-    }
-
-    const providerExports = await this.#importProvider(provider.file)
+    const providerExports = await provider.file()
+    const exportsLength = Object.keys(providerExports).length
 
     /**
-     * Return null when service provider does not have any
-     * exports
+     * Return null when there are no exports
      */
-    const hasExports = Object.keys(providerExports).length
-    if (!hasExports) {
+    if (exportsLength === 0) {
       return null
     }
 
-    this.#ensureIsClass(provider.file, providerExports.default)
+    /**
+     * If there are exports and not a default export, then we consider
+     * it to be an invalid provider
+     */
+    if (!providerExports.default) {
+      throw new RuntimeException(
+        `Invalid exports from "${provider.file.toString()}" provider. It must have a default export`
+      )
+    }
+
+    /**
+     * If the default export is not a class, then also we consider it
+     * to be an invalid provider
+     */
+    if (!this.#isAClass(providerExports.default)) {
+      throw new RuntimeException(
+        `Default export from module "${provider.file.toString()}" is not a class`
+      )
+    }
+
     return providerExports.default
   }
 

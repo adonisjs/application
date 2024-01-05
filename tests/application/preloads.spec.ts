@@ -35,15 +35,12 @@ test.group('Application | preloads', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       preloads: [
         {
-          file: './routes.js?v=1',
+          file: () => import(new URL('./routes.js?v=1', BASE_URL).href),
           environment: ['web'],
           optional: false,
         },
@@ -60,15 +57,12 @@ test.group('Application | preloads', (group) => {
   test('raise error when module is missing', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       preloads: [
         {
-          file: './routes.js?v=2',
+          file: () => import(new URL('./routes.js?v=2', BASE_URL).href),
           environment: ['web'],
           optional: false,
         },
@@ -90,15 +84,12 @@ test.group('Application | preloads', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'unknown',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       preloads: [
         {
-          file: './routes.js?v=5',
+          file: () => import(new URL('./routes.js?v=5', BASE_URL).href),
           environment: ['web'],
           optional: true,
         },
@@ -121,15 +112,12 @@ test.group('Application | preloads', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'console',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       preloads: [
         {
-          file: './routes.js?v=6',
+          file: () => import(new URL('./routes.js?v=6', BASE_URL).href),
           environment: ['web'],
           optional: false,
         },
@@ -152,15 +140,12 @@ test.group('Application | preloads', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       preloads: [
         {
-          file: './routes.js?v=6',
+          file: () => import(new URL('./routes.js?v=6', BASE_URL).href),
           environment: ['web'],
           optional: false,
         },
@@ -188,15 +173,12 @@ test.group('Application | preloads', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       preloads: [
         {
-          file: './routes.js?v=7',
+          file: () => import(new URL('./routes.js?v=7', BASE_URL).href),
           environment: ['web'],
           optional: true,
         },
@@ -223,9 +205,6 @@ test.group('Application | preloads', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({

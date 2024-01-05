@@ -41,15 +41,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=1',
+          file: () => import(new URL('./route_provider.js?v=1', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -65,13 +62,12 @@ test.group('Application | providers', (group) => {
   test('do not resolve providers outside of the current environment', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=2',
+          file: () => import(new URL('./route_provider.js?v=2', BASE_URL).href),
           environment: ['console'],
         },
       ],
@@ -85,15 +81,12 @@ test.group('Application | providers', (group) => {
   test('do not resolve providers outside in unknown environment', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'unknown',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=2',
+          file: () => import(new URL('./route_provider.js?v=2', BASE_URL).href),
           environment: ['console'],
         },
       ],
@@ -107,13 +100,12 @@ test.group('Application | providers', (group) => {
   test('switch environment before importing providers', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'console',
-      importer: () => {},
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=2',
+          file: () => import(new URL('./route_provider.js?v=2', BASE_URL).href),
           environment: ['console'],
         },
       ],
@@ -128,15 +120,12 @@ test.group('Application | providers', (group) => {
   test('fail when provider module is missing', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=3',
+          file: () => import(new URL('./route_provider.js?v=3', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -146,7 +135,7 @@ test.group('Application | providers', (group) => {
     await assert.rejects(() => app.boot(), /Cannot find module/)
   })
 
-  test('fail when provider does not have a default export', async ({ assert }) => {
+  test('fail when provider has exports but not a default export', async ({ assert }) => {
     await outputFile(
       join(BASE_PATH, './route_provider.ts'),
       `
@@ -162,15 +151,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=4',
+          file: () => import(new URL('./route_provider.js?v=4', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -180,7 +166,7 @@ test.group('Application | providers', (group) => {
 
     await assert.rejects(
       () => app.boot(),
-      'Default export from module "./route_provider.js?v=4" is not a class'
+      `Invalid exports from "()=>import(new URL('./route_provider.js?v=4', BASE_URL).href)" provider. It must have a default export`
     )
   })
 
@@ -200,15 +186,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=5',
+          file: () => import(new URL('./route_provider.js?v=5', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -218,8 +201,50 @@ test.group('Application | providers', (group) => {
 
     await assert.rejects(
       () => app.boot(),
-      'Default export from module "./route_provider.js?v=5" is not a class'
+      `Default export from module "()=>import(new URL('./route_provider.js?v=5', BASE_URL).href)" is not a class`
     )
+  })
+
+  test('allow providers with zero exports', async ({ assert }) => {
+    await outputFile(join(BASE_PATH, './route_provider.ts'), ``)
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: () => import(new URL('./route_provider.js?v=6', BASE_URL).href),
+          environment: ['web'],
+        },
+      ],
+    })
+
+    await app.init()
+
+    await assert.doesNotReject(() => app.boot())
+  })
+
+  test('allow providers with type only exports', async ({ assert }) => {
+    await outputFile(join(BASE_PATH, './route_provider.ts'), `export type Foo = string;`)
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: () => import(new URL('./route_provider.js?v=7', BASE_URL).href),
+          environment: ['web'],
+        },
+      ],
+    })
+
+    await app.init()
+
+    await assert.doesNotReject(() => app.boot())
   })
 
   test('boot providers', async ({ assert }) => {
@@ -247,15 +272,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=6',
+          file: () => import(new URL('./route_provider.js?v=8', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -271,23 +293,12 @@ test.group('Application | providers', (group) => {
   test('invoke booted hooks after the app has been booted', async ({ assert }) => {
     const stack: any[] = []
 
-    await outputFile(
-      join(BASE_PATH, './route_provider.ts'),
-      `
-      export default class RouteProvider {
-      }
-    `
-    )
-
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
-      providers: ['./route_provider.js?v=7'],
+      providers: [],
     })
 
     app.booted((__app) => {
@@ -306,24 +317,11 @@ test.group('Application | providers', (group) => {
   test('invoke booted hook immediately when the app is already been booted', async ({ assert }) => {
     const stack: any[] = []
 
-    await outputFile(
-      join(BASE_PATH, './route_provider.ts'),
-      `
-      export default class RouteProvider {
-      }
-    `
-    )
-
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
-    app.rcContents({
-      providers: ['./route_provider.js?v=8'],
-    })
+    app.rcContents({})
 
     await app.init()
     await app.boot()
@@ -369,15 +367,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=9',
+          file: () => import(new URL('./route_provider.js?v=9', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -430,15 +425,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=10',
+          file: () => import(new URL('./route_provider.js?v=10', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -495,15 +487,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=11',
+          file: () => import(new URL('./route_provider.js?v=11', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -565,15 +554,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=12',
+          file: () => import(new URL('./route_provider.js?v=12', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -632,15 +618,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=13',
+          file: () => import(new URL('./route_provider.js?v=13', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -695,15 +678,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=14',
+          file: () => import(new URL('./route_provider.js?v=14', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -755,15 +735,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=15',
+          file: () => import(new URL('./route_provider.js?v=15', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -824,15 +801,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=16',
+          file: () => import(new URL('./route_provider.js?v=16', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -855,9 +829,6 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.terminating(async () => {
@@ -870,47 +841,6 @@ test.group('Application | providers', (group) => {
     assert.isFalse(app.isTerminated)
   })
 
-  test('resolve provider using lazy import', async ({ assert }) => {
-    await outputFile(
-      join(BASE_PATH, './route_provider.ts'),
-      `
-      export default class RouteProvider {
-        constructor(private app) {}
-
-        register() {
-          this.app.container.singleton('route', () => {
-            return {
-              isBooted: false
-            }
-          })
-        }
-      }
-    `
-    )
-
-    const app = new Application(BASE_URL, {
-      environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
-    })
-
-    app.rcContents({
-      providers: [
-        {
-          file: () => import(new URL('./route_provider.js?v=20', BASE_URL).href),
-          environment: ['web'],
-        },
-      ],
-    })
-
-    await app.init()
-    await app.boot()
-    assert.deepEqual(await app.container.make('route'), {
-      isBooted: false,
-    })
-  })
-
   test('allow providers without any exports', async ({ assert }) => {
     await outputFile(
       join(BASE_PATH, './route_provider.ts'),
@@ -921,15 +851,12 @@ test.group('Application | providers', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: (filePath) => {
-        return import(new URL(filePath, BASE_URL).href)
-      },
     })
 
     app.rcContents({
       providers: [
         {
-          file: './route_provider.js?v=21',
+          file: () => import(new URL('./route_provider.js?v=21', BASE_URL).href),
           environment: ['web'],
         },
       ],

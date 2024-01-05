@@ -20,7 +20,6 @@ test.group('Application | directories', () => {
   test('generate paths to directories', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()

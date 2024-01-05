@@ -18,7 +18,6 @@ test.group('Application | init', () => {
   test('configure container', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -30,7 +29,6 @@ test.group('Application | init', () => {
   test('create stubs manager', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -44,7 +42,6 @@ test.group('Application | init', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     app.initiating(() => {
@@ -62,7 +59,6 @@ test.group('Application | init', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     app.initiating(() => {
@@ -80,7 +76,6 @@ test.group('Application | init', () => {
   test('update environment before app is initiated', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     app.setEnvironment('repl')
@@ -90,7 +85,6 @@ test.group('Application | init', () => {
   test('update environment after app is initiated', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -101,7 +95,6 @@ test.group('Application | init', () => {
   test('do not allow updating environment after app has been booted', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()

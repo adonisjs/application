@@ -38,7 +38,7 @@ test.group('Stubs Manager | build', (group) => {
     `
     )
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -71,7 +71,7 @@ test.group('Stubs Manager | build', (group) => {
     `
     )
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -87,7 +87,7 @@ test.group('Stubs Manager | build', (group) => {
     const originalSource = join(BASE_PATH, 'source/stubs')
     const publishTarget = join(BASE_PATH, 'custom/stubs')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -109,7 +109,7 @@ test.group('Stubs Manager | build', (group) => {
 
     const publishTarget = join(BASE_PATH, 'custom/stubs')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -228,7 +228,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -248,7 +248,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -269,7 +269,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -290,7 +290,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -315,7 +315,7 @@ test.group('Stubs Manager | copy', (group) => {
     await outputFile(join(originalSource, 'make/controller/controller.stub'), 'hello controller')
     await outputFile(join(originalSource, 'config/app.stub'), 'hello config')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -330,7 +330,7 @@ test.group('Stubs Manager | copy', (group) => {
     const originalSource = join(BASE_PATH, 'source/stubs')
     const publishTarget = join(BASE_PATH, 'custom/stubs')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)
@@ -345,7 +345,7 @@ test.group('Stubs Manager | copy', (group) => {
 
     await outputFile(join(originalSource, 'make/middleware/middleware.stub'), 'hello middleware')
 
-    const app = new Application(BASE_URL, { environment: 'web', importer: () => {} })
+    const app = new Application(BASE_URL, { environment: 'web' })
     await app.init()
 
     const stubs = new StubsManager(app, publishTarget)

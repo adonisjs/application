@@ -14,7 +14,7 @@ import type { AppEnvironments, Importer } from '../src/types.js'
  * App factory is used to generate application class instances for
  * testing
  */
-export class AppFactory {
+export class AppFactory<ContainerBindings extends Record<any, any>> {
   #parameters: Partial<{ environment: AppEnvironments; importer: Importer }> = {}
 
   /**
@@ -28,8 +28,8 @@ export class AppFactory {
   /**
    * Create application class instance
    */
-  create(appRoot: URL, importer: Importer) {
-    return new Application(
+  create(appRoot: URL, importer?: Importer) {
+    return new Application<ContainerBindings>(
       appRoot,
       Object.assign({ importer }, { environment: 'web' as const }, this.#parameters)
     )

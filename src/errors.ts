@@ -28,12 +28,29 @@ export const E_MISSING_PRELOAD_FILE = createError<[preloadProperty: string]>(
 )
 
 /**
+ * The exception is raised when the "file" property is not a function
+ */
+export const E_INVALID_PRELOAD_FILE = createError<[preloadProperty: string]>(
+  'Invalid preload entry "%s". The file property must be a function',
+  'E_INVALID_PRELOAD_FILE'
+)
+
+/**
  * The exception is raised when the "file" property is missing
  * in the provider object
  */
 export const E_MISSING_PROVIDER_FILE = createError<[preloadProperty: string]>(
   'Invalid provider entry "%s". Missing file property',
   'E_MISSING_PROVIDER_FILE'
+)
+
+/**
+ * The exception is raised when the "file" property is not a function
+ * in provider object
+ */
+export const E_INVALID_PROVIDER = createError<[preloadProperty: string]>(
+  'Invalid provider entry "%s". The file property must be a function',
+  'E_INVALID_PROVIDER'
 )
 
 /**

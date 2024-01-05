@@ -25,7 +25,6 @@ test.group('Application | config', (group) => {
   test('use config tree defined explicitly', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     app.useConfig({
@@ -81,7 +80,6 @@ test.group('Application | config', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -125,7 +123,6 @@ test.group('Application | config', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     app.useConfig({

@@ -28,7 +28,6 @@ test.group('Stubs', (group) => {
   test('prepare resource from stub', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -93,7 +92,6 @@ test.group('Stubs', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -116,7 +114,6 @@ test.group('Stubs', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -144,7 +141,6 @@ test.group('Stubs', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -167,7 +163,6 @@ test.group('Stubs', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -189,7 +184,6 @@ test.group('Stubs', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -211,7 +205,6 @@ test.group('Stubs', (group) => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -231,7 +224,6 @@ test.group('Stubs', (group) => {
   test('generate resource from stub', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -272,7 +264,6 @@ test.group('Stubs', (group) => {
   test('do not generate resource when it already exists', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -316,7 +307,6 @@ test.group('Stubs', (group) => {
   test('overwrite resource when stub exports forces it', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -360,7 +350,6 @@ test.group('Stubs', (group) => {
   test('do not overwrite when stub state sets force to false', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 
@@ -406,7 +395,6 @@ test.group('Stubs', (group) => {
   test('use string builder in stubs', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
 

@@ -21,7 +21,6 @@ test.group('Application | nodeEnv', () => {
     process.env.NODE_ENV = 'dev'
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
     await app.boot()
@@ -40,7 +39,6 @@ test.group('Application | nodeEnv', () => {
     process.env.NODE_ENV = 'develop'
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
     await app.boot()
@@ -59,7 +57,6 @@ test.group('Application | nodeEnv', () => {
     process.env.NODE_ENV = 'testing'
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
     await app.boot()
@@ -78,7 +75,6 @@ test.group('Application | nodeEnv', () => {
     process.env.NODE_ENV = 'prod'
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
     await app.boot()
@@ -97,7 +93,6 @@ test.group('Application | nodeEnv', () => {
     process.env.NODE_ENV = 'staging'
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     await app.init()
     await app.boot()

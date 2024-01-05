@@ -26,19 +26,20 @@ test.group('Application | rcFile', (group) => {
   test('parse rc file contents', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
+
+    const providerLoader = async () => {}
 
     app.rcContents({
       typescript: true,
-      providers: ['@adonisjs/core'],
+      providers: [providerLoader],
     })
 
     await app.init()
     assert.deepEqual(app.rcFile, {
       raw: {
         typescript: true,
-        providers: ['@adonisjs/core'],
+        providers: [providerLoader],
       },
       typescript: true,
       preloads: [],
@@ -48,7 +49,7 @@ test.group('Application | rcFile', (group) => {
       commandsAliases: {},
       providers: [
         {
-          file: '@adonisjs/core',
+          file: providerLoader,
           environment: ['web', 'console', 'test', 'repl'],
         },
       ],
@@ -65,20 +66,18 @@ test.group('Application | rcFile', (group) => {
       join(BASE_PATH, 'adonisrc.ts'),
       `export default {
         typescript: true,
-        providers: ['@adonisjs/core']
+        providers: [() => {}]
       }`
     )
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
-    assert.deepEqual(app.rcFile, {
+    assert.containsSubset(app.rcFile, {
       raw: {
         typescript: true,
-        providers: ['@adonisjs/core'],
       },
       typescript: true,
       preloads: [],
@@ -88,7 +87,6 @@ test.group('Application | rcFile', (group) => {
       commandsAliases: {},
       providers: [
         {
-          file: '@adonisjs/core',
           environment: ['web', 'console', 'test', 'repl'],
         },
       ],

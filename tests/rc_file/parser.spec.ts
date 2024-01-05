@@ -34,21 +34,23 @@ test.group('Rc Parser', () => {
   })
 
   test('parse partial object to rcfile node', ({ assert }) => {
+    const commandsLoader = async () => {}
+
     const parser = new RcFileParser(
       defineConfig({
-        commands: ['./foo/bar'],
+        commands: [commandsLoader],
       })
     )
 
     assert.deepEqual(parser.parse(), {
       raw: {
-        commands: ['./foo/bar'],
+        commands: [commandsLoader],
       },
       typescript: true,
       preloads: [],
       metaFiles: [],
       directories,
-      commands: ['./foo/bar'],
+      commands: [commandsLoader],
       commandsAliases: {},
       providers: [],
       tests: {
@@ -58,22 +60,26 @@ test.group('Rc Parser', () => {
       },
     })
   })
+})
 
-  test('define preloads as an array of strings', ({ assert }) => {
+test.group('Rc Parser | preloads', () => {
+  test('define preloads as an array of functions', ({ assert }) => {
+    const preloadFileLoader = async () => {}
+
     const parser = new RcFileParser(
       defineConfig({
-        preloads: ['./foo/bar'],
+        preloads: [preloadFileLoader],
       })
     )
 
     assert.deepEqual(parser.parse(), {
       raw: {
-        preloads: ['./foo/bar'],
+        preloads: [preloadFileLoader],
       },
       typescript: true,
       preloads: [
         {
-          file: './foo/bar',
+          file: preloadFileLoader,
           environment: ['web', 'console', 'test', 'repl'],
         },
       ],
@@ -91,11 +97,13 @@ test.group('Rc Parser', () => {
   })
 
   test('define preloads as an array of objects', ({ assert }) => {
+    const preloadFileLoader = async () => {}
+
     const parser = new RcFileParser(
       defineConfig({
         preloads: [
           {
-            file: './foo/bar',
+            file: preloadFileLoader,
             environment: ['web'],
           },
         ],
@@ -106,7 +114,7 @@ test.group('Rc Parser', () => {
       raw: {
         preloads: [
           {
-            file: './foo/bar',
+            file: preloadFileLoader,
             environment: ['web'],
           },
         ],
@@ -114,7 +122,7 @@ test.group('Rc Parser', () => {
       typescript: true,
       preloads: [
         {
-          file: './foo/bar',
+          file: preloadFileLoader,
           environment: ['web'],
         },
       ],
@@ -132,10 +140,12 @@ test.group('Rc Parser', () => {
   })
 
   test('drop extra nodes from preloads', ({ assert }) => {
+    const preloadFileLoader = async () => {}
+
     const parser = new RcFileParser({
       preloads: [
         {
-          file: 'foo',
+          file: preloadFileLoader,
           force: false,
           bar: false,
         },
@@ -146,7 +156,7 @@ test.group('Rc Parser', () => {
       raw: {
         preloads: [
           {
-            file: 'foo',
+            file: preloadFileLoader,
             force: false,
             bar: false,
           },
@@ -155,7 +165,7 @@ test.group('Rc Parser', () => {
       typescript: true,
       preloads: [
         {
-          file: 'foo',
+          file: preloadFileLoader,
           environment: ['web', 'console', 'test', 'repl'],
         },
       ],
@@ -185,6 +195,24 @@ test.group('Rc Parser', () => {
     assert.throws(fn, `Invalid preload entry "{ path: 'foo' }". Missing file property`)
   })
 
+  test('raise exception when preload file is not a function', ({ assert }) => {
+    const parser = new RcFileParser({
+      preloads: [
+        {
+          file: 'foo',
+        },
+      ],
+    })
+
+    const fn = () => parser.parse()
+    assert.throws(
+      fn,
+      `Invalid preload entry "{ file: 'foo' }". The file property must be a function`
+    )
+  })
+})
+
+test.group('Rc Parser | metaFiles', () => {
   test('define metaFiles as an array of strings', ({ assert }) => {
     const parser = new RcFileParser(
       defineConfig({
@@ -310,7 +338,9 @@ test.group('Rc Parser', () => {
     const fn = () => parser.parse()
     assert.throws(fn, `Invalid metafile entry "{ path: 'foo' }". Missing pattern property`)
   })
+})
 
+test.group('Rc Parser | tests', () => {
   test('raise error when test suite name is missing', ({ assert }) => {
     const parser = new RcFileParser({
       tests: {
@@ -450,15 +480,19 @@ test.group('Rc Parser', () => {
       },
     })
   })
+})
 
-  test('define providers as an array of strings', ({ assert }) => {
+test.group('Rc Parser | providers', () => {
+  test('define providers as an array of functions', ({ assert }) => {
+    const providerLoader = async () => {}
+
     const parser = new RcFileParser({
-      providers: ['@adonisjs/core'],
+      providers: [providerLoader],
     })
 
     assert.deepEqual(parser.parse(), {
       raw: {
-        providers: ['@adonisjs/core'],
+        providers: [providerLoader],
       },
       typescript: true,
       preloads: [],
@@ -468,7 +502,7 @@ test.group('Rc Parser', () => {
       commandsAliases: {},
       providers: [
         {
-          file: '@adonisjs/core',
+          file: providerLoader,
           environment: ['web', 'console', 'test', 'repl'],
         },
       ],
@@ -488,14 +522,27 @@ test.group('Rc Parser', () => {
     assert.throws(() => parser.parse(), 'Invalid provider entry "{}". Missing file property')
   })
 
-  test('define providers as an array of objects', ({ assert }) => {
+  test('raise exception when provider file path is not a function', ({ assert }) => {
     const parser = new RcFileParser({
-      providers: [{ file: '@adonisjs/core' }],
+      providers: [{ file: 'foo/bar' }],
+    })
+
+    assert.throws(
+      () => parser.parse(),
+      `Invalid provider entry "{ file: 'foo/bar' }". The file property must be a function`
+    )
+  })
+
+  test('define providers as an array of objects', ({ assert }) => {
+    const providerLoader = async () => {}
+
+    const parser = new RcFileParser({
+      providers: [{ file: providerLoader }],
     })
 
     assert.deepEqual(parser.parse(), {
       raw: {
-        providers: [{ file: '@adonisjs/core' }],
+        providers: [{ file: providerLoader }],
       },
       typescript: true,
       preloads: [],
@@ -505,7 +552,7 @@ test.group('Rc Parser', () => {
       commandsAliases: {},
       providers: [
         {
-          file: '@adonisjs/core',
+          file: providerLoader,
           environment: ['web', 'console', 'test', 'repl'],
         },
       ],
@@ -516,7 +563,9 @@ test.group('Rc Parser', () => {
       },
     })
   })
+})
 
+test.group('Rc Parser | assetsBundler', () => {
   test('parse assetsBundler property', ({ assert }) => {
     const parser = new RcFileParser({
       assetsBundler: {
@@ -607,7 +656,9 @@ test.group('Rc Parser', () => {
       'Invalid assetsBundler entry. Missing name property'
     )
   })
+})
 
+test.group('Rc Parser | directories', () => {
   test('merge directories with default directories list', ({ assert }) => {
     const parser = new RcFileParser({
       directories: {

@@ -81,5 +81,5 @@ test.group('Stub exports', () => {
     `
 
     parseStubExports(contents)
-  }).throws(new RegExp(/Unexpected token/))
+  }).throws(new RegExp(/Unexpected token|in JSON at position/))
 })

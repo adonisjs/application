@@ -83,7 +83,7 @@ export interface DirectoriesNode {
  * Shape of preload files
  */
 export type PreloadNode = {
-  file: string | (() => Promise<any>)
+  file: () => Promise<any>
   environment: Exclude<AppEnvironments, 'unknown'>[]
 }
 
@@ -91,9 +91,7 @@ export type PreloadNode = {
  * Shape of provider modules
  */
 export type ProviderNode = {
-  file:
-    | string
-    | (() => Promise<{ default?: new (app: Application<any>) => ContainerProviderContract }>)
+  file: () => Promise<{ default?: new (app: Application<any>) => ContainerProviderContract }>
   environment: Exclude<AppEnvironments, 'unknown'>[]
 }
 
@@ -174,7 +172,7 @@ export type RcFile = {
   /**
    * An array of commands to register
    */
-  commands: (string | (() => Promise<any>))[]
+  commands: (() => Promise<any>)[]
 
   /**
    * Custom command aliases
@@ -203,6 +201,9 @@ export type RcFile = {
   raw: Record<string, any>
 }
 
+/**
+ * RcFile input is the partial copy of the RcFile
+ */
 export interface RcFileInput {
   assetsBundler?: RcFile['assetsBundler']
   typescript?: RcFile['typescript']

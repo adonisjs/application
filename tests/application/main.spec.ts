@@ -17,7 +17,6 @@ test.group('Application', () => {
   test('get info.appName from the appName property', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -28,7 +27,6 @@ test.group('Application', () => {
   test('get info.version from the version property', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -42,7 +40,6 @@ test.group('Application', () => {
   test('get info.adonisVersion from the adonisVersion property', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -56,7 +53,6 @@ test.group('Application', () => {
   test('get app JSON representation', async ({ assert }) => {
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -80,7 +76,6 @@ test.group('Application', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -98,7 +93,6 @@ test.group('Application', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -116,7 +110,6 @@ test.group('Application', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -137,7 +130,6 @@ test.group('Application', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -156,14 +148,12 @@ test.group('Application', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     assert.isFalse(app.managedByPm2)
 
     process.env.pm2_id = '1'
     const app1 = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
     assert.isTrue(app1.managedByPm2)
   })
@@ -196,5 +186,21 @@ test.group('Application', () => {
 
     await app.init()
     assert.deepEqual(await app.importDefault('foo'), { foo: 'bar' })
+  })
+
+  test('throw error when importing modules without registering an importer', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+    await assert.rejects(
+      () => app.import('foo'),
+      'Cannot import "foo". Register a module importer with the application first.'
+    )
+    await assert.rejects(
+      () => app.importDefault('foo'),
+      'Cannot import "foo". Register a module importer with the application first.'
+    )
   })
 })

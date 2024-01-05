@@ -21,7 +21,7 @@ test.group('App factory', () => {
   test('pass options using the factory', ({ assert }) => {
     const app = new AppFactory()
       .merge({ environment: 'console' })
-      .create(new URL('./app/', import.meta.url), () => {})
+      .create(new URL('./app/', import.meta.url))
 
     assert.instanceOf(app, Application)
     assert.equal(app.getEnvironment(), 'console')

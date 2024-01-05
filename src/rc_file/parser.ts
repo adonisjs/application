@@ -86,18 +86,21 @@ export class RcFileParser {
    * Returns a normalized array of preload files
    */
   #getPreloads(): PreloadNode[] {
-    return this.#rcFile.preloads.map((preload: PreloadNode | string) => {
+    return this.#rcFile.preloads.map((preload: PreloadNode | PreloadNode['file']) => {
       const normalizedPreload =
-        typeof preload === 'string' || typeof preload === 'function'
+        typeof preload === 'function'
           ? {
               file: preload,
-              optional: false,
               environment: this.#knownEnvironments(),
             }
           : preload
 
       if (!normalizedPreload.file) {
         throw new errors.E_MISSING_PRELOAD_FILE([inspect(preload)])
+      }
+
+      if (typeof normalizedPreload.file !== 'function') {
+        throw new errors.E_INVALID_PRELOAD_FILE([inspect(preload)])
       }
 
       return {
@@ -111,9 +114,9 @@ export class RcFileParser {
    * Returns a normalized array of providers
    */
   #getProviders(): ProviderNode[] {
-    return this.#rcFile.providers.map((provider: ProviderNode | string) => {
+    return this.#rcFile.providers.map((provider: ProviderNode | ProviderNode['file']) => {
       const normalizedProvider =
-        typeof provider === 'string' || typeof provider === 'function'
+        typeof provider === 'function'
           ? {
               file: provider,
               environment: this.#knownEnvironments(),
@@ -122,6 +125,10 @@ export class RcFileParser {
 
       if (!normalizedProvider.file) {
         throw new errors.E_MISSING_PROVIDER_FILE([inspect(provider)])
+      }
+
+      if (typeof normalizedProvider.file !== 'function') {
+        throw new errors.E_INVALID_PROVIDER([inspect(provider)])
       }
 
       return {

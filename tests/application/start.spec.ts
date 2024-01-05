@@ -18,7 +18,6 @@ test.group('Application | start', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -44,7 +43,6 @@ test.group('Application | start', () => {
 
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()
@@ -70,7 +68,6 @@ test.group('Application | start', () => {
     const stack: string[] = []
     const app = new Application(BASE_URL, {
       environment: 'web',
-      importer: () => {},
     })
 
     await app.init()

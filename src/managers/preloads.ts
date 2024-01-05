@@ -8,7 +8,7 @@
  */
 
 import debug from '../debug.js'
-import type { AppEnvironments, Importer, PreloadNode } from '../types.js'
+import type { AppEnvironments, PreloadNode } from '../types.js'
 
 /**
  * The PreloadsManager class is used to resolve and import preload modules.
@@ -23,19 +23,13 @@ export class PreloadsManager {
   #list: PreloadNode[] = []
 
   /**
-   * The application root path
-   */
-  #importer: Importer
-
-  /**
    * The options accepted by the manager.
    */
   #options: {
     environment: AppEnvironments
   }
 
-  constructor(importer: Importer, options: { environment: AppEnvironments }) {
-    this.#importer = importer
+  constructor(options: { environment: AppEnvironments }) {
     this.#options = options
   }
 
@@ -48,18 +42,6 @@ export class PreloadsManager {
     }
 
     return provider.environment.includes(this.#options.environment)
-  }
-
-  /**
-   * Imports a preload module from the registered path. The method relies
-   * on "--experimental-import-meta-resolve" flag to resolve paths from
-   * the app root.
-   */
-  #importPreloadModule(preload: PreloadNode): Promise<void> {
-    if (typeof preload.file === 'function') {
-      return preload.file()
-    }
-    return this.#importer(preload.file)
   }
 
   /**
@@ -90,7 +72,7 @@ export class PreloadsManager {
     const preloads = this.#list.filter((preload) => this.#filterByEnvironment(preload))
     debug('preloading modules %O', preloads)
 
-    await Promise.all(preloads.map((preload) => this.#importPreloadModule(preload)))
+    await Promise.all(preloads.map((preload) => preload.file()))
 
     this.#list = []
   }

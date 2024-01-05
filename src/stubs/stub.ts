@@ -132,7 +132,7 @@ export class Stub {
     try {
       const { body, attributes } = parseStubExports(stubOutput)
       this.#validateToAttribute(attributes)
-      return { attributes, body: body }
+      return { attributes, body }
     } catch (error) {
       this.#patchErrorStack(error)
       throw error
