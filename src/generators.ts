@@ -34,6 +34,9 @@ const generators = {
     'adonisjs',
     'dashboard',
     'api',
+    'about',
+    'conatact',
+    'blog',
   ],
 
   /**
