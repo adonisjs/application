@@ -414,4 +414,27 @@ test.group('Stubs', (group) => {
     assert.deepEqual(attributes, { to: destination })
     assert.equal(destination, app.middlewarePath('user'))
   })
+
+  test('use string helpers in stubs', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    await app.init()
+
+    const stubContents = dedent`
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, string.snakeCase(entity.name))
+      })
+    }}}
+    `
+
+    const stub = new Stub(app, stubContents, './make/middleware.stub')
+    const { destination, attributes } = await stub.prepare({
+      entity: generators.createEntity('user'),
+    })
+
+    assert.deepEqual(attributes, { to: destination })
+    assert.equal(destination, app.middlewarePath('user'))
+  })
 })

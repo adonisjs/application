@@ -13,11 +13,20 @@ import string from '@poppinss/utils/string'
 import { dirname, isAbsolute } from 'node:path'
 import { RuntimeException } from '@poppinss/utils'
 import { mkdir, writeFile } from 'node:fs/promises'
+import stringHelpers from '@poppinss/utils/string'
 import StringBuilder from '@poppinss/utils/string_builder'
 
 import debug from '../debug.js'
 import type { Application } from '../application.js'
 import { parseStubExports, pathExists } from '../helpers.js'
+
+/**
+ * String builder function + object shared with the stubs
+ */
+function stubStringBuilder(value: string | StringBuilder) {
+  return new StringBuilder(value)
+}
+Object.assign(stubStringBuilder, stringHelpers)
 
 /**
  * The stub class uses tempura template engine to process
@@ -106,7 +115,7 @@ export class Stub {
       exports: (value: any) => {
         return `<!--EXPORT_START-->${JSON.stringify(value)}<!--EXPORT_END-->`
       },
-      string: (value: string | StringBuilder) => new StringBuilder(value),
+      string: stubStringBuilder,
     }
   }
 
