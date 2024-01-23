@@ -40,9 +40,9 @@
   "author": "virk,adonisjs",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/config": "^5.0.0",
+    "@adonisjs/config": "^5.0.1",
     "@adonisjs/eslint-config": "^1.2.1",
-    "@adonisjs/fold": "^10.0.0",
+    "@adonisjs/fold": "^10.0.1",
     "@adonisjs/prettier-config": "^1.2.1",
     "@adonisjs/tsconfig": "^1.2.1",
     "@commitlint/cli": "^18.5.0",
