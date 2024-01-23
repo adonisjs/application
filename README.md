@@ -5,7 +5,7 @@
 [![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url]
 
 ## Introduction
-AdonisJS application packages manages the lifecycle of an app in different runtime environments. Also, this package configures the `logger`, `environment variables`, and the `IoC container` to be used by rest of the application.
+AdonisJS application packages manages the lifecycle of an app in different runtime environments. Also, the app package is responsible for loading the `adonisrc.ts` file and boot the application.
 
 ## Official Documentation
 The documentation is available on the [AdonisJS website](https://docs.adonisjs.com/guides/application)
