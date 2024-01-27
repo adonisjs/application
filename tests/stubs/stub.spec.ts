@@ -437,4 +437,34 @@ test.group('Stubs', (group) => {
     assert.deepEqual(attributes, { to: destination })
     assert.equal(destination, app.middlewarePath('user'))
   })
+
+  test('handle case when exports is followed by an expression', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+
+    const stubContents = dedent`{{#var passedValue = value}}
+    {{#var fileName = \`\${env}.credentials\`}}
+    {{{
+      exports({
+        to: app.makePath('resources/credentials', fileName)
+      })
+    }}}
+    {{ passedValue }}`
+
+    const stub = new Stub(app, stubContents, './make/middleware.stub')
+    const { destination, contents, force, attributes } = await stub.prepare({
+      value: 'foo',
+      env: 'development',
+    })
+
+    assert.equal(contents, dedent`foo`)
+    assert.equal(destination, app.makePath('resources/credentials', 'development.credentials'))
+    assert.isFalse(force)
+    assert.deepEqual(attributes, {
+      to: app.makePath('resources/credentials', 'development.credentials'),
+    })
+  })
 })

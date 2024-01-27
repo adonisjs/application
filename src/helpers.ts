@@ -71,7 +71,11 @@ export function parseStubExports(contents: string) {
 
   chunks.forEach((line) => {
     if (line.trim().startsWith('<!--EXPORT_START-->')) {
-      exportedBlocks.push(line.replace('<!--EXPORT_START-->', '').replace('<!--EXPORT_END-->', ''))
+      const [exports, rest] = line.replace('<!--EXPORT_START-->', '').split('<!--EXPORT_END-->')
+      exportedBlocks.push(exports)
+      if (rest.trim().length) {
+        body.push(rest)
+      }
     } else {
       body.push(line)
     }
