@@ -308,7 +308,7 @@ const generators = {
   commandTerminalName(entityName: string) {
     const dashCase = new StringBuilder(this.commandName(entityName)).dashCase().toString()
 
-    const [namespace, ...rest] = dashCase.split('_')
+    const [namespace, ...rest] = dashCase.split('-')
     if (!rest.length) {
       return namespace
     }
