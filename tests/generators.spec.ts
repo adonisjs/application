@@ -244,7 +244,7 @@ test.group('Generator', () => {
     assert.equal(generators.commandTerminalName('serve'), 'serve')
     assert.equal(generators.commandTerminalName('publish_config_command'), 'publish:config')
     assert.equal(generators.commandTerminalName('create_users_command'), 'create:users')
-    assert.equal(generators.commandTerminalName('create_admin_users_command'), 'create:admin_users')
+    assert.equal(generators.commandTerminalName('create_admin_users_command'), 'create:admin-users')
   })
 
   test('convert entity name to validator name', ({ assert }) => {

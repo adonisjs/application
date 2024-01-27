@@ -306,14 +306,14 @@ const generators = {
    * Converts an entity name to command terminal name
    */
   commandTerminalName(entityName: string) {
-    const snakeCaseName = new StringBuilder(this.commandName(entityName)).snakeCase().toString()
+    const dashCase = new StringBuilder(this.commandName(entityName)).dashCase().toString()
 
-    const [namespace, ...rest] = snakeCaseName.split('_')
+    const [namespace, ...rest] = dashCase.split('_')
     if (!rest.length) {
       return namespace
     }
 
-    return `${namespace}:${rest.join('_')}`
+    return `${namespace}:${rest.join('-')}`
   },
 
   /**
