@@ -70,11 +70,18 @@ export function parseStubExports(contents: string) {
   const exportedBlocks: string[] = []
 
   chunks.forEach((line) => {
-    if (line.trim().startsWith('<!--EXPORT_START-->')) {
-      const [exports, rest] = line.replace('<!--EXPORT_START-->', '').split('<!--EXPORT_END-->')
+    if (line.includes('<!--EXPORT_START-->')) {
+      let [inital, rest] = line.split('<!--EXPORT_START-->')
+      let [exports, remaining] = rest.split('<!--EXPORT_END-->')
+      inital = inital.trim()
+      remaining = remaining.trim()
+
+      const remainingContents =
+        inital && remaining ? `${inital}\n${remaining}` : inital || remaining || ''
+
       exportedBlocks.push(exports)
-      if (rest.trim().length) {
-        body.push(rest)
+      if (remainingContents) {
+        body.push(remainingContents)
       }
     } else {
       body.push(line)

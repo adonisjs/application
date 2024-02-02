@@ -467,4 +467,36 @@ test.group('Stubs', (group) => {
       to: app.makePath('resources/credentials', 'development.credentials'),
     })
   })
+
+  test('handle case when comments are defined before exports', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    await app.init()
+
+    const stubContents = dedent`// Path where queue config template will be copied over to
+    {{{
+      exports({
+        to: app.makePath('resources/credentials', value)
+      })
+    }}}
+    {{ value }}`
+
+    const stub = new Stub(app, stubContents, './make/middleware.stub')
+    const { destination, contents, force, attributes } = await stub.prepare({
+      value: 'foo',
+    })
+
+    assert.equal(
+      contents,
+      dedent`// Path where queue config template will be copied over to
+    foo`
+    )
+    assert.equal(destination, app.makePath('resources/credentials', 'foo'))
+    assert.isFalse(force)
+    assert.deepEqual(attributes, {
+      to: app.makePath('resources/credentials', 'foo'),
+    })
+  })
 })
