@@ -657,7 +657,7 @@ test.group('Rc Parser | assetsBundler', () => {
     )
   })
 
-  test('parse assetsBundler false', ({ assert }) => {
+  test('parse assetsBundler with false value', ({ assert }) => {
     const parser = new RcFileParser({ assetsBundler: false })
 
     assert.deepEqual(parser.parse(), {
@@ -707,6 +707,130 @@ test.group('Rc Parser | directories', () => {
         suites: [],
         timeout: 2000,
         forceExit: true,
+      },
+    })
+  })
+})
+
+test.group('Rc Parser | assembler', () => {
+  test('parse runner properly', ({ assert }) => {
+    const parser = new RcFileParser({
+      assembler: {
+        runner: {
+          name: 'bun',
+          command: 'bun',
+          args: ['--flag'],
+        },
+      },
+    })
+
+    assert.deepEqual(parser.parse(), {
+      raw: {
+        assembler: {
+          runner: {
+            name: 'bun',
+            command: 'bun',
+            args: ['--flag'],
+          },
+        },
+      },
+      typescript: true,
+      preloads: [],
+      directories,
+      metaFiles: [],
+      commands: [],
+      commandsAliases: {},
+      providers: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
+      assembler: {
+        runner: {
+          name: 'bun',
+          command: 'bun',
+          args: ['--flag'],
+        },
+      },
+    })
+  })
+
+  test('raise error when runner properties are missing', ({ assert }) => {
+    assert.throws(
+      () =>
+        new RcFileParser({
+          assembler: {
+            runner: {
+              name: 'bun',
+            },
+          },
+        }).parse(),
+      'Invalid assembler.runner entry. Missing command property'
+    )
+
+    assert.throws(
+      () =>
+        new RcFileParser({
+          assembler: {
+            runner: {
+              command: 'bun',
+            },
+          },
+        }).parse(),
+      'Invalid assembler.runner entry. Missing name property'
+    )
+  })
+
+  test('parse assembler hooks properly', ({ assert }) => {
+    const onBuildStarting = () => {}
+    const onBuildCompleted = () => {}
+    const onDevServerClosed = () => {}
+    const onDevServerClosing = () => {}
+    const onDevServerStarted = () => {}
+    const onDevServerStarting = () => {}
+
+    const parser = new RcFileParser({
+      assembler: {
+        onBuildStarting,
+        onBuildCompleted,
+        onDevServerClosed,
+        onDevServerClosing,
+        onDevServerStarted,
+        onDevServerStarting,
+      },
+    })
+
+    assert.deepEqual(parser.parse(), {
+      raw: {
+        assembler: {
+          onBuildStarting,
+          onBuildCompleted,
+          onDevServerClosed,
+          onDevServerClosing,
+          onDevServerStarted,
+          onDevServerStarting,
+        },
+      },
+      typescript: true,
+      preloads: [],
+      directories,
+      metaFiles: [],
+      commands: [],
+      commandsAliases: {},
+      providers: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
+      assembler: {
+        onBuildStarting,
+        onBuildCompleted,
+        onDevServerClosed,
+        onDevServerClosing,
+        onDevServerStarted,
+        onDevServerStarting,
       },
     })
   })
