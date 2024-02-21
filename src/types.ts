@@ -126,18 +126,22 @@ export type RcFile = {
    *
    * This config can be used to configure assets bundler apart from
    * vite and encore (since both are auto-detected)
+   *
+   * Set it to `false` to disable the assets bundler
    */
-  assetsBundler?: {
-    name: string
-    devServer: {
-      command: string
-      args?: string[]
-    }
-    build: {
-      command: string
-      args?: string[]
-    }
-  }
+  assetsBundler?:
+    | {
+        name: string
+        devServer: {
+          command: string
+          args?: string[]
+        }
+        build: {
+          command: string
+          args?: string[]
+        }
+      }
+    | false
 
   /**
    * Is it a TypeScript project

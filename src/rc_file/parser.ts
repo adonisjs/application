@@ -59,6 +59,10 @@ export class RcFileParser {
    * Returns the assets bundler object
    */
   #getAssetsBundler(): RcFile['assetsBundler'] {
+    if (this.#rcFile.assetsBundler === false) {
+      return false
+    }
+
     if (!this.#rcFile.assetsBundler) {
       return
     }
@@ -195,7 +199,7 @@ export class RcFileParser {
 
     return {
       typescript: this.#rcFile.typescript,
-      ...(assetsBundler ? { assetsBundler } : {}),
+      ...(assetsBundler !== undefined ? { assetsBundler } : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
       commands: [...this.#rcFile.commands],
