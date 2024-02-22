@@ -246,7 +246,7 @@ export class RcFileParser {
    * Apply presets functions to the given rcFile
    */
   #applyPresets(rcFile: RcFile) {
-    const presets: PresetFn[] = this.#rcFile.raw.presets || []
+    const presets: PresetFn[] = this.#rcFile.raw?.presets || []
 
     presets.forEach((preset) => preset({ rcFile }))
   }
