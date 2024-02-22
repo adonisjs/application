@@ -50,6 +50,21 @@ export type HooksState<ContainerBindings extends Record<any, any>> = [
 ]
 
 /**
+ * Shape of an Assembler hook file
+ */
+export type AssemblerHookNode<Handler extends Function> = () => Promise<{ default: Handler }>
+
+/**
+ * Handler for the assembler hooks
+ */
+export type AssemblerHookHandler = (logger: Logger) => any
+
+/**
+ * Handler for the source file changed hook
+ */
+export type SourceFileChangedHookHandler = (filePath: string, logger: Logger) => any
+
+/**
  * Shape of directories object with known and unknown
  * directories
  */
@@ -116,21 +131,6 @@ export type MetaFileNode = {
   pattern: string
   reloadServer: boolean
 }
-
-/**
- * Shape of an Assembler hook file
- */
-export type AssemblerHookNode<Handler extends Function> = () => Promise<{ default: Handler }>
-
-/**
- * Handler for the assembler hooks
- */
-export type AssemblerHookHandler = (logger: Logger) => any
-
-/**
- * Handler for the source file changed hook
- */
-export type SourceFileChangedHookHandler = (filePath: string, logger: Logger) => any
 
 /**
  * Shape of the adonisrc.js file
