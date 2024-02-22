@@ -13,7 +13,14 @@ import { ObjectBuilder } from '@poppinss/utils'
 
 import * as errors from '../errors.js'
 import { directories } from '../directories.js'
-import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from '../types.js'
+import type {
+  AppEnvironments,
+  MetaFileNode,
+  PreloadNode,
+  PresetFn,
+  ProviderNode,
+  RcFile,
+} from '../types.js'
 
 /**
  * Rc file parser is used to parse and validate the `adonisrc.js` file contents.
@@ -236,13 +243,22 @@ export class RcFileParser {
   }
 
   /**
+   * Apply presets functions to the given rcFile
+   */
+  #applyPresets(rcFile: RcFile) {
+    const presets: PresetFn[] = this.#rcFile.raw.presets || []
+
+    presets.forEach((preset) => preset({ rcFile }))
+  }
+
+  /**
    * Parse and validate file contents and merge them with defaults
    */
   parse(): RcFile {
     const assembler = this.#getAssembler()
     const assetsBundler = this.#getAssetsBundler()
 
-    return {
+    const rcFile = {
       typescript: this.#rcFile.typescript,
       ...(assembler ? { assembler } : {}),
       ...(assetsBundler !== undefined ? { assetsBundler } : {}),
@@ -259,5 +275,8 @@ export class RcFileParser {
       },
       raw: this.#rcFile.raw,
     }
+
+    this.#applyPresets(rcFile)
+    return rcFile
   }
 }

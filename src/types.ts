@@ -50,6 +50,11 @@ export type HooksState<ContainerBindings extends Record<any, any>> = [
 ]
 
 /**
+ * Shape of the rc file preset function
+ */
+export type PresetFn = (options: { rcFile: RcFile }) => void | Promise<void>
+
+/**
  * Shape of directories object with known and unknown
  * directories
  */
@@ -276,6 +281,7 @@ export type RcFile = {
  * RcFile input is the partial copy of the RcFile
  */
 export interface RcFileInput {
+  presets?: PresetFn[]
   assetsBundler?: RcFile['assetsBundler']
   typescript?: RcFile['typescript']
   directories?: Partial<DirectoriesNode> & { [key: string]: string }

@@ -8,6 +8,7 @@
  */
 
 import { test } from '@japa/runner'
+import { PresetFn } from '../../src/types.js'
 import { directories } from '../../src/directories.js'
 import { defineConfig } from '../../src/define_config.js'
 import { RcFileParser } from '../../src/rc_file/parser.js'
@@ -831,6 +832,52 @@ test.group('Rc Parser | assembler', () => {
         onDevServerClosing,
         onDevServerStarted,
         onDevServerStarting,
+      },
+    })
+  })
+})
+
+test.group('Rc Parser | presets', () => {
+  test('mutate the RcFile using the preset function', ({ assert }) => {
+    const provider = async () => ({}) as any
+    const onBuildCompleted = async () => ({}) as any
+
+    function bunPreset(): PresetFn {
+      return function ({ rcFile }) {
+        rcFile.assembler = {
+          onBuildCompleted: [onBuildCompleted],
+          runner: {
+            name: 'bun',
+            command: 'bun',
+            args: ['--flag'],
+          },
+        }
+
+        rcFile.providers.push({ environment: ['web'], file: provider })
+        rcFile.tests.timeout = 3000
+      }
+    }
+
+    const preset = bunPreset()
+    const parser = new RcFileParser({ presets: [preset] })
+
+    assert.deepEqual(parser.parse(), {
+      raw: { presets: [preset] },
+      typescript: true,
+      assembler: {
+        runner: { name: 'bun', command: 'bun', args: ['--flag'] },
+        onBuildCompleted: [onBuildCompleted],
+      },
+      preloads: [],
+      directories,
+      metaFiles: [],
+      commands: [],
+      commandsAliases: {},
+      providers: [{ environment: ['web'], file: provider }],
+      tests: {
+        suites: [],
+        timeout: 3000,
+        forceExit: true,
       },
     })
   })
