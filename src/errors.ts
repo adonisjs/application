@@ -97,3 +97,21 @@ export const E_MISSING_BUNDLER_NAME = createError(
   'Invalid assetsBundler entry. Missing name property',
   'E_MISSING_BUNDLER_NAME'
 )
+
+/**
+ * The exception is raised when the "name" is missing
+ * in assembler.runner object
+ */
+export const E_MISSING_ASSEMBLER_RUNNER_NAME = createError(
+  'Invalid assembler.runner entry. Missing name property',
+  'E_MISSING_ASSEMBLER_RUNNER_NAME'
+)
+
+/**
+ * The exception is raised when the "command" is missing
+ * in assembler.runner object
+ */
+export const E_MISSING_ASSEMBLER_RUNNER_COMMAND = createError(
+  'Invalid assembler.runner entry. Missing command property',
+  'E_MISSING_ASSEMBLER_RUNNER_COMMAND'
+)

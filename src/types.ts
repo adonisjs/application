@@ -7,6 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import type { Logger } from '@poppinss/cliui'
+import type { Colors } from '@poppinss/cliui/types'
+
 import type { Application } from './application.js'
 
 /**
@@ -47,6 +50,24 @@ export type HooksState<ContainerBindings extends Record<any, any>> = [
   [Application<ContainerBindings>],
   [Application<ContainerBindings>],
 ]
+
+/**
+ * Shape of an Assembler hook file
+ */
+export type AssemblerHookNode<Handler extends Function> = () => Promise<{ default: Handler }>
+
+/**
+ * Handler for the assembler hooks
+ */
+export type AssemblerHookHandler = (ui: { logger: Logger; colors: Colors }) => any
+
+/**
+ * Handler for the source file changed hook
+ */
+export type SourceFileChangedHookHandler = (
+  ui: { logger: Logger; colors: Colors },
+  filePath: string
+) => any
 
 /**
  * Shape of directories object with known and unknown
@@ -186,6 +207,42 @@ export type RcFile = {
   }
 
   /**
+   * Assembler configuration
+   */
+  unstable_assembler?: {
+    /**
+     * Configure a custom runner to start the dev server
+     * and tests. By default we are using ts-node but you
+     * are free to use any other runner
+     */
+    runner?: {
+      name: string
+      command: string
+      args?: string[]
+    }
+
+    /**
+     * When the dev server is started
+     */
+    onDevServerStarted?: AssemblerHookNode<AssemblerHookHandler>[]
+
+    /**
+     * When a source file changes
+     */
+    onSourceFileChanged?: AssemblerHookNode<SourceFileChangedHookHandler>[]
+
+    /**
+     * When a build is started
+     */
+    onBuildStarting?: AssemblerHookNode<AssemblerHookHandler>[]
+
+    /**
+     * When a build is completed
+     */
+    onBuildCompleted?: AssemblerHookNode<AssemblerHookHandler>[]
+  }
+
+  /**
    * Register test suites
    */
   tests: {
@@ -226,6 +283,7 @@ export interface RcFileInput {
     timeout?: number
   }
   providers?: (ProviderNode | ProviderNode['file'])[]
+  unstable_assembler?: RcFile['unstable_assembler']
 }
 
 /**

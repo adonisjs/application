@@ -9,6 +9,7 @@
 
 import { inspect } from 'node:util'
 import globParent from 'glob-parent'
+import { ObjectBuilder } from '@poppinss/utils'
 
 import * as errors from '../errors.js'
 import { directories } from '../directories.js'
@@ -84,6 +85,46 @@ export class RcFileParser {
       devServer: this.#rcFile.assetsBundler.devServer,
       build: this.#rcFile.assetsBundler.build,
     }
+  }
+
+  /**
+   * Returns the assembler runner object
+   */
+  #getAssemblerRunner(): NonNullable<RcFile['unstable_assembler']>['runner'] {
+    if (!this.#rcFile.unstable_assembler?.runner) {
+      return
+    }
+
+    if (!this.#rcFile.unstable_assembler.runner.name) {
+      throw new errors.E_MISSING_ASSEMBLER_RUNNER_NAME()
+    }
+
+    if (!this.#rcFile.unstable_assembler.runner.command) {
+      throw new errors.E_MISSING_ASSEMBLER_RUNNER_COMMAND()
+    }
+
+    return {
+      name: this.#rcFile.unstable_assembler.runner.name,
+      command: this.#rcFile.unstable_assembler.runner.command,
+      args: this.#rcFile.unstable_assembler.runner.args,
+    }
+  }
+
+  /**
+   * Returns the assembler object
+   */
+  #getAssembler(): RcFile['unstable_assembler'] {
+    if (!this.#rcFile.unstable_assembler) {
+      return
+    }
+
+    const runner = this.#getAssemblerRunner()
+    return new ObjectBuilder({})
+      .add('runner', runner)
+      .add('onBuildStarting', this.#rcFile.unstable_assembler.onBuildStarting)
+      .add('onBuildCompleted', this.#rcFile.unstable_assembler.onBuildCompleted)
+      .add('onDevServerStarted', this.#rcFile.unstable_assembler.onDevServerStarted)
+      .toObject()
   }
 
   /**
@@ -195,10 +236,12 @@ export class RcFileParser {
    * Parse and validate file contents and merge them with defaults
    */
   parse(): RcFile {
+    const assembler = this.#getAssembler()
     const assetsBundler = this.#getAssetsBundler()
 
     return {
       typescript: this.#rcFile.typescript,
+      ...(assembler ? { unstable_assembler: assembler } : {}),
       ...(assetsBundler !== undefined ? { assetsBundler } : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
