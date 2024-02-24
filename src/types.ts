@@ -283,7 +283,7 @@ export interface RcFileInput {
     timeout?: number
   }
   providers?: (ProviderNode | ProviderNode['file'])[]
-  assembler?: RcFile['assembler']
+  unstable_assembler?: RcFile['unstable_assembler']
 }
 
 /**
