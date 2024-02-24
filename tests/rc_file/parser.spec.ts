@@ -656,6 +656,27 @@ test.group('Rc Parser | assetsBundler', () => {
       'Invalid assetsBundler entry. Missing name property'
     )
   })
+
+  test('parse assetsBundler false', ({ assert }) => {
+    const parser = new RcFileParser({ assetsBundler: false })
+
+    assert.deepEqual(parser.parse(), {
+      raw: { assetsBundler: false },
+      typescript: true,
+      assetsBundler: false,
+      preloads: [],
+      directories,
+      metaFiles: [],
+      commands: [],
+      commandsAliases: {},
+      providers: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
+    })
+  })
 })
 
 test.group('Rc Parser | directories', () => {
