@@ -90,43 +90,40 @@ export class RcFileParser {
   /**
    * Returns the assembler runner object
    */
-  #getAssemblerRunner(): NonNullable<RcFile['assembler']>['runner'] {
-    if (!this.#rcFile.assembler?.runner) {
+  #getAssemblerRunner(): NonNullable<RcFile['unstable_assembler']>['runner'] {
+    if (!this.#rcFile.unstable_assembler?.runner) {
       return
     }
 
-    if (!this.#rcFile.assembler.runner.name) {
+    if (!this.#rcFile.unstable_assembler.runner.name) {
       throw new errors.E_MISSING_ASSEMBLER_RUNNER_NAME()
     }
 
-    if (!this.#rcFile.assembler.runner.command) {
+    if (!this.#rcFile.unstable_assembler.runner.command) {
       throw new errors.E_MISSING_ASSEMBLER_RUNNER_COMMAND()
     }
 
     return {
-      name: this.#rcFile.assembler.runner.name,
-      command: this.#rcFile.assembler.runner.command,
-      args: this.#rcFile.assembler.runner.args,
+      name: this.#rcFile.unstable_assembler.runner.name,
+      command: this.#rcFile.unstable_assembler.runner.command,
+      args: this.#rcFile.unstable_assembler.runner.args,
     }
   }
 
   /**
    * Returns the assembler object
    */
-  #getAssembler(): RcFile['assembler'] {
-    if (!this.#rcFile.assembler) {
+  #getAssembler(): RcFile['unstable_assembler'] {
+    if (!this.#rcFile.unstable_assembler) {
       return
     }
 
     const runner = this.#getAssemblerRunner()
     return new ObjectBuilder({})
       .add('runner', runner)
-      .add('onBuildStarting', this.#rcFile.assembler.onBuildStarting)
-      .add('onBuildCompleted', this.#rcFile.assembler.onBuildCompleted)
-      .add('onDevServerClosed', this.#rcFile.assembler.onDevServerClosed)
-      .add('onDevServerClosing', this.#rcFile.assembler.onDevServerClosing)
-      .add('onDevServerStarted', this.#rcFile.assembler.onDevServerStarted)
-      .add('onDevServerStarting', this.#rcFile.assembler.onDevServerStarting)
+      .add('onBuildStarting', this.#rcFile.unstable_assembler.onBuildStarting)
+      .add('onBuildCompleted', this.#rcFile.unstable_assembler.onBuildCompleted)
+      .add('onDevServerStarted', this.#rcFile.unstable_assembler.onDevServerStarted)
       .toObject()
   }
 
@@ -244,7 +241,7 @@ export class RcFileParser {
 
     return {
       typescript: this.#rcFile.typescript,
-      ...(assembler ? { assembler } : {}),
+      ...(assembler ? { unstable_assembler: assembler } : {}),
       ...(assetsBundler !== undefined ? { assetsBundler } : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),

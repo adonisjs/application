@@ -715,7 +715,7 @@ test.group('Rc Parser | directories', () => {
 test.group('Rc Parser | assembler', () => {
   test('parse runner properly', ({ assert }) => {
     const parser = new RcFileParser({
-      assembler: {
+      unstable_assembler: {
         runner: {
           name: 'bun',
           command: 'bun',
@@ -726,7 +726,7 @@ test.group('Rc Parser | assembler', () => {
 
     assert.deepEqual(parser.parse(), {
       raw: {
-        assembler: {
+        unstable_assembler: {
           runner: {
             name: 'bun',
             command: 'bun',
@@ -746,7 +746,7 @@ test.group('Rc Parser | assembler', () => {
         timeout: 2000,
         forceExit: true,
       },
-      assembler: {
+      unstable_assembler: {
         runner: {
           name: 'bun',
           command: 'bun',
@@ -760,7 +760,7 @@ test.group('Rc Parser | assembler', () => {
     assert.throws(
       () =>
         new RcFileParser({
-          assembler: {
+          unstable_assembler: {
             runner: {
               name: 'bun',
             },
@@ -772,7 +772,7 @@ test.group('Rc Parser | assembler', () => {
     assert.throws(
       () =>
         new RcFileParser({
-          assembler: {
+          unstable_assembler: {
             runner: {
               command: 'bun',
             },
@@ -785,31 +785,22 @@ test.group('Rc Parser | assembler', () => {
   test('parse assembler hooks properly', ({ assert }) => {
     const onBuildStarting = () => {}
     const onBuildCompleted = () => {}
-    const onDevServerClosed = () => {}
-    const onDevServerClosing = () => {}
     const onDevServerStarted = () => {}
-    const onDevServerStarting = () => {}
 
     const parser = new RcFileParser({
-      assembler: {
+      unstable_assembler: {
         onBuildStarting,
         onBuildCompleted,
-        onDevServerClosed,
-        onDevServerClosing,
         onDevServerStarted,
-        onDevServerStarting,
       },
     })
 
     assert.deepEqual(parser.parse(), {
       raw: {
-        assembler: {
+        unstable_assembler: {
           onBuildStarting,
           onBuildCompleted,
-          onDevServerClosed,
-          onDevServerClosing,
           onDevServerStarted,
-          onDevServerStarting,
         },
       },
       typescript: true,
@@ -824,13 +815,10 @@ test.group('Rc Parser | assembler', () => {
         timeout: 2000,
         forceExit: true,
       },
-      assembler: {
+      unstable_assembler: {
         onBuildStarting,
         onBuildCompleted,
-        onDevServerClosed,
-        onDevServerClosing,
         onDevServerStarted,
-        onDevServerStarting,
       },
     })
   })

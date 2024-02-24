@@ -8,6 +8,8 @@
  */
 
 import type { Logger } from '@poppinss/cliui'
+import type { Colors } from '@poppinss/cliui/types'
+
 import type { Application } from './application.js'
 
 /**
@@ -57,12 +59,12 @@ export type AssemblerHookNode<Handler extends Function> = () => Promise<{ defaul
 /**
  * Handler for the assembler hooks
  */
-export type AssemblerHookHandler = (logger: Logger) => any
+export type AssemblerHookHandler = (ui: { logger: Logger, colors: Colors }) => any
 
 /**
  * Handler for the source file changed hook
  */
-export type SourceFileChangedHookHandler = (filePath: string, logger: Logger) => any
+export type SourceFileChangedHookHandler = (ui: { logger: Logger, colors: Colors }, filePath: string) => any
 
 /**
  * Shape of directories object with known and unknown
@@ -204,7 +206,7 @@ export type RcFile = {
   /**
    * Assembler configuration
    */
-  assembler?: {
+  unstable_assembler?: {
     /**
      * Configure a custom runner to start the dev server
      * and tests. By default we are using ts-node but you
@@ -222,24 +224,9 @@ export type RcFile = {
     onDevServerStarted?: AssemblerHookNode<AssemblerHookHandler>[]
 
     /**
-     * When the dev server is about to start
-     */
-    onDevServerStarting?: AssemblerHookNode<AssemblerHookHandler>[]
-
-    /**
      * When a source file changes
      */
     onSourceFileChanged?: AssemblerHookNode<SourceFileChangedHookHandler>[]
-
-    /**
-     * When the dev server is about to close
-     */
-    onDevServerClosing?: AssemblerHookNode<AssemblerHookHandler>[]
-
-    /**
-     * When the dev server is closed
-     */
-    onDevServerClosed?: AssemblerHookNode<AssemblerHookHandler>[]
 
     /**
      * When a build is started
