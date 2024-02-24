@@ -59,12 +59,15 @@ export type AssemblerHookNode<Handler extends Function> = () => Promise<{ defaul
 /**
  * Handler for the assembler hooks
  */
-export type AssemblerHookHandler = (ui: { logger: Logger, colors: Colors }) => any
+export type AssemblerHookHandler = (ui: { logger: Logger; colors: Colors }) => any
 
 /**
  * Handler for the source file changed hook
  */
-export type SourceFileChangedHookHandler = (ui: { logger: Logger, colors: Colors }, filePath: string) => any
+export type SourceFileChangedHookHandler = (
+  ui: { logger: Logger; colors: Colors },
+  filePath: string
+) => any
 
 /**
  * Shape of directories object with known and unknown
