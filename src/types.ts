@@ -54,7 +54,8 @@ export type HooksState<ContainerBindings extends Record<any, any>> = [
 /**
  * Shape of an Assembler hook file
  */
-export type AssemblerHookNode<Handler extends Function> = () => Promise<{ default: Handler }>
+export type AssemblerHookNode<Handler extends AssemblerHookHandler | SourceFileChangedHookHandler> =
+  () => Promise<{ default: Handler }>
 
 /**
  * Handler for the assembler hooks
