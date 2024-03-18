@@ -786,12 +786,14 @@ test.group('Rc Parser | assembler', () => {
     const onBuildStarting = () => {}
     const onBuildCompleted = () => {}
     const onDevServerStarted = () => {}
+    const onSourceFileChanged = () => {}
 
     const parser = new RcFileParser({
       unstable_assembler: {
         onBuildStarting,
         onBuildCompleted,
         onDevServerStarted,
+        onSourceFileChanged,
       },
     })
 
@@ -801,6 +803,7 @@ test.group('Rc Parser | assembler', () => {
           onBuildStarting,
           onBuildCompleted,
           onDevServerStarted,
+          onSourceFileChanged,
         },
       },
       typescript: true,
@@ -819,6 +822,7 @@ test.group('Rc Parser | assembler', () => {
         onBuildStarting,
         onBuildCompleted,
         onDevServerStarted,
+        onSourceFileChanged,
       },
     })
   })
