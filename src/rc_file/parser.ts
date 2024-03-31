@@ -125,6 +125,7 @@ export class RcFileParser {
       .add('onBuildCompleted', this.#rcFile.unstable_assembler.onBuildCompleted)
       .add('onDevServerStarted', this.#rcFile.unstable_assembler.onDevServerStarted)
       .add('onSourceFileChanged', this.#rcFile.unstable_assembler.onSourceFileChanged)
+      .add('onHttpServerMessage', this.#rcFile.unstable_assembler.onHttpServerMessage)
       .toObject()
   }
 
