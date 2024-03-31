@@ -258,7 +258,7 @@ export type RcFile = {
     /**
      * When a message is received from the HTTP server process
      */
-    onHttpServerMessage?: AssemblerHookNode<AssemblerHookHandler>[]
+    onHttpServerMessage?: AssemblerHookNode<HttpServerMessageHookHandler>[]
   }
 
   /**
