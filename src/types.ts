@@ -274,6 +274,11 @@ export interface RcFileInput {
   }
   providers?: (ProviderNode | ProviderNode['file'])[]
   hooks?: RcFile['hooks']
+
+  /**
+   * @deprecated Use `hooks` instead
+   */
+  unstable_assembler?: RcFile['hooks']
 }
 
 /**

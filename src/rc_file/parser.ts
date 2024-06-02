@@ -90,16 +90,18 @@ export class RcFileParser {
   /**
    * Returns the assembler object
    */
-  #getAssembler(): RcFile['hooks'] {
-    if (!this.#rcFile.hooks) {
+  #getHooks(): RcFile['hooks'] {
+    // @ts-expect-error - Keep supporting the old `unstable_assembler` property for now
+    const hooksProperty = this.#rcFile.hooks || this.#rcFile.unstable_assembler
+    if (!hooksProperty) {
       return
     }
 
     return new ObjectBuilder({})
-      .add('onBuildStarting', this.#rcFile.hooks.onBuildStarting)
-      .add('onBuildCompleted', this.#rcFile.hooks.onBuildCompleted)
-      .add('onDevServerStarted', this.#rcFile.hooks.onDevServerStarted)
-      .add('onSourceFileChanged', this.#rcFile.hooks.onSourceFileChanged)
+      .add('onBuildStarting', hooksProperty.onBuildStarting)
+      .add('onBuildCompleted', hooksProperty.onBuildCompleted)
+      .add('onDevServerStarted', hooksProperty.onDevServerStarted)
+      .add('onSourceFileChanged', hooksProperty.onSourceFileChanged)
       .toObject()
   }
 
@@ -212,7 +214,7 @@ export class RcFileParser {
    * Parse and validate file contents and merge them with defaults
    */
   parse(): RcFile {
-    const assembler = this.#getAssembler()
+    const assembler = this.#getHooks()
     const assetsBundler = this.#getAssetsBundler()
 
     return {

@@ -757,4 +757,49 @@ test.group('Rc Parser | hooks', () => {
       },
     })
   })
+
+  test('still works with unstable_assembler', ({ assert }) => {
+    const onBuildStarting = () => {}
+    const onBuildCompleted = () => {}
+    const onDevServerStarted = () => {}
+    const onSourceFileChanged = () => {}
+
+    const parser = new RcFileParser({
+      unstable_assembler: {
+        onBuildStarting,
+        onBuildCompleted,
+        onDevServerStarted,
+        onSourceFileChanged,
+      },
+    })
+
+    assert.deepEqual(parser.parse(), {
+      raw: {
+        unstable_assembler: {
+          onBuildStarting,
+          onBuildCompleted,
+          onDevServerStarted,
+          onSourceFileChanged,
+        },
+      },
+      typescript: true,
+      preloads: [],
+      directories,
+      metaFiles: [],
+      commands: [],
+      commandsAliases: {},
+      providers: [],
+      tests: {
+        suites: [],
+        timeout: 2000,
+        forceExit: true,
+      },
+      hooks: {
+        onBuildStarting,
+        onBuildCompleted,
+        onDevServerStarted,
+        onSourceFileChanged,
+      },
+    })
+  })
 })
