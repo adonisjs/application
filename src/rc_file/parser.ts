@@ -88,44 +88,19 @@ export class RcFileParser {
   }
 
   /**
-   * Returns the assembler runner object
-   */
-  #getAssemblerRunner(): NonNullable<RcFile['unstable_assembler']>['runner'] {
-    if (!this.#rcFile.unstable_assembler?.runner) {
-      return
-    }
-
-    if (!this.#rcFile.unstable_assembler.runner.name) {
-      throw new errors.E_MISSING_ASSEMBLER_RUNNER_NAME()
-    }
-
-    if (!this.#rcFile.unstable_assembler.runner.command) {
-      throw new errors.E_MISSING_ASSEMBLER_RUNNER_COMMAND()
-    }
-
-    return {
-      name: this.#rcFile.unstable_assembler.runner.name,
-      command: this.#rcFile.unstable_assembler.runner.command,
-      args: this.#rcFile.unstable_assembler.runner.args,
-    }
-  }
-
-  /**
    * Returns the assembler object
    */
-  #getAssembler(): RcFile['unstable_assembler'] {
-    if (!this.#rcFile.unstable_assembler) {
+  #getAssembler(): RcFile['hooks'] {
+    if (!this.#rcFile.hooks) {
       return
     }
 
-    const runner = this.#getAssemblerRunner()
     return new ObjectBuilder({})
-      .add('runner', runner)
-      .add('onBuildStarting', this.#rcFile.unstable_assembler.onBuildStarting)
-      .add('onBuildCompleted', this.#rcFile.unstable_assembler.onBuildCompleted)
-      .add('onDevServerStarted', this.#rcFile.unstable_assembler.onDevServerStarted)
-      .add('onSourceFileChanged', this.#rcFile.unstable_assembler.onSourceFileChanged)
-      .add('onHttpServerMessage', this.#rcFile.unstable_assembler.onHttpServerMessage)
+      .add('onBuildStarting', this.#rcFile.hooks.onBuildStarting)
+      .add('onBuildCompleted', this.#rcFile.hooks.onBuildCompleted)
+      .add('onDevServerStarted', this.#rcFile.hooks.onDevServerStarted)
+      .add('onSourceFileChanged', this.#rcFile.hooks.onSourceFileChanged)
+      .add('onHttpServerMessage', this.#rcFile.hooks.onHttpServerMessage)
       .toObject()
   }
 
@@ -243,7 +218,7 @@ export class RcFileParser {
 
     return {
       typescript: this.#rcFile.typescript,
-      ...(assembler ? { unstable_assembler: assembler } : {}),
+      ...(assembler ? { hooks: assembler } : {}),
       ...(assetsBundler !== undefined ? { assetsBundler } : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),

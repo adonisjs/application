@@ -712,76 +712,7 @@ test.group('Rc Parser | directories', () => {
   })
 })
 
-test.group('Rc Parser | assembler', () => {
-  test('parse runner properly', ({ assert }) => {
-    const parser = new RcFileParser({
-      unstable_assembler: {
-        runner: {
-          name: 'bun',
-          command: 'bun',
-          args: ['--flag'],
-        },
-      },
-    })
-
-    assert.deepEqual(parser.parse(), {
-      raw: {
-        unstable_assembler: {
-          runner: {
-            name: 'bun',
-            command: 'bun',
-            args: ['--flag'],
-          },
-        },
-      },
-      typescript: true,
-      preloads: [],
-      directories,
-      metaFiles: [],
-      commands: [],
-      commandsAliases: {},
-      providers: [],
-      tests: {
-        suites: [],
-        timeout: 2000,
-        forceExit: true,
-      },
-      unstable_assembler: {
-        runner: {
-          name: 'bun',
-          command: 'bun',
-          args: ['--flag'],
-        },
-      },
-    })
-  })
-
-  test('raise error when runner properties are missing', ({ assert }) => {
-    assert.throws(
-      () =>
-        new RcFileParser({
-          unstable_assembler: {
-            runner: {
-              name: 'bun',
-            },
-          },
-        }).parse(),
-      'Invalid assembler.runner entry. Missing command property'
-    )
-
-    assert.throws(
-      () =>
-        new RcFileParser({
-          unstable_assembler: {
-            runner: {
-              command: 'bun',
-            },
-          },
-        }).parse(),
-      'Invalid assembler.runner entry. Missing name property'
-    )
-  })
-
+test.group('Rc Parser | hooks', () => {
   test('parse assembler hooks properly', ({ assert }) => {
     const onBuildStarting = () => {}
     const onBuildCompleted = () => {}
@@ -790,7 +721,7 @@ test.group('Rc Parser | assembler', () => {
     const onHttpServerMessage = () => {}
 
     const parser = new RcFileParser({
-      unstable_assembler: {
+      hooks: {
         onBuildStarting,
         onBuildCompleted,
         onDevServerStarted,
@@ -801,7 +732,7 @@ test.group('Rc Parser | assembler', () => {
 
     assert.deepEqual(parser.parse(), {
       raw: {
-        unstable_assembler: {
+        hooks: {
           onBuildStarting,
           onBuildCompleted,
           onDevServerStarted,
@@ -821,7 +752,7 @@ test.group('Rc Parser | assembler', () => {
         timeout: 2000,
         forceExit: true,
       },
-      unstable_assembler: {
+      hooks: {
         onBuildStarting,
         onBuildCompleted,
         onDevServerStarted,

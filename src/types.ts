@@ -159,10 +159,10 @@ export type RcFile = {
    * Configure a custom assets bundler to bundle and serve
    * assets.
    *
-   * This config can be used to configure assets bundler apart from
-   * vite and encore (since both are auto-detected)
-   *
-   * Set it to `false` to disable the assets bundler
+   * **Setting a custom assets bundler is deprecated and will be removed
+   * in future versions**. If you need a custom bundler, you should
+   * create a package integrating it with AdonisJS, probably using
+   * assembler hooks, like @adonisjs/vite does.
    */
   assetsBundler?:
     | {
@@ -221,20 +221,9 @@ export type RcFile = {
   }
 
   /**
-   * Assembler configuration
+   * Assembler hooks configuration
    */
-  unstable_assembler?: {
-    /**
-     * Configure a custom runner to start the dev server
-     * and tests. By default we are using ts-node but you
-     * are free to use any other runner
-     */
-    runner?: {
-      name: string
-      command: string
-      args?: string[]
-    }
-
+  hooks?: {
     /**
      * When the dev server is started
      */
@@ -302,7 +291,7 @@ export interface RcFileInput {
     timeout?: number
   }
   providers?: (ProviderNode | ProviderNode['file'])[]
-  unstable_assembler?: RcFile['unstable_assembler']
+  hooks?: RcFile['hooks']
 }
 
 /**
