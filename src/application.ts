@@ -341,6 +341,7 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
     sendHandle?: any,
     options?: {
       swallowErrors?: boolean | undefined
+      keepOpen?: boolean | undefined
     },
     callback?: (error: Error | null) => void
   ) {
