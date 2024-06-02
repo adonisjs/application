@@ -100,7 +100,6 @@ export class RcFileParser {
       .add('onBuildCompleted', this.#rcFile.hooks.onBuildCompleted)
       .add('onDevServerStarted', this.#rcFile.hooks.onDevServerStarted)
       .add('onSourceFileChanged', this.#rcFile.hooks.onSourceFileChanged)
-      .add('onHttpServerMessage', this.#rcFile.hooks.onHttpServerMessage)
       .toObject()
   }
 

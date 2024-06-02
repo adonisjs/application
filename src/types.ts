@@ -54,12 +54,8 @@ export type HooksState<ContainerBindings extends Record<any, any>> = [
 /**
  * Shape of an Assembler hook file
  */
-export type AssemblerHookNode<
-  Handler extends
-    | AssemblerHookHandler
-    | SourceFileChangedHookHandler
-    | HttpServerMessageHookHandler,
-> = () => Promise<{ default: Handler }>
+export type AssemblerHookNode<Handler extends AssemblerHookHandler | SourceFileChangedHookHandler> =
+  () => Promise<{ default: Handler }>
 
 /**
  * Handler for the assembler hooks
@@ -72,15 +68,6 @@ export type AssemblerHookHandler = (ui: { logger: Logger; colors: Colors }) => a
 export type SourceFileChangedHookHandler = (
   ui: { logger: Logger; colors: Colors },
   filePath: string
-) => any
-
-/**
- * Handler for the onHttpServerMessage hook
- */
-export type HttpServerMessageHookHandler = (
-  ui: { logger: Logger; colors: Colors },
-  message: any,
-  actions: { restartServer: () => void }
 ) => any
 
 /**
@@ -243,11 +230,6 @@ export type RcFile = {
      * When a build is completed
      */
     onBuildCompleted?: AssemblerHookNode<AssemblerHookHandler>[]
-
-    /**
-     * When a message is received from the HTTP server process
-     */
-    onHttpServerMessage?: AssemblerHookNode<HttpServerMessageHookHandler>[]
   }
 
   /**

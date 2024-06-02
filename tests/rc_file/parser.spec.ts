@@ -718,7 +718,6 @@ test.group('Rc Parser | hooks', () => {
     const onBuildCompleted = () => {}
     const onDevServerStarted = () => {}
     const onSourceFileChanged = () => {}
-    const onHttpServerMessage = () => {}
 
     const parser = new RcFileParser({
       hooks: {
@@ -726,7 +725,6 @@ test.group('Rc Parser | hooks', () => {
         onBuildCompleted,
         onDevServerStarted,
         onSourceFileChanged,
-        onHttpServerMessage,
       },
     })
 
@@ -737,7 +735,6 @@ test.group('Rc Parser | hooks', () => {
           onBuildCompleted,
           onDevServerStarted,
           onSourceFileChanged,
-          onHttpServerMessage,
         },
       },
       typescript: true,
@@ -757,7 +754,6 @@ test.group('Rc Parser | hooks', () => {
         onBuildCompleted,
         onDevServerStarted,
         onSourceFileChanged,
-        onHttpServerMessage,
       },
     })
   })
