@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-// @ts-expect-error
 import * as tempura from 'tempura'
 import string from '@poppinss/utils/string'
 import { dirname, isAbsolute } from 'node:path'
