@@ -371,6 +371,8 @@ test.group('Generator', () => {
     )
     assert.equal(generators.mailName('password_reset', 'provision'), 'PasswordResetProvision')
     assert.equal(generators.mailName('team_invite', 'provision'), 'TeamInviteProvision')
+    assert.equal(generators.mailName('verify_email', 'provision'), 'VerifyEmailProvision')
+    assert.equal(generators.mailName('verifyEmail', 'provision'), 'VerifyEmailProvision')
   })
 
   test('convert entity name to mail filename', ({ assert }) => {
@@ -385,5 +387,7 @@ test.group('Generator', () => {
       'password_reset_provision.ts'
     )
     assert.equal(generators.mailFileName('team_invite', 'provision'), 'team_invite_provision.ts')
+    assert.equal(generators.mailFileName('verify_email', 'provision'), 'verify_email_provision.ts')
+    assert.equal(generators.mailFileName('verifyEmail', 'provision'), 'verify_email_provision.ts')
   })
 })
