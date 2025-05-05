@@ -20,38 +20,30 @@
   "scripts": {
     "pretest": "npm run lint",
     "test": "cross-env NODE_DEBUG=adonisjs:app c8 npm run quick:test",
-    "clean": "del-cli build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
+    "clean": "del-cli build",
     "precompile": "npm run lint && npm run clean",
     "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
     "build": "npm run compile",
-    "release": "release-it",
     "version": "npm run build",
     "prepublishOnly": "npm run build",
-    "lint": "eslint . --ext=.ts",
-    "format": "prettier --write .",
-    "sync-labels": "github-label-sync --labels .github/labels.json adonisjs/application",
-    "quick:test": "node --enable-source-maps --loader=ts-node/esm bin/test.ts"
+    "release": "release-it",
+    "quick:test": "node --import=ts-node-maintained/register/esm --enable-source-maps bin/test.ts"
   },
-  "keywords": [
-    "adonisjs",
-    "app"
-  ],
-  "author": "virk,adonisjs",
-  "license": "MIT",
   "devDependencies": {
     "@adonisjs/config": "^5.0.2",
     "@adonisjs/eslint-config": "^2.0.0",
     "@adonisjs/fold": "^10.1.3",
     "@adonisjs/prettier-config": "^1.4.4",
     "@adonisjs/tsconfig": "^1.4.0",
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
     "@japa/assert": "^4.0.1",
     "@japa/expect-type": "^2.0.3",
     "@japa/file-system": "^2.3.2",
     "@japa/runner": "^4.2.0",
     "@poppinss/cliui": "^6.4.3",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@swc/core": "1.10.7",
     "@types/fs-extra": "^11.0.4",
     "@types/glob-parent": "^5.1.3",
@@ -62,13 +54,10 @@
     "del-cli": "^6.0.0",
     "eslint": "^9.26.0",
     "fs-extra": "^11.3.0",
-    "github-label-sync": "^3.0.0",
-    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "release-it": "^19.0.2",
     "semver": "^7.7.1",
     "ts-dedent": "^2.2.0",
-    "ts-node": "^10.9.2",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
   },
@@ -83,6 +72,7 @@
     "@adonisjs/config": "^5.0.0",
     "@adonisjs/fold": "^10.0.0"
   },
+  "homepage": "https://github.com/adonisjs/application#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adonisjs/application.git"
@@ -90,26 +80,51 @@
   "bugs": {
     "url": "https://github.com/adonisjs/application/issues"
   },
-  "homepage": "https://github.com/adonisjs/application#readme",
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
+  "keywords": [
+    "adonisjs",
+    "app"
+  ],
+  "author": "Harminder Virk <virk@adonisjs.com>",
+  "license": "MIT",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "provenance": true
+  },
+  "tsup": {
+    "entry": [
+      "./index.ts",
+      "./src/types.ts",
+      "./factories/main.ts"
+    ],
+    "outDir": "./build",
+    "clean": true,
+    "format": "esm",
+    "dts": false,
+    "sourcemap": false,
+    "target": "esnext"
   },
   "release-it": {
     "git": {
+      "requireCleanWorkingDir": true,
+      "requireUpstream": true,
       "commitMessage": "chore(release): ${version}",
       "tagAnnotation": "v${version}",
+      "push": true,
       "tagName": "v${version}"
     },
     "github": {
-      "release": true,
-      "releaseName": "v${version}",
-      "web": true
+      "release": true
+    },
+    "npm": {
+      "publish": true,
+      "skipChecks": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "angular"
+        }
+      }
     }
   },
   "c8": {
@@ -121,21 +136,5 @@
       "tests/**"
     ]
   },
-  "eslintConfig": {
-    "extends": "@adonisjs/eslint-config/package"
-  },
-  "prettier": "@adonisjs/prettier-config",
-  "tsup": {
-    "entry": [
-      "./index.ts",
-      "./src/types.ts",
-      "./factories/main.ts"
-    ],
-    "outDir": "./build",
-    "clean": true,
-    "format": "esm",
-    "dts": false,
-    "sourcemap": true,
-    "target": "esnext"
-  }
+  "prettier": "@adonisjs/prettier-config"
 }
