@@ -650,10 +650,18 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
       return
     }
 
+    const shutdownInReverseOrder = this.experimentalFlags.enabled('shutdownInReverseOrder')
+
     debug('terminating app')
+
     this.#terminating = true
-    await this.#hooks.runner('terminating').run(this)
-    await this.#providersManager.shutdown()
+    if (shutdownInReverseOrder) {
+      await this.#hooks.runner('terminating').runReverse(this)
+    } else {
+      await this.#hooks.runner('terminating').run(this)
+    }
+
+    await this.#providersManager.shutdown(shutdownInReverseOrder)
     this.#hooks.clear('terminating')
     this.#state = 'terminated'
   }

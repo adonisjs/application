@@ -204,13 +204,17 @@ export class ProvidersManager {
   /**
    * Invoke shutdown method on all the providers
    */
-  async shutdown() {
-    for (let provider of this.#providersWithShutdownListeners) {
+  async shutdown(inReverseOrder: boolean) {
+    const providersWithShutdownListeners = inReverseOrder
+      ? Array.from(this.#providersWithShutdownListeners).reverse()
+      : Array.from(this.#providersWithShutdownListeners)
+
+    this.#providersWithShutdownListeners = []
+
+    for (let provider of providersWithShutdownListeners) {
       if (provider.shutdown) {
         await provider.shutdown()
       }
     }
-
-    this.#providersWithShutdownListeners = []
   }
 }

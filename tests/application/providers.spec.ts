@@ -522,7 +522,7 @@ test.group('Application | providers', (group) => {
         constructor(private app) {}
 
         register() {
-          this.app.container.singleton('route', () => {
+          this.app.container.singleton('lifecycle', () => {
             return {
               stack: []
             }
@@ -530,23 +530,52 @@ test.group('Application | providers', (group) => {
         }
 
         async boot() {
-          const route = await this.app.container.make('route')
-          route.stack.push('booted')
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router booted')
         }
 
         async start() {
-          const route = await this.app.container.make('route')
-          route.stack.push('setup start')
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router setup start')
         }
 
         async ready() {
-          const route = await this.app.container.make('route')
-          route.stack.push('ready')
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router ready')
         }
 
         async shutdown() {
-          const route = await this.app.container.make('route')
-          route.stack.push('shutdown')
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router shutdown')
+        }
+      }
+    `
+    )
+
+    await outputFile(
+      join(BASE_PATH, './app_provider.ts'),
+      `
+      export default class AppProvider {
+        constructor(private app) {}
+
+        async boot() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app booted')
+        }
+
+        async start() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app setup start')
+        }
+
+        async ready() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app ready')
+        }
+
+        async shutdown() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app shutdown')
         }
       }
     `
@@ -562,19 +591,143 @@ test.group('Application | providers', (group) => {
           file: () => import(new URL('./route_provider.js?v=12', BASE_URL).href),
           environment: ['web'],
         },
+        {
+          file: () => import(new URL('./app_provider.js?v=12', BASE_URL).href),
+          environment: ['web'],
+        },
       ],
     })
 
     await app.init()
     await app.boot()
     await app.start(async () => {
-      const route = await app.container.make('route')
-      route.stack.push('starting')
+      const lifecycle = await app.container.make('lifecycle')
+      lifecycle.stack.push('starting')
     })
     await app.terminate()
 
-    assert.deepEqual(await app.container.make('route'), {
-      stack: ['booted', 'setup start', 'starting', 'ready', 'shutdown'],
+    assert.deepEqual(await app.container.make('lifecycle'), {
+      stack: [
+        'router booted',
+        'app booted',
+        'router setup start',
+        'app setup start',
+        'starting',
+        'router ready',
+        'app ready',
+        'router shutdown',
+        'app shutdown',
+      ],
+    })
+  })
+
+  test('invoke shutdown hooks in reverse order', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, './route_provider.ts'),
+      `
+      export default class RouteProvider {
+        constructor(private app) {}
+
+        register() {
+          this.app.container.singleton('lifecycle', () => {
+            return {
+              stack: []
+            }
+          })
+        }
+
+        async boot() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router booted')
+        }
+
+        async start() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router setup start')
+        }
+
+        async ready() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router ready')
+        }
+
+        async shutdown() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('router shutdown')
+        }
+      }
+    `
+    )
+
+    await outputFile(
+      join(BASE_PATH, './app_provider.ts'),
+      `
+      export default class AppProvider {
+        constructor(private app) {}
+
+        async boot() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app booted')
+        }
+
+        async start() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app setup start')
+        }
+
+        async ready() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app ready')
+        }
+
+        async shutdown() {
+          const lifecycle = await this.app.container.make('lifecycle')
+          lifecycle.stack.push('app shutdown')
+        }
+      }
+    `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    app.rcContents({
+      experimental: {
+        shutdownInReverseOrder: true,
+      },
+      providers: [
+        {
+          file: () => import(new URL('./route_provider.js?v=13', BASE_URL).href),
+          environment: ['web'],
+        },
+        {
+          file: () => import(new URL('./app_provider.js?v=13', BASE_URL).href),
+          environment: ['web'],
+        },
+      ],
+    })
+
+    await app.init()
+    await app.boot()
+    await app.start(async () => {
+      const lifecycle = await app.container.make('lifecycle')
+      lifecycle.stack.push('starting')
+    })
+    await app.terminate()
+
+    assert.deepEqual(await app.container.make('lifecycle'), {
+      stack: [
+        'router booted',
+        'app booted',
+        'router setup start',
+        'app setup start',
+        'starting',
+        'router ready',
+        'app ready',
+        'app shutdown',
+        'router shutdown',
+      ],
     })
   })
 
@@ -623,7 +776,7 @@ test.group('Application | providers', (group) => {
     app.rcContents({
       providers: [
         {
-          file: () => import(new URL('./route_provider.js?v=13', BASE_URL).href),
+          file: () => import(new URL('./route_provider.js?v=14', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -683,7 +836,7 @@ test.group('Application | providers', (group) => {
     app.rcContents({
       providers: [
         {
-          file: () => import(new URL('./route_provider.js?v=14', BASE_URL).href),
+          file: () => import(new URL('./route_provider.js?v=15', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -740,7 +893,7 @@ test.group('Application | providers', (group) => {
     app.rcContents({
       providers: [
         {
-          file: () => import(new URL('./route_provider.js?v=15', BASE_URL).href),
+          file: () => import(new URL('./route_provider.js?v=16', BASE_URL).href),
           environment: ['web'],
         },
       ],
@@ -762,6 +915,95 @@ test.group('Application | providers', (group) => {
 
     assert.deepEqual(await app.container.make('route'), {
       stack: ['booted', 'setup start', 'starting', 'ready', 'terminating', 'shutdown'],
+    })
+
+    assert.isTrue(app.isTerminated)
+  })
+
+  test('invoke terminating hooks in reverse order', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, './route_provider.ts'),
+      `
+      export default class RouteProvider {
+        constructor(private app) {}
+
+        register() {
+          this.app.container.singleton('route', () => {
+            return {
+              stack: []
+            }
+          })
+        }
+
+        async boot() {
+          const route = await this.app.container.make('route')
+          route.stack.push('booted')
+        }
+
+        async start() {
+          const route = await this.app.container.make('route')
+          route.stack.push('setup start')
+        }
+
+        async ready() {
+          const route = await this.app.container.make('route')
+          route.stack.push('ready')
+        }
+
+        async shutdown() {
+          const route = await this.app.container.make('route')
+          route.stack.push('shutdown')
+        }
+      }
+    `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    app.rcContents({
+      experimental: {
+        shutdownInReverseOrder: true,
+      },
+      providers: [
+        {
+          file: () => import(new URL('./route_provider.js?v=17', BASE_URL).href),
+          environment: ['web'],
+        },
+      ],
+    })
+
+    await app.init()
+    await app.boot()
+    await app.start(async () => {
+      const route = await app.container.make('route')
+      route.stack.push('starting')
+    })
+
+    app.terminating(async () => {
+      const route = await app.container.make('route')
+      assert.isTrue(app.isTerminating)
+      route.stack.push('terminating 1')
+    })
+    app.terminating(async () => {
+      const route = await app.container.make('route')
+      assert.isTrue(app.isTerminating)
+      route.stack.push('terminating 2')
+    })
+
+    await app.terminate()
+
+    assert.deepEqual(await app.container.make('route'), {
+      stack: [
+        'booted',
+        'setup start',
+        'starting',
+        'ready',
+        'terminating 2',
+        'terminating 1',
+        'shutdown',
+      ],
     })
 
     assert.isTrue(app.isTerminated)
@@ -806,7 +1048,7 @@ test.group('Application | providers', (group) => {
     app.rcContents({
       providers: [
         {
-          file: () => import(new URL('./route_provider.js?v=16', BASE_URL).href),
+          file: () => import(new URL('./route_provider.js?v=18', BASE_URL).href),
           environment: ['web'],
         },
       ],
