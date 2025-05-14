@@ -37,6 +37,7 @@ export class RcFileParser {
       forceExit: true,
     },
     raw: {},
+    experimental: {},
   }
 
   /**
@@ -232,6 +233,7 @@ export class RcFileParser {
         timeout: this.#rcFile.tests.timeout ?? 2000,
         forceExit: this.#rcFile.tests.forceExit ?? true,
       },
+      experimental: this.#rcFile.experimental,
       raw: this.#rcFile.raw,
     }
   }

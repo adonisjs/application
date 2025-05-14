@@ -28,6 +28,7 @@ import type {
   HooksState,
   AppEnvironments,
   ApplicationStates,
+  ExperimentalFlags,
 } from './types.js'
 
 /**
@@ -225,6 +226,40 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
     create: async () => {
       const { StubsManager } = await import('./stubs/manager.js')
       return new StubsManager(this, this.makePath(this.rcFile.directories.stubs))
+    },
+  }
+
+  /**
+   * Check the status of the configured feature flags and act on them
+   */
+  experimentalFlags = {
+    enabled: <Feature extends keyof ExperimentalFlags | (string & {})>(
+      feature: Feature
+    ): boolean => {
+      return this.#rcFileManager.rcFile.experimental[feature as keyof ExperimentalFlags] === true
+    },
+    disabled: <Feature extends keyof ExperimentalFlags | (string & {})>(
+      feature: Feature
+    ): boolean => {
+      return this.#rcFileManager.rcFile.experimental[feature as keyof ExperimentalFlags] === false
+    },
+    has: <Feature extends keyof ExperimentalFlags | (string & {})>(feature: Feature): boolean => {
+      return feature in this.#rcFileManager.rcFile.experimental
+    },
+    when: <Feature extends keyof ExperimentalFlags | (string & {}), EnabledResult, DisabledResult>(
+      feature: Feature,
+      enabledCallback: () => EnabledResult,
+      disabledCallback?: () => DisabledResult
+    ): [never] extends DisabledResult
+      ? EnabledResult | undefined
+      : EnabledResult | DisabledResult => {
+      if (this.experimentalFlags.enabled(feature)) {
+        return enabledCallback()
+      }
+
+      return (disabledCallback ? disabledCallback() : undefined) as [never] extends DisabledResult
+        ? EnabledResult | undefined
+        : EnabledResult | DisabledResult
     },
   }
 

@@ -44,6 +44,7 @@ test.group('Application | rcFile', (group) => {
       typescript: true,
       preloads: [],
       directories: directories,
+      experimental: {},
       metaFiles: [],
       commands: [],
       commandsAliases: {},

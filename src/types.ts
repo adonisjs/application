@@ -102,6 +102,20 @@ export interface DirectoriesNode {
 }
 
 /**
+ * To be extended by the packages that wants to introduce flags
+ */
+export interface ExperimentalFlags {
+  /**
+   * In the upcoming major version of AdonisJS, the shutdown hooks will be
+   * executed in the reverse order in which the providers will registered.
+   *
+   * You can enable the same behavior today by enabling the "shutdownInReverseOrder"
+   * flag
+   */
+  shutdownInReverseOrder?: boolean
+}
+
+/**
  * Shape of preload files
  */
 export type PreloadNode = {
@@ -250,6 +264,11 @@ export type RcFile = {
    * Reference to `adonisrc.js` file raw contents
    */
   raw: Record<string, any>
+
+  /**
+   * Specify flags to enable experimental features
+   */
+  experimental: ExperimentalFlags
 }
 
 /**
@@ -279,6 +298,11 @@ export interface RcFileInput {
    * @deprecated Use `hooks` instead
    */
   unstable_assembler?: RcFile['hooks']
+
+  /**
+   * Specify flags to enable experimental features
+   */
+  experimental?: ExperimentalFlags
 }
 
 /**
