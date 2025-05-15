@@ -28,8 +28,9 @@ import type {
   HooksState,
   AppEnvironments,
   ApplicationStates,
-  ExperimentalFlags,
+  ExperimentalFlagsList,
 } from './types.js'
+import { FeatureFlags } from './feature_flags.js'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes
@@ -232,36 +233,9 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
   /**
    * Check the status of the configured feature flags and act on them
    */
-  experimentalFlags = {
-    enabled: <Feature extends keyof ExperimentalFlags | (string & {})>(
-      feature: Feature
-    ): boolean => {
-      return this.#rcFileManager.rcFile.experimental[feature as keyof ExperimentalFlags] === true
-    },
-    disabled: <Feature extends keyof ExperimentalFlags | (string & {})>(
-      feature: Feature
-    ): boolean => {
-      return this.#rcFileManager.rcFile.experimental[feature as keyof ExperimentalFlags] === false
-    },
-    has: <Feature extends keyof ExperimentalFlags | (string & {})>(feature: Feature): boolean => {
-      return feature in this.#rcFileManager.rcFile.experimental
-    },
-    when: <Feature extends keyof ExperimentalFlags | (string & {}), EnabledResult, DisabledResult>(
-      feature: Feature,
-      enabledCallback: () => EnabledResult,
-      disabledCallback?: () => DisabledResult
-    ): [never] extends DisabledResult
-      ? EnabledResult | undefined
-      : EnabledResult | DisabledResult => {
-      if (this.experimentalFlags.enabled(feature)) {
-        return enabledCallback()
-      }
-
-      return (disabledCallback ? disabledCallback() : undefined) as [never] extends DisabledResult
-        ? EnabledResult | undefined
-        : EnabledResult | DisabledResult
-    },
-  }
+  experimentalFlags = new FeatureFlags<ExperimentalFlagsList>(
+    () => this.#rcFileManager.rcFile.experimental
+  )
 
   /**
    * A flag to know if VineJS provider is configured. When set

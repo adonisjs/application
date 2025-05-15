@@ -104,7 +104,7 @@ export interface DirectoriesNode {
 /**
  * To be extended by the packages that wants to introduce flags
  */
-export interface ExperimentalFlags {
+export interface ExperimentalFlagsList {
   /**
    * In the upcoming major version of AdonisJS, the shutdown hooks will be
    * executed in the reverse order in which the providers will registered.
@@ -268,7 +268,7 @@ export type RcFile = {
   /**
    * Specify flags to enable experimental features
    */
-  experimental: ExperimentalFlags
+  experimental: ExperimentalFlagsList
 }
 
 /**
@@ -302,7 +302,7 @@ export interface RcFileInput {
   /**
    * Specify flags to enable experimental features
    */
-  experimental?: ExperimentalFlags
+  experimental?: ExperimentalFlagsList
 }
 
 /**
