@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { RuntimeException } from '@poppinss/utils'
+import { RuntimeException } from '@poppinss/utils/exception'
 
 import debug from '../debug.js'
 import type { ProviderNode, AppEnvironments, ContainerProviderContract } from '../types.js'
@@ -19,7 +19,7 @@ import type { ProviderNode, AppEnvironments, ContainerProviderContract } from '.
  * The class relies on "import.meta.resolve" to resolve the provider modules from
  * the root of the application.
  *
- * Also, a single instance of the provider is used to executed all the hooks.
+ * Also, a single instance of the provider is used to execute all the hooks.
  */
 export class ProvidersManager {
   /**

@@ -59,6 +59,7 @@ test.group('Application | rcFile', (group) => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -96,6 +97,7 @@ test.group('Application | rcFile', (group) => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 })

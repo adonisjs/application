@@ -8,12 +8,13 @@
  */
 
 import { join } from 'node:path'
-import { cp } from 'node:fs/promises'
-import { RuntimeException, fsReadAll } from '@poppinss/utils'
+import { cp, stat } from 'node:fs/promises'
+import { fsReadAll } from '@poppinss/utils/fs'
+import { RuntimeException } from '@poppinss/utils/exception'
 
 import debug from '../debug.js'
 import { Stub } from './stub.js'
-import { Application } from '../application.js'
+import { type Application } from '../application.js'
 import { readFileFromSources } from '../helpers.js'
 
 /**
@@ -108,9 +109,17 @@ export class StubsManager {
         : join(await this.#getPackageSource(options.pkg), stubPath)
 
     try {
-      const files = await fsReadAll(source, {
-        filter: (path) => path === '' || path.endsWith('.stub'),
-      })
+      let files: string[] = []
+      const sourceEntry = await stat(source)
+      if (sourceEntry.isFile()) {
+        if (source.endsWith('.stub')) {
+          files = ['']
+        }
+      } else {
+        files = await fsReadAll(source, {
+          filter: (path) => path === '' || path.endsWith('.stub'),
+        })
+      }
 
       debug('copying stubs from "%s" with options %O', source, copyOptions)
       debug('preparing to copy stubs "%s"', files)

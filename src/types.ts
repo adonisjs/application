@@ -7,9 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { Logger } from '@poppinss/cliui'
-import type { Colors } from '@poppinss/cliui/types'
-
+import { type AssemblerRcFile } from '@adonisjs/assembler/types'
 import type { Application } from './application.js'
 
 /**
@@ -50,25 +48,6 @@ export type HooksState<ContainerBindings extends Record<any, any>> = [
   [Application<ContainerBindings>],
   [Application<ContainerBindings>],
 ]
-
-/**
- * Shape of an Assembler hook file
- */
-export type AssemblerHookNode<Handler extends AssemblerHookHandler | SourceFileChangedHookHandler> =
-  () => Promise<{ default: Handler }>
-
-/**
- * Handler for the assembler hooks
- */
-export type AssemblerHookHandler = (ui: { logger: Logger; colors: Colors }) => any
-
-/**
- * Handler for the source file changed hook
- */
-export type SourceFileChangedHookHandler = (
-  ui: { logger: Logger; colors: Colors },
-  filePath: string
-) => any
 
 /**
  * Shape of directories object with known and unknown
@@ -157,29 +136,6 @@ export type MetaFileNode = {
  */
 export type RcFile = {
   /**
-   * Configure a custom assets bundler to bundle and serve
-   * assets.
-   *
-   * **Setting a custom assets bundler is deprecated and will be removed
-   * in future versions**. If you need a custom bundler, you should
-   * create a package integrating it with AdonisJS, probably using
-   * assembler hooks, like @adonisjs/vite does.
-   */
-  assetsBundler?:
-    | {
-        name: string
-        devServer: {
-          command: string
-          args?: string[]
-        }
-        build: {
-          command: string
-          args?: string[]
-        }
-      }
-    | false
-
-  /**
    * Is it a TypeScript project
    */
   typescript: boolean
@@ -224,27 +180,7 @@ export type RcFile = {
   /**
    * Assembler hooks configuration
    */
-  hooks?: {
-    /**
-     * When the dev server is started
-     */
-    onDevServerStarted?: AssemblerHookNode<AssemblerHookHandler>[]
-
-    /**
-     * When a source file changes
-     */
-    onSourceFileChanged?: AssemblerHookNode<SourceFileChangedHookHandler>[]
-
-    /**
-     * When a build is started
-     */
-    onBuildStarting?: AssemblerHookNode<AssemblerHookHandler>[]
-
-    /**
-     * When a build is completed
-     */
-    onBuildCompleted?: AssemblerHookNode<AssemblerHookHandler>[]
-  }
+  hooks: AssemblerRcFile['hooks']
 
   /**
    * Register test suites
@@ -275,7 +211,6 @@ export type RcFile = {
  * RcFile input is the partial copy of the RcFile
  */
 export interface RcFileInput {
-  assetsBundler?: RcFile['assetsBundler']
   typescript?: RcFile['typescript']
   directories?: Partial<DirectoriesNode> & { [key: string]: string }
   preloads?: (PreloadNode | PreloadNode['file'])[]
@@ -293,11 +228,6 @@ export interface RcFileInput {
   }
   providers?: (ProviderNode | ProviderNode['file'])[]
   hooks?: RcFile['hooks']
-
-  /**
-   * @deprecated Use `hooks` instead
-   */
-  unstable_assembler?: RcFile['hooks']
 
   /**
    * Specify flags to enable experimental features

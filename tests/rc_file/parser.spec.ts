@@ -31,6 +31,7 @@ test.group('Rc Parser', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -60,6 +61,7 @@ test.group('Rc Parser', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 })
@@ -96,6 +98,7 @@ test.group('Rc Parser | preloads', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -140,6 +143,7 @@ test.group('Rc Parser | preloads', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -179,6 +183,7 @@ test.group('Rc Parser | preloads', () => {
       commands: [],
       commandsAliases: {},
       providers: [],
+      hooks: {},
       tests: {
         suites: [],
         timeout: 2000,
@@ -247,6 +252,7 @@ test.group('Rc Parser | metaFiles', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -289,6 +295,7 @@ test.group('Rc Parser | metaFiles', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -331,6 +338,7 @@ test.group('Rc Parser | metaFiles', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -418,6 +426,7 @@ test.group('Rc Parser | tests', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -443,6 +452,7 @@ test.group('Rc Parser | tests', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -489,6 +499,7 @@ test.group('Rc Parser | tests', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 })
@@ -523,6 +534,7 @@ test.group('Rc Parser | providers', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 
@@ -574,122 +586,7 @@ test.group('Rc Parser | providers', () => {
         timeout: 2000,
         forceExit: true,
       },
-    })
-  })
-})
-
-test.group('Rc Parser | assetsBundler', () => {
-  test('parse assetsBundler property', ({ assert }) => {
-    const parser = new RcFileParser({
-      assetsBundler: {
-        name: 'vite',
-        devServer: {
-          command: 'vite',
-          args: [],
-        },
-        build: {
-          command: 'vite',
-          args: ['build'],
-        },
-      },
-    })
-
-    assert.deepEqual(parser.parse(), {
-      raw: {
-        assetsBundler: {
-          name: 'vite',
-          devServer: {
-            command: 'vite',
-            args: [],
-          },
-          build: {
-            command: 'vite',
-            args: ['build'],
-          },
-        },
-      },
-      typescript: true,
-      assetsBundler: {
-        name: 'vite',
-        devServer: {
-          command: 'vite',
-          args: [],
-        },
-        build: {
-          command: 'vite',
-          args: ['build'],
-        },
-      },
-      preloads: [],
-      directories,
-      experimental: {},
-      metaFiles: [],
-      commands: [],
-      commandsAliases: {},
-      providers: [],
-      tests: {
-        suites: [],
-        timeout: 2000,
-        forceExit: true,
-      },
-    })
-  })
-
-  test('raise error when assetsBundler properties are missing', ({ assert }) => {
-    assert.throws(
-      () =>
-        new RcFileParser({
-          assetsBundler: {
-            name: 'vite',
-          },
-        }).parse(),
-      'Invalid assetsBundler entry. Missing devServer property'
-    )
-
-    assert.throws(
-      () =>
-        new RcFileParser({
-          assetsBundler: {
-            name: 'vite',
-            devServer: {
-              command: 'vite',
-            },
-          },
-        }).parse(),
-      'Invalid assetsBundler entry. Missing build property'
-    )
-
-    assert.throws(
-      () =>
-        new RcFileParser({
-          assetsBundler: {
-            devServerCommand: 'vite',
-            buildCommand: 'vite build',
-          },
-        }).parse(),
-      'Invalid assetsBundler entry. Missing name property'
-    )
-  })
-
-  test('parse assetsBundler with false value', ({ assert }) => {
-    const parser = new RcFileParser({ assetsBundler: false })
-
-    assert.deepEqual(parser.parse(), {
-      raw: { assetsBundler: false },
-      typescript: true,
-      assetsBundler: false,
-      preloads: [],
-      directories,
-      experimental: {},
-      metaFiles: [],
-      commands: [],
-      commandsAliases: {},
-      providers: [],
-      tests: {
-        suites: [],
-        timeout: 2000,
-        forceExit: true,
-      },
+      hooks: {},
     })
   })
 })
@@ -724,33 +621,65 @@ test.group('Rc Parser | directories', () => {
         timeout: 2000,
         forceExit: true,
       },
+      hooks: {},
     })
   })
 })
 
 test.group('Rc Parser | hooks', () => {
-  test('parse assembler hooks properly', ({ assert }) => {
+  test('throw error when unknown hooks are specified', () => {
     const onBuildStarting = () => {}
-    const onBuildCompleted = () => {}
-    const onDevServerStarted = () => {}
-    const onSourceFileChanged = () => {}
 
     const parser = new RcFileParser({
       hooks: {
         onBuildStarting,
-        onBuildCompleted,
-        onDevServerStarted,
-        onSourceFileChanged,
+      },
+    })
+    parser.parse()
+  }).throws('Assembler hook defined for unknown event "onBuildStarting"')
+
+  test('throw error when hooks value is not an array of imports', () => {
+    const buildStarting = () => {}
+    const buildFinished = () => {}
+    const devServerStarted = () => {}
+    const fileChanged = () => {}
+
+    const parser = new RcFileParser({
+      hooks: {
+        buildStarting,
+        buildFinished,
+        devServerStarted,
+        fileChanged,
+      },
+    })
+
+    parser.parse()
+  }).throws(
+    'Expected hooks for event "buildStarting" to be an array of dynamic imports. Instead received "[Function: buildStarting]"'
+  )
+
+  test('parse assembler hooks properly', ({ assert }) => {
+    const buildStarting = () => {}
+    const buildFinished = () => {}
+    const devServerStarted = () => {}
+    const fileChanged = () => {}
+
+    const parser = new RcFileParser({
+      hooks: {
+        buildStarting: [buildStarting],
+        buildFinished: [buildFinished],
+        devServerStarted: [devServerStarted],
+        fileChanged: [fileChanged],
       },
     })
 
     assert.deepEqual(parser.parse(), {
       raw: {
         hooks: {
-          onBuildStarting,
-          onBuildCompleted,
-          onDevServerStarted,
-          onSourceFileChanged,
+          buildStarting: [buildStarting],
+          buildFinished: [buildFinished],
+          devServerStarted: [devServerStarted],
+          fileChanged: [fileChanged],
         },
       },
       typescript: true,
@@ -767,56 +696,10 @@ test.group('Rc Parser | hooks', () => {
         forceExit: true,
       },
       hooks: {
-        onBuildStarting,
-        onBuildCompleted,
-        onDevServerStarted,
-        onSourceFileChanged,
-      },
-    })
-  })
-
-  test('still works with unstable_assembler', ({ assert }) => {
-    const onBuildStarting = () => {}
-    const onBuildCompleted = () => {}
-    const onDevServerStarted = () => {}
-    const onSourceFileChanged = () => {}
-
-    const parser = new RcFileParser({
-      unstable_assembler: {
-        onBuildStarting,
-        onBuildCompleted,
-        onDevServerStarted,
-        onSourceFileChanged,
-      },
-    })
-
-    assert.deepEqual(parser.parse(), {
-      raw: {
-        unstable_assembler: {
-          onBuildStarting,
-          onBuildCompleted,
-          onDevServerStarted,
-          onSourceFileChanged,
-        },
-      },
-      typescript: true,
-      preloads: [],
-      directories,
-      experimental: {},
-      metaFiles: [],
-      commands: [],
-      commandsAliases: {},
-      providers: [],
-      tests: {
-        suites: [],
-        timeout: 2000,
-        forceExit: true,
-      },
-      hooks: {
-        onBuildStarting,
-        onBuildCompleted,
-        onDevServerStarted,
-        onSourceFileChanged,
+        buildStarting: [buildStarting],
+        buildFinished: [buildFinished],
+        devServerStarted: [devServerStarted],
+        fileChanged: [fileChanged],
       },
     })
   })

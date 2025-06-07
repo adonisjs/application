@@ -9,11 +9,22 @@
 
 import { inspect } from 'node:util'
 import globParent from 'glob-parent'
-import { ObjectBuilder } from '@poppinss/utils'
 
 import * as errors from '../errors.js'
 import { directories } from '../directories.js'
 import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from '../types.js'
+
+const KNOWN_ASSEMBLER_HOOKS = [
+  'buildStarting',
+  'buildFinished',
+  'devServerStarting',
+  'devServerStarted',
+  'testsStarting',
+  'testsFinished',
+  'fileAdded',
+  'fileChanged',
+  'fileRemoved',
+] satisfies (keyof NonNullable<RcFile['hooks']>)[]
 
 /**
  * Rc file parser is used to parse and validate the `adonisrc.js` file contents.
@@ -37,6 +48,7 @@ export class RcFileParser {
       forceExit: true,
     },
     raw: {},
+    hooks: {},
     experimental: {},
   }
 
@@ -58,52 +70,27 @@ export class RcFileParser {
   }
 
   /**
-   * Returns the assets bundler object
-   */
-  #getAssetsBundler(): RcFile['assetsBundler'] {
-    if (this.#rcFile.assetsBundler === false) {
-      return false
-    }
-
-    if (!this.#rcFile.assetsBundler) {
-      return
-    }
-
-    if (!this.#rcFile.assetsBundler.name) {
-      throw new errors.E_MISSING_BUNDLER_NAME()
-    }
-
-    if (!this.#rcFile.assetsBundler.devServer) {
-      throw new errors.E_MISSING_BUNDLER_DEV_COMMAND()
-    }
-
-    if (!this.#rcFile.assetsBundler.build) {
-      throw new errors.E_MISSING_BUNDLER_BUILD_COMMAND()
-    }
-
-    return {
-      name: this.#rcFile.assetsBundler.name,
-      devServer: this.#rcFile.assetsBundler.devServer,
-      build: this.#rcFile.assetsBundler.build,
-    }
-  }
-
-  /**
-   * Returns the assembler object
+   * Cherry picks the known hooks from the RCFile.
    */
   #getHooks(): RcFile['hooks'] {
-    // @ts-expect-error - Keep supporting the old `unstable_assembler` property for now
-    const hooksProperty = this.#rcFile.hooks || this.#rcFile.unstable_assembler
-    if (!hooksProperty) {
+    const hooks = this.#rcFile.hooks
+    if (!hooks) {
       return
     }
 
-    return new ObjectBuilder({})
-      .add('onBuildStarting', hooksProperty.onBuildStarting)
-      .add('onBuildCompleted', hooksProperty.onBuildCompleted)
-      .add('onDevServerStarted', hooksProperty.onDevServerStarted)
-      .add('onSourceFileChanged', hooksProperty.onSourceFileChanged)
-      .toObject()
+    return Object.keys(hooks).reduce<NonNullable<RcFile['hooks']>>((result, eventName) => {
+      if (!KNOWN_ASSEMBLER_HOOKS.includes(eventName as keyof NonNullable<RcFile['hooks']>)) {
+        throw new errors.E_UNKNOWN_ASSEMBLER_HOOK([eventName])
+      }
+
+      const eventHooks = hooks[eventName as keyof NonNullable<RcFile['hooks']>]
+      if (!Array.isArray(eventHooks)) {
+        throw new errors.E_INVALID_HOOKS_VALUE([eventName, inspect(eventHooks)])
+      }
+
+      ;(result as any)[eventName] = eventHooks
+      return result
+    }, {})
   }
 
   /**
@@ -215,13 +202,8 @@ export class RcFileParser {
    * Parse and validate file contents and merge them with defaults
    */
   parse(): RcFile {
-    const assembler = this.#getHooks()
-    const assetsBundler = this.#getAssetsBundler()
-
     return {
       typescript: this.#rcFile.typescript,
-      ...(assembler ? { hooks: assembler } : {}),
-      ...(assetsBundler !== undefined ? { assetsBundler } : {}),
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
       commands: [...this.#rcFile.commands],
@@ -233,6 +215,7 @@ export class RcFileParser {
         timeout: this.#rcFile.tests.timeout ?? 2000,
         forceExit: this.#rcFile.tests.forceExit ?? true,
       },
+      hooks: this.#getHooks(),
       experimental: this.#rcFile.experimental,
       raw: this.#rcFile.raw,
     }

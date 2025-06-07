@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { createError } from '@poppinss/utils'
+import { createError } from '@poppinss/utils/exception'
 
 /**
  * The exception is raised when the "pattern" property is missing
@@ -114,4 +114,22 @@ export const E_MISSING_ASSEMBLER_RUNNER_NAME = createError(
 export const E_MISSING_ASSEMBLER_RUNNER_COMMAND = createError(
   'Invalid assembler.runner entry. Missing command property',
   'E_MISSING_ASSEMBLER_RUNNER_COMMAND'
+)
+
+/**
+ * The exception is raised when a hook is specified for an unknown
+ * assembler event
+ */
+export const E_UNKNOWN_ASSEMBLER_HOOK = createError<[eventName: string]>(
+  'Assembler hook defined for unknown event "%s"',
+  'E_UNKNOWN_ASSEMBLER_HOOK'
+)
+
+/**
+ * The exception is raised when hooks for an event are not specified as an
+ * array of values
+ */
+export const E_INVALID_HOOKS_VALUE = createError<[eventName: string, value: string]>(
+  'Expected hooks for event "%s" to be an array of dynamic imports. Instead received "%s"',
+  'E_INVALID_HOOKS_VALUE'
 )

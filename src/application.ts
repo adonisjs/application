@@ -12,8 +12,8 @@ import { fileURLToPath } from 'node:url'
 import { join, relative } from 'node:path'
 import { Container } from '@adonisjs/fold'
 import Macroable from '@poppinss/macroable'
+import { importDefault } from '@poppinss/utils'
 import type { HookHandler } from '@poppinss/hooks/types'
-import { importDefault, RuntimeException } from '@poppinss/utils'
 
 import debug from './debug.js'
 import generators from './generators.js'
@@ -31,6 +31,7 @@ import type {
   ExperimentalFlagsList,
 } from './types.js'
 import { FeatureFlags } from './feature_flags.js'
+import { RuntimeException } from '@poppinss/utils/exception'
 
 /**
  * Application class manages the state of an AdonisJS application. It includes

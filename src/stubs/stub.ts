@@ -10,10 +10,10 @@
 import * as tempura from 'tempura'
 import string from '@poppinss/utils/string'
 import { dirname, isAbsolute } from 'node:path'
-import { RuntimeException } from '@poppinss/utils'
 import { mkdir, writeFile } from 'node:fs/promises'
 import stringHelpers from '@poppinss/utils/string'
 import StringBuilder from '@poppinss/utils/string_builder'
+import { RuntimeException } from '@poppinss/utils/exception'
 
 import debug from '../debug.js'
 import type { Application } from '../application.js'
