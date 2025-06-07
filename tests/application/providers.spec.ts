@@ -615,8 +615,8 @@ test.group('Application | providers', (group) => {
         'starting',
         'router ready',
         'app ready',
-        'router shutdown',
         'app shutdown',
+        'router shutdown',
       ],
     })
   })

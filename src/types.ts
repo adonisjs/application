@@ -83,16 +83,7 @@ export interface DirectoriesNode {
 /**
  * To be extended by the packages that wants to introduce flags
  */
-export interface ExperimentalFlagsList {
-  /**
-   * In the upcoming major version of AdonisJS, the shutdown hooks will be
-   * executed in the reverse order in which the providers will registered.
-   *
-   * You can enable the same behavior today by enabling the "shutdownInReverseOrder"
-   * flag
-   */
-  shutdownInReverseOrder?: boolean
-}
+export interface ExperimentalFlagsList {}
 
 /**
  * Shape of preload files

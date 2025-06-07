@@ -26,9 +26,7 @@ test.group('Application | experimentalFlags', () => {
     })
 
     await app.init()
-    expectTypeOf(app.experimentalFlags.enabled).parameters.toEqualTypeOf<
-      ['shutdownInReverseOrder' | (string & {})]
-    >()
+    expectTypeOf(app.experimentalFlags.enabled).parameters.toEqualTypeOf<[string & {}]>()
 
     assert.isTrue(app.experimentalFlags.enabled('shutdownInReverseOrder'))
     assert.isTrue(app.experimentalFlags.has('shutdownInReverseOrder'))
