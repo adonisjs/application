@@ -133,3 +133,27 @@ export const E_INVALID_HOOKS_VALUE = createError<[eventName: string, value: stri
   'Expected hooks for event "%s" to be an array of dynamic imports. Instead received "%s"',
   'E_INVALID_HOOKS_VALUE'
 )
+
+/**
+ * The exception is raised when the presets property is not an array
+ */
+export const E_INVALID_PRESETS_VALUE = createError<[value: string]>(
+  'Expected presets to be an array of functions. Instead received "%s"',
+  'E_INVALID_PRESETS_VALUE'
+)
+
+/**
+ * The exception is raised when a preset is not a function
+ */
+export const E_INVALID_PRESET_FUNCTION = createError<[index: number, value: string]>(
+  'Expected preset at index %s to be a function. Instead received "%s"',
+  'E_INVALID_PRESET_FUNCTION'
+)
+
+/**
+ * The exception is raised when a preset throws an error during execution
+ */
+export const E_PRESET_EXECUTION_ERROR = createError<[index: number, message: string]>(
+  'Preset at index %s failed to execute: %s',
+  'E_PRESET_EXECUTION_ERROR'
+)

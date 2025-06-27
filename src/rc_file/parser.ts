@@ -12,7 +12,14 @@ import globParent from 'glob-parent'
 
 import * as errors from '../errors.js'
 import { directories } from '../directories.js'
-import type { AppEnvironments, MetaFileNode, PreloadNode, ProviderNode, RcFile } from '../types.js'
+import type {
+  AppEnvironments,
+  MetaFileNode,
+  PreloadNode,
+  PresetFn,
+  ProviderNode,
+  RcFile,
+} from '../types.js'
 
 const KNOWN_ASSEMBLER_HOOKS = [
   'buildStarting',
@@ -199,10 +206,36 @@ export class RcFileParser {
   }
 
   /**
+   * Apply presets functions to the raw rcFile before parsing
+   */
+  #applyPresets(): void {
+    const presets: PresetFn[] = this.#rcFile.raw?.presets || []
+    if (presets.length === 0) return
+
+    if (!Array.isArray(presets)) {
+      throw new errors.E_INVALID_PRESETS_VALUE([inspect(presets)])
+    }
+
+    presets.forEach((preset, index) => {
+      if (typeof preset !== 'function') {
+        throw new errors.E_INVALID_PRESET_FUNCTION([index, inspect(preset)])
+      }
+
+      try {
+        preset({ rcFile: this.#rcFile })
+      } catch (error) {
+        throw new errors.E_PRESET_EXECUTION_ERROR([index, error.message])
+      }
+    })
+  }
+
+  /**
    * Parse and validate file contents and merge them with defaults
    */
   parse(): RcFile {
-    return {
+    this.#applyPresets()
+
+    const rcFile = {
       typescript: this.#rcFile.typescript,
       preloads: this.#getPreloads(),
       metaFiles: this.#getMetaFiles(),
@@ -219,5 +252,7 @@ export class RcFileParser {
       experimental: this.#rcFile.experimental,
       raw: this.#rcFile.raw,
     }
+
+    return rcFile
   }
 }

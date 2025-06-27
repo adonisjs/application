@@ -202,6 +202,11 @@ export type RcFile = {
  * RcFile input is the partial copy of the RcFile
  */
 export interface RcFileInput {
+  /**
+   * List of presets to apply to the configuration
+   */
+  presets?: PresetFn[]
+
   typescript?: RcFile['typescript']
   directories?: Partial<DirectoriesNode> & { [key: string]: string }
   preloads?: (PreloadNode | PreloadNode['file'])[]
@@ -283,3 +288,8 @@ export interface ContainerProviderContract {
  * will call this function
  */
 export type Importer = (moduleIdentifier: string, options?: ImportCallOptions) => any
+
+/**
+ * AdonisRC Preset function type
+ */
+export type PresetFn = (options: { rcFile: RcFile }) => void
