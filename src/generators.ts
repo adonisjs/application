@@ -34,8 +34,17 @@ const generators = {
     'dashboard',
     'api',
     'about',
-    'conatact',
+    'contact',
     'blog',
+    'library',
+    'password',
+    'password_link',
+    'new_password',
+    'profile',
+    'account',
+    'new_account',
+    'avatar',
+    'forum',
   ],
 
   /**
