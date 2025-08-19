@@ -625,6 +625,11 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
       return
     }
 
+    if (this.#terminating) {
+      debug('app is already being terminated')
+      return
+    }
+
     debug('terminating app')
 
     this.#terminating = true
