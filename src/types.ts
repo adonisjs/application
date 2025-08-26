@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { type AsyncOrSync } from '@poppinss/utils/types'
 import { type AssemblerRcFile } from '@adonisjs/assembler/types'
 import type { Application } from './application.js'
 
@@ -248,7 +249,7 @@ export interface ContainerProviderContract {
    * For example: Registering macros/getters, defining middleware,
    * or repl bindings.
    */
-  boot?(): void | Promise<void>
+  boot?(): AsyncOrSync<void>
 
   /**
    * The start method on the provider class is called right the
@@ -258,7 +259,7 @@ export interface ContainerProviderContract {
    * the application gets started. Also, at this stage you can be sure
    * that all providers have been booted.
    */
-  start?(): void | Promise<void>
+  start?(): AsyncOrSync<void>
 
   /**
    * The ready method is called after the preloaded files have been
@@ -266,7 +267,7 @@ export interface ContainerProviderContract {
    * server, the server will be ready to receive incoming HTTP requests
    * before this hook gets called.
    */
-  ready?(): void | Promise<void>
+  ready?(): AsyncOrSync<void>
 
   /**
    * The shutdown method on the provider class is meant to perform
@@ -277,7 +278,7 @@ export interface ContainerProviderContract {
    * forcefully killed based upon the event that occurred shutdown
    * in first place.
    */
-  shutdown?(): void | Promise<void>
+  shutdown?(): AsyncOrSync<void>
 }
 
 /**

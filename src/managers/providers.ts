@@ -11,6 +11,13 @@ import { RuntimeException } from '@poppinss/utils/exception'
 
 import debug from '../debug.js'
 import type { ProviderNode, AppEnvironments, ContainerProviderContract } from '../types.js'
+import {
+  providerBoot,
+  providerStart,
+  providerReady,
+  providerShutdown,
+  providerRegister,
+} from '../tracing_channels.ts'
 
 /**
  * The ProvidersManager class is used to resolve, import and execute lifecycle
@@ -159,7 +166,7 @@ export class ProvidersManager {
         }
 
         if (providerInstance.register) {
-          providerInstance.register()
+          providerRegister.traceSync(providerInstance.register, providerInstance, providerInstance)
         }
       }
     })
@@ -172,7 +179,7 @@ export class ProvidersManager {
   async boot() {
     for (let provider of this.#providers) {
       if (provider.boot) {
-        await provider.boot()
+        await providerBoot.tracePromise(provider.boot as () => Promise<void>, provider, provider)
       }
     }
   }
@@ -183,7 +190,7 @@ export class ProvidersManager {
   async start() {
     for (let provider of this.#providers) {
       if (provider.start) {
-        await provider.start()
+        await providerStart.tracePromise(provider.start as () => Promise<void>, provider, provider)
       }
     }
   }
@@ -194,7 +201,7 @@ export class ProvidersManager {
   async ready() {
     for (let provider of this.#providers) {
       if (provider.ready) {
-        await provider.ready()
+        await providerReady.tracePromise(provider.ready as () => Promise<void>, provider, provider)
       }
     }
 
@@ -213,7 +220,11 @@ export class ProvidersManager {
 
     for (let provider of providersWithShutdownListeners) {
       if (provider.shutdown) {
-        await provider.shutdown()
+        await providerShutdown.tracePromise(
+          provider.shutdown as () => Promise<void>,
+          provider,
+          provider
+        )
       }
     }
   }
