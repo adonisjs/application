@@ -38,4 +38,6 @@ export const directories: DirectoriesNode = {
   events: 'app/events',
   listeners: 'app/listeners',
   stubs: 'stubs',
+  generatedClient: '.adonisjs/client',
+  generatedServer: '.adonisjs/server',
 }

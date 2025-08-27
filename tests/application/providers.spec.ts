@@ -13,7 +13,6 @@ import { fileURLToPath } from 'node:url'
 import { outputFile, remove } from 'fs-extra'
 import { Application } from '../../src/application.ts'
 import { providerBoot } from '../../src/tracing_channels.ts'
-import { AsyncLocalStorage } from 'node:async_hooks'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)

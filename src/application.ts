@@ -1204,6 +1204,30 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
   }
 
   /**
+   * Makes path to the client directory for writing generated
+   * output
+   *
+   * @param {...string} paths - Path segments to append to events directory
+   * @returns {string} The constructed directory path
+   * @memberof Application
+   */
+  generatedClientPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.generatedClient, ...paths)
+  }
+
+  /**
+   * Makes path to the server directory for writing generated
+   * output
+   *
+   * @param {...string} paths - Path segments to append to events directory
+   * @returns {string} The constructed directory path
+   * @memberof Application
+   */
+  generatedServerPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.generatedServer, ...paths)
+  }
+
+  /**
    * Import a module by identifier. This method uses the importer function
    * defined at the time of creating the application instance and throws
    * an error if no importer was defined.

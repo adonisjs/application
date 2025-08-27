@@ -108,6 +108,8 @@ export interface DirectoriesNode {
   events: string
   listeners: string
   stubs: string
+  generatedClient: string
+  generatedServer: string
 }
 
 /**
