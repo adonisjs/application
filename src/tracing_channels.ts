@@ -28,7 +28,7 @@ import { type ContainerProviderContract } from './types.ts'
  */
 export const providerRegister = diagnostics_channel.tracingChannel<
   'adonisjs.provider.register',
-  ContainerProviderContract
+  { provider: ContainerProviderContract }
 >('adonisjs.provider.register')
 
 /**
@@ -49,7 +49,7 @@ export const providerRegister = diagnostics_channel.tracingChannel<
  */
 export const providerBoot = diagnostics_channel.tracingChannel<
   'adonisjs.provider.boot',
-  ContainerProviderContract
+  { provider: ContainerProviderContract }
 >('adonisjs.provider.boot')
 
 /**
@@ -68,7 +68,7 @@ export const providerBoot = diagnostics_channel.tracingChannel<
  */
 export const providerStart = diagnostics_channel.tracingChannel<
   'adonisjs.provider.start',
-  ContainerProviderContract
+  { provider: ContainerProviderContract }
 >('adonisjs.provider.start')
 
 /**
@@ -89,7 +89,7 @@ export const providerStart = diagnostics_channel.tracingChannel<
  */
 export const providerReady = diagnostics_channel.tracingChannel<
   'adonisjs.provider.ready',
-  ContainerProviderContract
+  { provider: ContainerProviderContract }
 >('adonisjs.provider.ready')
 
 /**
@@ -113,5 +113,5 @@ export const providerReady = diagnostics_channel.tracingChannel<
  */
 export const providerShutdown = diagnostics_channel.tracingChannel<
   'adonisjs.provider.shutdown',
-  ContainerProviderContract
+  { provider: ContainerProviderContract }
 >('adonisjs.provider.shutdown')

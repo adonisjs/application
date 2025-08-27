@@ -12,6 +12,8 @@ import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
 import { outputFile, remove } from 'fs-extra'
 import { Application } from '../../src/application.ts'
+import { providerBoot } from '../../src/tracing_channels.ts'
+import { AsyncLocalStorage } from 'node:async_hooks'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
@@ -1108,5 +1110,47 @@ test.group('Application | providers', (group) => {
     await app.boot()
 
     assert.isTrue('ROUTE_PROVIDER' in global)
+  })
+
+  test('trace booting of async providers', async ({ assert }) => {
+    await outputFile(
+      join(BASE_PATH, './route_provider.ts'),
+      `
+      export default class RouteProvider {
+        constructor(private app) {}
+        async boot() {
+        }
+      }
+    `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: () => import(new URL('./route_provider.js?v=19', BASE_URL).href),
+          environment: ['web'],
+        },
+      ],
+    })
+
+    const spans = new Map()
+    providerBoot.subscribe({
+      asyncStart(message: any) {
+        spans.set(message.provider, { provider: message.provider, startTime: process.hrtime() })
+      },
+      asyncEnd(message: any) {
+        const span = spans.get(message.provider)
+        span.duration = process.hrtime(span.startTime)
+      },
+    } as any)
+
+    await app.init()
+    await app.boot()
+    assert.properties(spans.values().next().value, ['startTime', 'duration'])
+    assert.equal(spans.values().next().value.provider.constructor.name, 'RouteProvider')
   })
 })
