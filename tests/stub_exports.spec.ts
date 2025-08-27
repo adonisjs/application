@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { parseStubExports } from '../src/helpers.js'
+import { parseStubExports } from '../src/utils.ts'
 
 test.group('Stub exports', () => {
   test('get contents when there are no exports', ({ assert }) => {

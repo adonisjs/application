@@ -8,13 +8,17 @@
  */
 
 import { Config, ConfigLoader } from '@adonisjs/config'
-import debug from '../debug.js'
+import debug from '../debug.ts'
 
 /**
- * Env manager is used to load, parse, validate and set environment
- * variables.
+ * ConfigManager is used to load, parse, validate and set configuration
+ * values. Can load config from directories or use explicitly provided
+ * config values.
  */
 export class ConfigManager {
+  /**
+   * The application root directory URL
+   */
   #appRoot: URL
 
   /**
@@ -28,6 +32,11 @@ export class ConfigManager {
    */
   config!: Config
 
+  /**
+   * Creates a new ConfigManager instance
+   *
+   * @param appRoot - The application root directory URL
+   */
   constructor(appRoot: URL) {
     this.#appRoot = appRoot
   }
@@ -36,6 +45,9 @@ export class ConfigManager {
    * Define the config values to use when booting the
    * config provider. Calling this method disables
    * reading files from the config directory.
+   *
+   * @param values - The configuration values to use
+   * @returns this - Returns the ConfigManager instance for method chaining
    */
   useConfig(values: Record<any, any>): this {
     this.#configValues = values
@@ -44,6 +56,9 @@ export class ConfigManager {
 
   /**
    * Process config values.
+   *
+   * @param configDirectory - The directory path containing config files
+   * @returns Promise that resolves when config processing is complete
    */
   async process(configDirectory: string) {
     if (this.#configValues) {

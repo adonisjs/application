@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import debug from '../debug.js'
-import type { AppEnvironments, PreloadNode } from '../types.js'
+import debug from '../debug.ts'
+import type { AppEnvironments, PreloadNode } from '../types.ts'
 
 /**
  * The PreloadsManager class is used to resolve and import preload modules.
@@ -29,12 +29,20 @@ export class PreloadsManager {
     environment: AppEnvironments
   }
 
+  /**
+   * Creates a new PreloadsManager instance
+   *
+   * @param options - Configuration options including environment
+   */
   constructor(options: { environment: AppEnvironments }) {
     this.#options = options
   }
 
   /**
    * Filters the preload modules by the current environment.
+   *
+   * @param provider - The preload node to filter
+   * @returns Whether the preload should be included in the current environment
    */
   #filterByEnvironment(provider: PreloadNode) {
     if (this.#options.environment === 'unknown') {
@@ -46,6 +54,9 @@ export class PreloadsManager {
 
   /**
    * Pass an array of preload modules to import
+   *
+   * @param list - Array of preload modules to register
+   * @returns this - Returns the PreloadsManager instance for method chaining
    */
   use(list: PreloadNode[]): this {
     this.#list = list
@@ -54,6 +65,9 @@ export class PreloadsManager {
 
   /**
    * Switch the environment in which the app is running.
+   *
+   * @param environment - The new environment to set
+   * @returns this - Returns the PreloadsManager instance for method chaining
    */
   setEnvironment(environment: AppEnvironments): this {
     debug(
@@ -67,6 +81,8 @@ export class PreloadsManager {
 
   /**
    * Import preload files
+   *
+   * @returns Promise that resolves when all preload modules have been imported
    */
   async import() {
     const preloads = this.#list.filter((preload) => this.#filterByEnvironment(preload))

@@ -10,8 +10,8 @@
 import { inspect } from 'node:util'
 import globParent from 'glob-parent'
 
-import * as errors from '../errors.js'
-import { directories } from '../directories.js'
+import * as errors from '../errors.ts'
+import { directories } from '../directories.ts'
 import type {
   AppEnvironments,
   MetaFileNode,
@@ -19,7 +19,7 @@ import type {
   PresetFn,
   ProviderNode,
   RcFile,
-} from '../types.js'
+} from '../types.ts'
 
 const KNOWN_ASSEMBLER_HOOKS = [
   'buildStarting',
@@ -34,12 +34,16 @@ const KNOWN_ASSEMBLER_HOOKS = [
 ] satisfies (keyof NonNullable<RcFile['hooks']>)[]
 
 /**
- * Rc file parser is used to parse and validate the `adonisrc.js` file contents.
+ * RcFileParser is responsible for parsing and validating the contents of `adonisrc.js` file.
+ * It normalizes configuration values, applies presets, validates structure, and merges
+ * user configuration with sensible defaults.
  */
 export class RcFileParser {
   /**
-   * Defaults for the RcFile. This object initiates all
-   * the known properties
+   * Default configuration values for an RcFile. This object initializes all known
+   * properties with sensible defaults that will be merged with user configuration.
+   *
+   * @private
    */
   #defaults: RcFile = {
     typescript: true,
@@ -60,24 +64,41 @@ export class RcFileParser {
   }
 
   /**
-   * RcFile merged with defaults
+   * The parsed RcFile configuration merged with default values.
+   * This represents the final configuration after applying user overrides.
+   *
+   * @private
    */
   #rcFile: RcFile
 
+  /**
+   * Creates a new RcFileParser instance.
+   *
+   * @param rcFile - The raw RC file configuration object to parse and validate
+   */
   constructor(rcFile: Record<string, any>) {
     this.#rcFile = Object.assign(this.#defaults, rcFile)
     this.#rcFile.raw = rcFile
   }
 
   /**
-   * An array of known environments
+   * Returns an array of all known application environments.
+   * These are the valid environments that can be used for conditional loading
+   * of providers and preload files.
+   *
+   * @private
    */
   #knownEnvironments(): Exclude<AppEnvironments, 'unknown'>[] {
     return ['web', 'console', 'test', 'repl']
   }
 
   /**
-   * Cherry picks the known hooks from the RCFile.
+   * Extracts and validates assembler hooks from the RC file configuration.
+   * Only known hook events are allowed, and each hook must be an array of functions.
+   *
+   * @throws {E_UNKNOWN_ASSEMBLER_HOOK} When an unknown hook event is encountered
+   * @throws {E_INVALID_HOOKS_VALUE} When a hook value is not an array
+   * @private
    */
   #getHooks(): RcFile['hooks'] {
     const hooks = this.#rcFile.hooks
@@ -101,7 +122,12 @@ export class RcFileParser {
   }
 
   /**
-   * Returns a normalized array of preload files
+   * Normalizes and validates the preload files configuration.
+   * Converts simple function references to full PreloadNode objects with environment targeting.
+   *
+   * @throws {E_MISSING_PRELOAD_FILE} When a preload entry is missing the file property
+   * @throws {E_INVALID_PRELOAD_FILE} When a preload file is not a function
+   * @private
    */
   #getPreloads(): PreloadNode[] {
     return this.#rcFile.preloads.map((preload: PreloadNode | PreloadNode['file']) => {
@@ -129,7 +155,12 @@ export class RcFileParser {
   }
 
   /**
-   * Returns a normalized array of providers
+   * Normalizes and validates the service providers configuration.
+   * Converts simple function references to full ProviderNode objects with environment targeting.
+   *
+   * @throws {E_MISSING_PROVIDER_FILE} When a provider entry is missing the file property
+   * @throws {E_INVALID_PROVIDER} When a provider file is not a function
+   * @private
    */
   #getProviders(): ProviderNode[] {
     return this.#rcFile.providers.map((provider: ProviderNode | ProviderNode['file']) => {
@@ -157,7 +188,11 @@ export class RcFileParser {
   }
 
   /**
-   * Returns a nornalized array of meta files
+   * Normalizes and validates the meta files configuration.
+   * Meta files are patterns that define files to watch for changes during development.
+   *
+   * @throws {E_MISSING_METAFILE_PATTERN} When a meta file entry is missing the pattern property
+   * @private
    */
   #getMetaFiles(): MetaFileNode[] {
     return this.#rcFile.metaFiles.map((pattern: MetaFileNode | string) => {
@@ -181,7 +216,13 @@ export class RcFileParser {
   }
 
   /**
-   * Returns a normalized array of test suites
+   * Normalizes and validates the test suites configuration.
+   * Each suite must have a name and file patterns, and automatically determines
+   * the base directories for file watching.
+   *
+   * @throws {E_MISSING_SUITE_NAME} When a test suite is missing the name property
+   * @throws {E_MISSING_SUITE_FILES} When a test suite is missing the files property
+   * @private
    */
   #getSuites() {
     const suites = this.#rcFile.tests.suites || []
@@ -206,7 +247,14 @@ export class RcFileParser {
   }
 
   /**
-   * Apply presets functions to the raw rcFile before parsing
+   * Applies preset functions to modify the RC file configuration before parsing.
+   * Presets are functions that can programmatically modify the configuration,
+   * allowing for dynamic setup and shared configurations.
+   *
+   * @throws {E_INVALID_PRESETS_VALUE} When presets is not an array
+   * @throws {E_INVALID_PRESET_FUNCTION} When a preset is not a function
+   * @throws {E_PRESET_EXECUTION_ERROR} When a preset function throws an error
+   * @private
    */
   #applyPresets(): void {
     const presets: PresetFn[] = this.#rcFile.raw?.presets || []
@@ -230,7 +278,14 @@ export class RcFileParser {
   }
 
   /**
-   * Parse and validate file contents and merge them with defaults
+   * Parses and validates the RC file configuration, applying all normalization
+   * and validation rules. This is the main entry point for processing RC file data.
+   *
+   * The parsing process:
+   * 1. Applies any preset functions to modify the configuration
+   * 2. Normalizes all configuration sections (preloads, providers, etc.)
+   * 3. Validates the structure and values
+   * 4. Merges with defaults to create the final configuration
    */
   parse(): RcFile {
     this.#applyPresets()

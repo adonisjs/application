@@ -9,8 +9,8 @@
 
 import { test } from '@japa/runner'
 import { Container } from '@adonisjs/fold'
-import { Application } from '../../src/application.js'
-import { StubsManager } from '../../src/stubs/manager.js'
+import { Application } from '../../src/application.ts'
+import { StubsManager } from '../../src/stubs/manager.ts'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 

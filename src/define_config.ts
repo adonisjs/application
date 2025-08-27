@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { RcFileInput } from './types.js'
+import type { RcFileInput } from './types.ts'
 
 /**
  * Define rcFile config

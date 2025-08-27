@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Application } from '../src/application.js'
-import type { AppEnvironments, Importer } from '../src/types.js'
+import { Application } from '../src/application.ts'
+import type { AppEnvironments, Importer } from '../src/types.ts'
 
 /**
  * App factory is used to generate application class instances for

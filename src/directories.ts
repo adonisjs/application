@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { DirectoriesNode } from './types.js'
+import type { DirectoriesNode } from './types.ts'
 
 /**
  * List of default directories

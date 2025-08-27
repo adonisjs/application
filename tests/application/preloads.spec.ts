@@ -11,7 +11,7 @@ import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
 import { outputFile, remove } from 'fs-extra'
-import { Application } from '../../src/application.js'
+import { Application } from '../../src/application.ts'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)

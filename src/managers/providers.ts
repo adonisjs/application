@@ -9,8 +9,8 @@
 
 import { RuntimeException } from '@poppinss/utils/exception'
 
-import debug from '../debug.js'
-import type { ProviderNode, AppEnvironments, ContainerProviderContract } from '../types.js'
+import debug from '../debug.ts'
+import type { ProviderNode, AppEnvironments, ContainerProviderContract } from '../types.ts'
 import {
   providerBoot,
   providerStart,
@@ -55,12 +55,20 @@ export class ProvidersManager {
     providersState: any[]
   }
 
+  /**
+   * Creates a new ProvidersManager instance
+   *
+   * @param options - Configuration options including environment and provider state
+   */
   constructor(options: { environment: AppEnvironments; providersState: any[] }) {
     this.#options = options
   }
 
   /**
    * Filters the providers by the current environment.
+   *
+   * @param provider - The provider node to filter
+   * @returns Whether the provider should be included in the current environment
    */
   #filterByEnvironment(provider: ProviderNode) {
     if (this.#options.environment === 'unknown') {
@@ -72,6 +80,9 @@ export class ProvidersManager {
 
   /**
    * Check if value is a class
+   *
+   * @param providerClass - The value to check
+   * @returns Whether the value is a class constructor
    */
   #isAClass(providerClass: any) {
     return typeof providerClass === 'function' && providerClass.toString().startsWith('class ')
@@ -81,6 +92,9 @@ export class ProvidersManager {
    * Imports all providers from the registered module path. The method relies
    * on --experimental-import-meta-resolve flag to resolve paths from
    * the app root.
+   *
+   * @param provider - The provider node to resolve
+   * @returns The provider class constructor or null
    */
   async #resolveProvider(provider: ProviderNode): Promise<{
     new (...args: any[]): ContainerProviderContract
@@ -120,6 +134,8 @@ export class ProvidersManager {
 
   /**
    * Resolves all providers from the supplied list of module paths.
+   *
+   * @returns Promise that resolves to array of provider classes
    */
   #resolve() {
     const providers = this.#list.filter((provider) => this.#filterByEnvironment(provider))
@@ -130,6 +146,9 @@ export class ProvidersManager {
 
   /**
    * Pass an array of providers to use
+   *
+   * @param list - Array of provider nodes to register
+   * @returns this - Returns the ProvidersManager instance for method chaining
    */
   use(list: ProviderNode[]): this {
     this.#list = list
@@ -138,6 +157,9 @@ export class ProvidersManager {
 
   /**
    * Switch the environment in which the app is running.
+   *
+   * @param environment - The new environment to set
+   * @returns this - Returns the ProvidersManager instance for method chaining
    */
   setEnvironment(environment: AppEnvironments): this {
     debug(
@@ -151,6 +173,8 @@ export class ProvidersManager {
 
   /**
    * Invoke register method on the providers.
+   *
+   * @returns Promise that resolves when all providers are registered
    */
   async register() {
     const providers = await this.#resolve()
@@ -175,6 +199,8 @@ export class ProvidersManager {
   /**
    * Invoke boot method on the providers. The existing providers
    * instances are used.
+   *
+   * @returns Promise that resolves when all providers are booted
    */
   async boot() {
     for (let provider of this.#providers) {
@@ -186,6 +212,8 @@ export class ProvidersManager {
 
   /**
    * Invoke start method on all the providers
+   *
+   * @returns Promise that resolves when all providers are started
    */
   async start() {
     for (let provider of this.#providers) {
@@ -197,6 +225,8 @@ export class ProvidersManager {
 
   /**
    * Invoke ready method on all the providers
+   *
+   * @returns Promise that resolves when all providers are ready
    */
   async ready() {
     for (let provider of this.#providers) {
@@ -210,6 +240,9 @@ export class ProvidersManager {
 
   /**
    * Invoke shutdown method on all the providers
+   *
+   * @param inReverseOrder - Whether to shutdown providers in reverse order
+   * @returns Promise that resolves when all providers are shutdown
    */
   async shutdown(inReverseOrder: boolean) {
     const providersWithShutdownListeners = inReverseOrder

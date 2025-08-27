@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { Application } from '../index.js'
-import { AppFactory } from '../factories/app.js'
+import { Application } from '../index.ts'
+import { AppFactory } from '../factories/app.ts'
 
 test.group('App factory', () => {
   test('create app instance using app factory', ({ assert }) => {

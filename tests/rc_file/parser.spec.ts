@@ -8,9 +8,9 @@
  */
 
 import { test } from '@japa/runner'
-import { directories } from '../../src/directories.js'
-import { defineConfig } from '../../src/define_config.js'
-import { RcFileParser } from '../../src/rc_file/parser.js'
+import { directories } from '../../src/directories.ts'
+import { defineConfig } from '../../src/define_config.ts'
+import { RcFileParser } from '../../src/rc_file/parser.ts'
 
 test.group('Rc Parser', () => {
   test('parse empty object to rcfile node', ({ assert }) => {

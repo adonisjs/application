@@ -23,10 +23,16 @@ const DEV_ENVS = ['dev', 'develop', 'development']
  * - The "dev", "develop", and "development" envs are normalized to "development"
  */
 export class NodeEnvManager {
+  /**
+   * The normalized node environment value
+   */
   nodeEnvironment: 'unknown' | 'development' | 'production' | 'test' | string = 'unknown'
 
   /**
    * Normalizes node env
+   *
+   * @param env - The environment string to normalize
+   * @returns The normalized environment string
    */
   #normalizeNodeEnv(env?: string) {
     if (!env || typeof env !== 'string') {
@@ -51,6 +57,8 @@ export class NodeEnvManager {
 
   /**
    * Capture the current node env
+   *
+   * @returns Captures and normalizes the current NODE_ENV value
    */
   process() {
     this.nodeEnvironment = this.#normalizeNodeEnv(process.env.NODE_ENV)

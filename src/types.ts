@@ -9,12 +9,24 @@
 
 import { type AsyncOrSync } from '@poppinss/utils/types'
 import { type AssemblerRcFile } from '@adonisjs/assembler/types'
-import type { Application } from './application.js'
+import type { Application } from './application.ts'
 
 /**
  * Known application environments. The list is strictly limited to
  * AdonisJS known environments and custom environments are not
- * supported as of now
+ * supported as of now.
+ *
+ * @example
+ * // Environment-specific behavior
+ * if (app.getEnvironment() === 'test') {
+ *   // Test-specific logic
+ * }
+ *
+ * - 'web' - HTTP server environment
+ * - 'console' - Command-line environment (ace commands)
+ * - 'test' - Testing environment
+ * - 'repl' - REPL environment
+ * - 'unknown' - Fallback for unrecognized environments
  */
 export type AppEnvironments = 'web' | 'console' | 'test' | 'repl' | 'unknown'
 
@@ -43,7 +55,15 @@ export type AppEnvironments = 'web' | 'console' | 'test' | 'repl' | 'unknown'
 export type ApplicationStates = 'created' | 'initiated' | 'booted' | 'ready' | 'terminated'
 
 /**
- * State shared with hooks
+ * State shared with hooks during application lifecycle.
+ * Represents the application instance parameters passed to hook functions.
+ *
+ * @template ContainerBindings - Type representing the container bindings
+ * @example
+ * // Hook function receiving application state
+ * function myHook(app: Application<ContainerBindings>) {
+ *   // Access application instance
+ * }
  */
 export type HooksState<ContainerBindings extends Record<any, any>> = [
   [Application<ContainerBindings>],
@@ -51,8 +71,17 @@ export type HooksState<ContainerBindings extends Record<any, any>> = [
 ]
 
 /**
- * Shape of directories object with known and unknown
- * directories
+ * Shape of directories object with known and unknown directories.
+ * Defines the standard directory structure for an AdonisJS application.
+ * Custom directories can be added via the index signature.
+ *
+ * @example
+ * const directories: DirectoriesNode = {
+ *   config: './config',
+ *   public: './public',
+ *   // ... other standard directories
+ *   customDir: './custom' // Custom directory
+ * }
  */
 export interface DirectoriesNode {
   [key: string]: string
@@ -82,12 +111,29 @@ export interface DirectoriesNode {
 }
 
 /**
- * To be extended by the packages that wants to introduce flags
+ * To be extended by packages that want to introduce experimental flags.
+ * This interface can be augmented by packages to add their own experimental features.
+ *
+ * @example
+ * // In a package's types file:
+ * declare module '@adonisjs/application/types' {
+ *   interface ExperimentalFlagsList {
+ *     myExperimentalFeature: boolean
+ *   }
+ * }
  */
 export interface ExperimentalFlagsList {}
 
 /**
- * Shape of preload files
+ * Shape of preload files configuration.
+ * Preload files are automatically imported during application boot
+ * for specific environments.
+ *
+ * @example
+ * const preloadFile: PreloadNode = {
+ *   file: () => import('./start/routes.js'),
+ *   environment: ['web', 'console']
+ * }
  */
 export type PreloadNode = {
   file: () => Promise<any>
@@ -95,7 +141,15 @@ export type PreloadNode = {
 }
 
 /**
- * Shape of provider modules
+ * Shape of provider modules configuration.
+ * Providers are service containers that register bindings and boot
+ * application services for specific environments.
+ *
+ * @example
+ * const provider: ProviderNode = {
+ *   file: () => import('./providers/database_provider.js'),
+ *   environment: ['web', 'console']
+ * }
  */
 export type ProviderNode = {
   file: () => Promise<{ default?: new (app: Application<any>) => ContainerProviderContract }>
@@ -103,7 +157,19 @@ export type ProviderNode = {
 }
 
 /**
- * Shape of semver node
+ * Shape of semantic version node.
+ * Represents a parsed semantic version with its components
+ * and utility methods.
+ *
+ * @example
+ * const version: SemverNode = {
+ *   major: 1,
+ *   minor: 2,
+ *   patch: 3,
+ *   prerelease: ['beta', 1],
+ *   version: '1.2.3-beta.1',
+ *   toString: () => '1.2.3-beta.1'
+ * }
  */
 export type SemverNode = {
   major: number
@@ -115,8 +181,15 @@ export type SemverNode = {
 }
 
 /**
- * Shape of the meta file inside the `metaFiles` array inside
- * `adonisrc.js` file.
+ * Shape of meta file configuration inside the `metaFiles` array
+ * in the `adonisrc.js` file.
+ * Meta files are watched for changes and can trigger server reloads.
+ *
+ * @example
+ * const metaFile: MetaFileNode = {
+ *   pattern: './config/**\/*.ts',
+ *   reloadServer: true // Reload server when files matching pattern change
+ * }
  */
 export type MetaFileNode = {
   pattern: string
@@ -124,58 +197,75 @@ export type MetaFileNode = {
 }
 
 /**
- * Shape of the adonisrc.js file
+ * Shape of the adonisrc.js configuration file.
+ * This is the main configuration file that defines the application structure,
+ * providers, preloads, and other essential settings.
+ *
+ * @example
+ * const rcFile: RcFile = {
+ *   typescript: true,
+ *   directories: { ... },
+ *   providers: [...],
+ *   preloads: [...],
+ *   // ... other configurations
+ * }
  */
 export type RcFile = {
   /**
-   * Is it a TypeScript project
+   * Indicates whether this is a TypeScript project.
    */
   typescript: boolean
 
   /**
-   * List of configured directories
+   * List of configured directories for the application.
+   * Combines standard AdonisJS directories with custom ones.
    */
   directories: DirectoriesNode & { [key: string]: string }
 
   /**
-   * An array of files to load after the application
-   * has been booted
+   * Array of files to preload after the application has been booted.
+   * These files are automatically imported based on environment.
    */
   preloads: PreloadNode[]
 
   /**
-   * An array of files to load after the application
-   * has been booted
+   * Array of meta files to watch for changes.
+   * Used by development tools to trigger server reloads.
    */
   metaFiles: MetaFileNode[]
 
   /**
-   * Providers to register.
-   *
-   * - The "base" key is used to register providers in all the environments.
-   * - The environment specific keys are used to register providers for a specific env.
+   * Providers to register in the IoC container.
+   * Providers are registered based on their environment configuration.
    */
   providers: ProviderNode[]
 
   /**
-   * An array of commands to register
+   * Array of Ace commands to register.
+   * Each entry is a function that imports a command class.
    */
   commands: (() => Promise<any>)[]
 
   /**
-   * Custom command aliases
+   * Custom aliases for Ace commands.
+   * Maps alias names to actual command names.
+   *
+   * @example
+   * { 'm:c': 'make:controller', 'serve': 'serve' }
    */
   commandsAliases: {
     [key: string]: string
   }
 
   /**
-   * Assembler hooks configuration
+   * Assembler hooks configuration for build processes.
+   * Hooks are executed during various build lifecycle events.
    */
   hooks: AssemblerRcFile['hooks']
 
   /**
-   * Register test suites
+   * Test suites configuration for the application.
+   * Defines test files, directories, and execution settings.
    */
   tests: {
     suites: {
@@ -189,22 +279,35 @@ export type RcFile = {
   }
 
   /**
-   * Reference to `adonisrc.js` file raw contents
+   * Reference to the raw contents of the `adonisrc.js` file.
+   * Contains the original, unprocessed configuration object.
    */
   raw: Record<string, any>
 
   /**
-   * Specify flags to enable experimental features
+   * Flags to enable experimental features.
+   * Can be extended by packages to add their own experimental options.
    */
   experimental: ExperimentalFlagsList
 }
 
 /**
- * RcFile input is the partial copy of the RcFile
+ * Input shape for RcFile configuration.
+ * A partial version of RcFile used when creating or updating
+ * the application configuration. Includes preset functions for
+ * applying common configurations.
+ *
+ * @example
+ * const input: RcFileInput = {
+ *   typescript: true,
+ *   presets: [webPreset()],
+ *   directories: { controllers: './app/controllers' }
+ * }
  */
 export interface RcFileInput {
   /**
-   * List of presets to apply to the configuration
+   * List of preset functions to apply to the configuration.
+   * Presets provide common configuration patterns.
    */
   presets?: PresetFn[]
 
@@ -227,70 +330,88 @@ export interface RcFileInput {
   hooks?: RcFile['hooks']
 
   /**
-   * Specify flags to enable experimental features
+   * Optional flags to enable experimental features.
+   * Can be extended by packages to add their own experimental options.
    */
   experimental?: ExperimentalFlagsList
 }
 
 /**
- * Shape of the container provider class instance.
+ * Contract for service provider classes.
+ * Service providers are used to register bindings in the IoC container
+ * and boot application services during different lifecycle phases.
+ *
+ * @example
+ * export default class MyProvider implements ContainerProviderContract {
+ *   register() {
+ *     this.app.container.singleton('myService', () => new MyService())
+ *   }
+ *
+ *   boot() {
+ *     // Boot logic
+ *   }
+ * }
  */
 export interface ContainerProviderContract {
   /**
-   * The register method on the provider class is meant to
-   * register bindings in the container
+   * The register method is called to register bindings in the IoC container.
+   * This is where you should bind services, singletons, and other dependencies.
    */
   register?(): void
 
   /**
-   * The boot method on the provider class is meant to boot
-   * any state that application might need.
-   *
-   * For example: Registering macros/getters, defining middleware,
-   * or repl bindings.
+   * The boot method is called to boot application state.
+   * Use this method for registering macros, middleware, REPL bindings,
+   * and other application-level configurations.
    */
   boot?(): AsyncOrSync<void>
 
   /**
-   * The start method on the provider class is called right the
-   * boot method.
-   *
-   * This method is best place to use existing container bindings before
-   * the application gets started. Also, at this stage you can be sure
-   * that all providers have been booted.
+   * The start method is called after all providers have been booted.
+   * This is the ideal place to use existing container bindings and
+   * perform startup operations that depend on other services.
    */
   start?(): AsyncOrSync<void>
 
   /**
-   * The ready method is called after the preloaded files have been
-   * imported and the app is considered ready. In case of an HTTP
-   * server, the server will be ready to receive incoming HTTP requests
-   * before this hook gets called.
+   * The ready method is called when the application is fully ready.
+   * For HTTP servers, this is called after the server starts listening.
+   * Preloaded files have been imported and the app is ready to serve requests.
    */
   ready?(): AsyncOrSync<void>
 
   /**
-   * The shutdown method on the provider class is meant to perform
-   * cleanup for graceful shutdown. You should avoid executing
-   * long running tasks in this method.
-   *
-   * If the shutdown process takes time, the application might get
-   * forcefully killed based upon the event that occurred shutdown
-   * in first place.
+   * The shutdown method is called during graceful application shutdown.
+   * Use this method to clean up resources, close connections, and perform
+   * other cleanup tasks. Avoid long-running operations to prevent forceful termination.
    */
   shutdown?(): AsyncOrSync<void>
 }
 
 /**
- * The importer is used to import modules in context of the
- * an AdonisJS application.
+ * Function type for importing modules in the context of an AdonisJS application.
+ * This function is called whenever AdonisJS needs to import a module from a string identifier.
  *
- * Anytime AdonisJS wants to import a module from a bare string, it
- * will call this function
+ * @param moduleIdentifier - The module identifier or path to import
+ * @param options - Optional import call options
+ * @returns The imported module
+ *
+ * @example
+ * const importer: Importer = (id, options) => import(id)
  */
 export type Importer = (moduleIdentifier: string, options?: ImportCallOptions) => any
 
 /**
- * AdonisRC Preset function type
+ * Type for AdonisRC preset functions.
+ * Preset functions are used to apply common configuration patterns
+ * to the RcFile configuration object.
+ *
+ * @param options - Object containing the RcFile to modify
+ *
+ * @example
+ * const webPreset: PresetFn = ({ rcFile }) => {
+ *   rcFile.providers.push(httpProvider)
+ *   rcFile.preloads.push(routesPreload)
+ * }
  */
 export type PresetFn = (options: { rcFile: RcFile }) => void

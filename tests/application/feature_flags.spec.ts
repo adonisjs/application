@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { Application } from '../../src/application.js'
+import { Application } from '../../src/application.ts'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 

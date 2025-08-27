@@ -7,4 +7,4 @@
  * file that was distributed with this source code.
  */
 
-export { AppFactory } from './app.js'
+export { AppFactory } from './app.ts'

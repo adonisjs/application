@@ -14,8 +14,8 @@ import { fileURLToPath } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { remove, outputFile } from 'fs-extra'
 
-import { Application } from '../../index.js'
-import { StubsManager } from '../../src/stubs/manager.js'
+import { Application } from '../../index.ts'
+import { StubsManager } from '../../src/stubs/manager.ts'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)

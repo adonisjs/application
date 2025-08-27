@@ -12,16 +12,19 @@ import { cp, stat } from 'node:fs/promises'
 import { fsReadAll } from '@poppinss/utils/fs'
 import { RuntimeException } from '@poppinss/utils/exception'
 
-import debug from '../debug.js'
-import { Stub } from './stub.js'
-import { type Application } from '../application.js'
-import { readFileFromSources } from '../helpers.js'
+import debug from '../debug.ts'
+import { Stub } from './stub.ts'
+import { type Application } from '../application.ts'
+import { readFileFromSources } from '../utils.ts'
 
 /**
  * Stub Manager is used to read and copy stubs from different sources. Also
  * allows creating resources from pre-existing stubs
  */
 export class StubsManager {
+  /**
+   * Reference to the application instance
+   */
   #app: Application<any>
 
   /**
@@ -30,6 +33,12 @@ export class StubsManager {
    */
   #publishTarget: string
 
+  /**
+   * Creates a new StubsManager instance
+   *
+   * @param app - The application instance
+   * @param publishTarget - Directory path where stubs should be published
+   */
   constructor(app: Application<any>, publishTarget: string) {
     this.#app = app
     this.#publishTarget = publishTarget
@@ -37,6 +46,9 @@ export class StubsManager {
 
   /**
    * Returns the path to the stubs source directory of a package
+   *
+   * @param packageName - The name of the package to get stubs from
+   * @returns Promise that resolves to the package's stubs directory path
    */
   async #getPackageSource(packageName: string) {
     const pkgMainExports = await this.#app.import(packageName)
@@ -52,6 +64,10 @@ export class StubsManager {
   /**
    * Creates an instance of stub by its name. The lookup is performed inside
    * the publishTarget and the optional source or pkg destination.
+   *
+   * @param stubName - Name of the stub file to build
+   * @param options - Optional configuration for stub source
+   * @returns Promise that resolves to a Stub instance
    */
   async build(stubName: string, options?: { source?: string; pkg?: string }) {
     const sources: string[] = [this.#publishTarget]
@@ -89,6 +105,10 @@ export class StubsManager {
   /**
    * Copy one or more stub files from a custom location to publish
    * target.
+   *
+   * @param stubPath - Path to the stub file or directory to copy
+   * @param options - Copy options including source/package and overwrite settings
+   * @returns Promise that resolves to an array of copied file paths
    */
   async copy(
     stubPath: string,

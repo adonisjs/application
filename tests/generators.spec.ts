@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import generators from '../src/generators.js'
+import generators from '../src/generators.ts'
 
 test.group('Generator', () => {
   test('convert user input to entity', ({ assert }) => {

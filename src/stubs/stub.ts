@@ -15,9 +15,9 @@ import stringHelpers from '@poppinss/utils/string'
 import StringBuilder from '@poppinss/utils/string_builder'
 import { RuntimeException } from '@poppinss/utils/exception'
 
-import debug from '../debug.js'
-import type { Application } from '../application.js'
-import { parseStubExports, pathExists } from '../helpers.js'
+import debug from '../debug.ts'
+import type { Application } from '../application.ts'
+import { parseStubExports, pathExists } from '../utils.ts'
 
 /**
  * String builder function + object shared with the stubs
@@ -51,6 +51,13 @@ export class Stub {
    */
   #app: Application<any>
 
+  /**
+   * Creates a new Stub instance
+   *
+   * @param app - The application instance
+   * @param stubContents - The raw contents of the stub template
+   * @param stubPath - The absolute path to the stub file
+   */
   constructor(app: Application<any>, stubContents: string, stubPath: string) {
     this.#app = app
     this.#stubPath = stubPath
@@ -59,6 +66,9 @@ export class Stub {
 
   /**
    * Patch error stack and point it to the stub file
+   *
+   * @param error - The error object to patch
+   * @returns Modifies the error stack in place
    */
   #patchErrorStack(error: Error) {
     const stack = error.stack!.split('\n')
@@ -68,6 +78,9 @@ export class Stub {
 
   /**
    * Patch tempura error stack and point it to the stub file
+   *
+   * @param error - The tempura error object to patch
+   * @returns Modifies the tempura error stack in place
    */
   #patchTempuraStack(error: Error) {
     const stack = error.stack!.split('\n')
@@ -88,6 +101,9 @@ export class Stub {
 
   /**
    * Validates the "to" attribute
+   *
+   * @param attributes - The attributes object to validate
+   * @returns Validates the 'to' attribute and throws if invalid
    */
   #validateToAttribute(attributes: Record<string, any>) {
     if (!attributes.to) {
@@ -105,6 +121,8 @@ export class Stub {
 
   /**
    * Returns the default state for the stub
+   *
+   * @returns The default state object for stub processing
    */
   #getStubDefaults() {
     return {
@@ -120,6 +138,9 @@ export class Stub {
 
   /**
    * Renders stub using tempura templating syntax.
+   *
+   * @param data - The data object to use for rendering
+   * @returns Promise that resolves to the rendered stub content
    */
   async #renderStub(data: Record<string, any>) {
     try {
@@ -135,6 +156,9 @@ export class Stub {
 
   /**
    * Parsers the stub exports
+   *
+   * @param stubOutput - The rendered stub output to parse
+   * @returns Object containing parsed attributes and body content
    */
   #parseExports(stubOutput: string) {
     try {
@@ -149,6 +173,9 @@ export class Stub {
 
   /**
    * Prepare stub to be written to the disk
+   *
+   * @param stubData - The data to use for stub preparation
+   * @returns Promise that resolves to the prepared stub data
    */
   async prepare(stubData: Record<string, any>) {
     const data = {
@@ -170,6 +197,9 @@ export class Stub {
 
   /**
    * Generate resource for the stub. Writes file to the disk
+   *
+   * @param stubData - The data to use for stub generation
+   * @returns Promise that resolves to generation result with status
    */
   async generate(stubData: Record<string, any>) {
     const { force, ...stub } = await this.prepare(stubData)

@@ -7,15 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import debug from '../debug.js'
-import type { RcFile } from '../types.js'
-import { RcFileParser } from '../rc_file/parser.js'
+import debug from '../debug.ts'
+import type { RcFile } from '../types.ts'
+import { RcFileParser } from '../rc_file/parser.ts'
 
 /**
  * RcFileManager is used to process the raw contents or the contents
  * of "adonisrc.js" file.
  */
 export class RcFileManager {
+  /**
+   * The application root directory URL
+   */
   #appRoot: URL
 
   /**
@@ -29,6 +32,11 @@ export class RcFileManager {
    */
   rcFile!: RcFile
 
+  /**
+   * Creates a new RcFileManager instance
+   *
+   * @param appRoot - The application root directory URL
+   */
   constructor(appRoot: URL) {
     this.#appRoot = appRoot
   }
@@ -37,6 +45,9 @@ export class RcFileManager {
    * Specify the contents of the "adonisrc.js" file as
    * an object. Calling this method will disable loading
    * the "adonisrc.js" file from the disk.
+   *
+   * @param value - The RC file contents as an object
+   * @returns this - Returns the RcFileManager instance for method chaining
    */
   rcContents(value: Record<string, any>): this {
     this.#rcContents = value
@@ -45,6 +56,8 @@ export class RcFileManager {
 
   /**
    * Process the contents for the rcFile
+   *
+   * @returns Promise that resolves when RC file processing is complete
    */
   async process() {
     if (!this.#rcContents) {

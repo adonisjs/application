@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { directories } from '../../src/directories.js'
-import { RcFileParser } from '../../src/rc_file/parser.js'
+import { directories } from '../../src/directories.ts'
+import { RcFileParser } from '../../src/rc_file/parser.ts'
 import { type PresetFn } from '../../src/types.ts'
 
 test.group('Rc Parser | presets', () => {
