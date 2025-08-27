@@ -182,6 +182,7 @@ export class ProvidersManager {
 
     providers.forEach((provider) => {
       if (provider) {
+        debug('registering "%s"', provider.name)
         const providerInstance = new provider(...this.#options.providersState)
         this.#providers.push(providerInstance)
 
@@ -209,6 +210,7 @@ export class ProvidersManager {
   async boot() {
     for (let provider of this.#providers) {
       if (provider.boot) {
+        debug('booting "%s"', provider.constructor.name)
         await providerBoot.tracePromise(
           provider.boot as () => Promise<void>,
           providerBoot.hasSubscribers ? { provider } : undefined,
@@ -226,6 +228,7 @@ export class ProvidersManager {
   async start() {
     for (let provider of this.#providers) {
       if (provider.start) {
+        debug('invoking "%s" start method', provider.constructor.name)
         await providerStart.tracePromise(
           provider.start as () => Promise<void>,
           providerStart.hasSubscribers ? { provider } : undefined,
@@ -243,6 +246,7 @@ export class ProvidersManager {
   async ready() {
     for (let provider of this.#providers) {
       if (provider.ready) {
+        debug('invoking "%s" ready method', provider.constructor.name)
         await providerReady.tracePromise(
           provider.ready as () => Promise<void>,
           providerReady.hasSubscribers ? { provider } : undefined,
@@ -269,6 +273,7 @@ export class ProvidersManager {
 
     for (let provider of providersWithShutdownListeners) {
       if (provider.shutdown) {
+        debug('shutting down "%s"', provider.constructor.name)
         await providerShutdown.tracePromise(
           provider.shutdown as () => Promise<void>,
           providerShutdown.hasSubscribers ? { provider } : undefined,
