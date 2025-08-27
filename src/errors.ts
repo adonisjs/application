@@ -72,51 +72,6 @@ export const E_MISSING_SUITE_FILES = createError<[suiteProperty: string]>(
 )
 
 /**
- * The exception is raised when the "devServerCommand" is missing
- * in assetsBundler object
- */
-export const E_MISSING_BUNDLER_DEV_COMMAND = createError(
-  'Invalid assetsBundler entry. Missing devServer property',
-  'E_MISSING_BUNDLER_DEV_COMMAND'
-)
-
-/**
- * The exception is raised when the "buildCommand" is missing
- * in assetsBundler object
- */
-export const E_MISSING_BUNDLER_BUILD_COMMAND = createError(
-  'Invalid assetsBundler entry. Missing build property',
-  'E_MISSING_BUNDLER_BUILD_COMMAND'
-)
-
-/**
- * The exception is raised when the "name" is missing
- * in assetsBundler object
- */
-export const E_MISSING_BUNDLER_NAME = createError(
-  'Invalid assetsBundler entry. Missing name property',
-  'E_MISSING_BUNDLER_NAME'
-)
-
-/**
- * The exception is raised when the "name" is missing
- * in assembler.runner object
- */
-export const E_MISSING_ASSEMBLER_RUNNER_NAME = createError(
-  'Invalid assembler.runner entry. Missing name property',
-  'E_MISSING_ASSEMBLER_RUNNER_NAME'
-)
-
-/**
- * The exception is raised when the "command" is missing
- * in assembler.runner object
- */
-export const E_MISSING_ASSEMBLER_RUNNER_COMMAND = createError(
-  'Invalid assembler.runner entry. Missing command property',
-  'E_MISSING_ASSEMBLER_RUNNER_COMMAND'
-)
-
-/**
  * The exception is raised when a hook is specified for an unknown
  * assembler event
  */
