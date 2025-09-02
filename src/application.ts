@@ -58,7 +58,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {Importer | undefined}
-   * @memberof Application
    */
   #importer?: Importer
 
@@ -70,7 +69,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @private
    * @type {boolean}
    * @default false
-   * @memberof Application
    */
   #terminating: boolean = false
 
@@ -81,7 +79,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @private
    * @type {Object}
    * @property {boolean} pm2 - Whether the app is running under PM2
-   * @memberof Application
    */
   #surroundedEnvironment = {
     pm2: false,
@@ -93,7 +90,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {URL}
-   * @memberof Application
    */
   #appRoot: URL
 
@@ -103,7 +99,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {AppEnvironments}
-   * @memberof Application
    */
   #environment: AppEnvironments
 
@@ -114,7 +109,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @private
    * @type {ApplicationStates}
    * @default 'created'
-   * @memberof Application
    */
   #state: ApplicationStates = 'created'
 
@@ -123,7 +117,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {ConfigManager}
-   * @memberof Application
    */
   #configManager: ConfigManager
 
@@ -132,7 +125,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {RcFileManager}
-   * @memberof Application
    */
   #rcFileManager: RcFileManager
 
@@ -141,7 +133,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {NodeEnvManager}
-   * @memberof Application
    */
   #nodeEnvManager: NodeEnvManager
 
@@ -150,7 +141,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {PreloadsManager}
-   * @memberof Application
    */
   #preloadsManager: PreloadsManager
 
@@ -159,7 +149,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {ProvidersManager}
-   * @memberof Application
    */
   #providersManager: ProvidersManager
 
@@ -170,7 +159,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @private
    * @type {Hooks}
-   * @memberof Application
    */
   #hooks = new Hooks<{
     initiating: HooksState<ContainerBindings>
@@ -186,7 +174,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * app name, version, and AdonisJS version.
    *
    * @type {Map<string, any>}
-   * @memberof Application
    */
   info: Map<'appName' | 'version' | 'adonisVersion' | string, any> = new Map()
 
@@ -196,7 +183,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {string}
-   * @memberof Application
    */
   get appName() {
     return this.info.get('appName') || 'adonisjs_app'
@@ -208,7 +194,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {SemverNode | null}
-   * @memberof Application
    */
   get version(): SemverNode | null {
     return this.info.get('version') || null
@@ -220,7 +205,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {SemverNode | null}
-   * @memberof Application
    */
   get adonisVersion(): SemverNode | null {
     return this.info.get('adonisVersion') || null
@@ -231,7 +215,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {URL}
-   * @memberof Application
    */
   get appRoot() {
     return this.#appRoot
@@ -243,7 +226,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get isBooted() {
     return this.#state !== 'created' && this.#state !== 'initiated'
@@ -255,7 +237,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get isReady() {
     return this.#state === 'ready'
@@ -267,7 +248,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get isTerminated() {
     return this.#state === 'terminated'
@@ -279,7 +259,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get isTerminating() {
     return this.#terminating && this.#state !== 'terminated'
@@ -291,7 +270,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {any}
-   * @memberof Application
    */
   get config() {
     return this.#configManager.config
@@ -303,7 +281,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {any}
-   * @memberof Application
    */
   get rcFile() {
     return this.#rcFileManager.rcFile
@@ -315,7 +292,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {string}
-   * @memberof Application
    */
   get nodeEnvironment() {
     return this.#nodeEnvManager.nodeEnvironment
@@ -327,7 +303,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get inProduction(): boolean {
     return this.nodeEnvironment === 'production'
@@ -339,7 +314,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get inDev(): boolean {
     return this.nodeEnvironment === 'development'
@@ -351,7 +325,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get inTest(): boolean {
     return this.nodeEnvironment === 'test'
@@ -363,7 +336,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {boolean}
-   * @memberof Application
    */
   get managedByPm2() {
     return this.#surroundedEnvironment.pm2
@@ -375,7 +347,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @readonly
    * @type {any}
-   * @memberof Application
    */
   get generators() {
     return generators
@@ -387,7 +358,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @type {Object}
    * @property {Function} create - Factory function to create a StubsManager instance
-   * @memberof Application
    */
   stubs = {
     create: async () => {
@@ -401,7 +371,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * Reads configuration from adonisrc.js experimental section.
    *
    * @type {FeatureFlags<ExperimentalFlagsList>}
-   * @memberof Application
    */
   experimentalFlags = new FeatureFlags<ExperimentalFlagsList>(
     () => this.#rcFileManager.rcFile.experimental
@@ -413,7 +382,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @type {boolean}
    * @default false
-   * @memberof Application
    */
   usingVineJS: boolean = false
 
@@ -423,7 +391,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @type {boolean}
    * @default false
-   * @memberof Application
    */
   usingEdgeJS: boolean = false
 
@@ -433,7 +400,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * Available after the "init" method has been called.
    *
    * @type {Container<ContainerBindings>}
-   * @memberof Application
    */
   declare container: Container<ContainerBindings>
 
@@ -444,7 +410,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {Object} options - Configuration options
    * @param {AppEnvironments} options.environment - The application environment
    * @param {Importer} [options.importer] - Optional module importer function
-   * @memberof Application
    */
   constructor(appRoot: URL, options: { environment: AppEnvironments; importer?: Importer }) {
     super()
@@ -477,7 +442,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * Instantiate the application container
    *
    * @private
-   * @memberof Application
    */
   #instantiateContainer() {
     this.container = new Container<ContainerBindings>()
@@ -487,7 +451,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * The current environment in which the application is running
    *
    * @returns {AppEnvironments} The current application environment
-   * @memberof Application
    */
   getEnvironment(): AppEnvironments {
     return this.#environment
@@ -500,7 +463,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {AppEnvironments} environment - The new environment to set
    * @returns {this} Returns the application instance for method chaining
    * @throws {RuntimeException} When called after the app has been booted
-   * @memberof Application
    */
   setEnvironment(environment: AppEnvironments): this {
     if (this.#state !== 'created' && this.#state !== 'initiated') {
@@ -518,7 +480,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * The current state of the application
    *
    * @returns {ApplicationStates} The current application state
-   * @memberof Application
    */
   getState(): ApplicationStates {
     return this.#state
@@ -531,7 +492,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {Record<string, any>} value - The RC file contents as an object
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   rcContents(value: Record<string, any>): this {
     this.#rcFileManager.rcContents(value)
@@ -545,7 +505,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {Record<any, any>} values - The config values to use
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   useConfig(values: Record<any, any>): this {
     this.#configManager.useConfig(values)
@@ -562,7 +521,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {boolean} [options.swallowErrors] - Whether to swallow errors
    * @param {boolean} [options.keepOpen] - Whether to keep the connection open
    * @param {function} [callback] - Callback function to handle send result
-   * @memberof Application
    */
   notify(
     message: any,
@@ -585,7 +543,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {NodeJS.Signals} signal - The signal to listen for
    * @param {NodeJS.SignalsListener} callback - The callback to execute when signal is received
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   listen(signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
     process.on(signal, callback)
@@ -599,7 +556,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {NodeJS.Signals} signal - The signal to listen for
    * @param {NodeJS.SignalsListener} callback - The callback to execute when signal is received
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   listenOnce(signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
     process.once(signal, callback)
@@ -613,7 +569,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {NodeJS.Signals} signal - The signal to listen for
    * @param {NodeJS.SignalsListener} callback - The callback to execute when signal is received
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   listenIf(conditional: boolean, signal: NodeJS.Signals, callback: NodeJS.SignalsListener): this {
     if (conditional) {
@@ -630,7 +585,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {NodeJS.Signals} signal - The signal to listen for
    * @param {NodeJS.SignalsListener} callback - The callback to execute when signal is received
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   listenOnceIf(
     conditional: boolean,
@@ -650,7 +604,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {HookHandler} handler - The hook handler function to register
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   initiating(
     handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
@@ -670,7 +623,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * - Instantiates the IoC container
    *
    * @returns {Promise<void>} Promise that resolves when initiation is complete
-   * @memberof Application
    */
   async init(): Promise<void> {
     if (this.#state !== 'created') {
@@ -709,7 +661,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {HookHandler} handler - The hook handler function to register
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   booting(
     handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
@@ -727,7 +678,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * - Run the "booted" hooks
    *
    * @returns {Promise<void>} Promise that resolves when boot is complete
-   * @memberof Application
    */
   async boot(): Promise<void> {
     if (this.#state !== 'initiated') {
@@ -773,7 +723,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {HookHandler} handler - The hook handler function to register
    * @returns {Promise<void>} Promise that resolves after the handler is executed
-   * @memberof Application
    */
   async booted(
     handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
@@ -790,7 +739,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {HookHandler} handler - The hook handler function to register
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   starting(
     handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
@@ -810,7 +758,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {function} callback - The callback function to invoke when starting the app
    * @returns {Promise<void>} Promise that resolves when start is complete
-   * @memberof Application
    */
   async start(callback: (app: this) => void | Promise<void>): Promise<void> {
     if (this.#state !== 'booted') {
@@ -860,7 +807,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {HookHandler} handler - The hook handler function to register
    * @returns {Promise<void>} Promise that resolves after the handler is executed
-   * @memberof Application
    */
   async ready(
     handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
@@ -877,7 +823,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {HookHandler} handler - The hook handler function to register
    * @returns {this} Returns the application instance for method chaining
-   * @memberof Application
    */
   terminating(
     handler: HookHandler<[Application<ContainerBindings>], [Application<ContainerBindings>]>
@@ -894,7 +839,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * - Run "terminating" app lifecycle hooks
    *
    * @returns {Promise<void>} Promise that resolves when termination is complete
-   * @memberof Application
    */
   async terminate(): Promise<void> {
     if (this.#state === 'created' || this.#state === 'terminated') {
@@ -921,7 +865,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {string} absolutePath - The absolute path to convert
    * @returns {string} The relative path from app root
-   * @memberof Application
    */
   relativePath(absolutePath: string): string {
     return relative(fileURLToPath(this.appRoot), absolutePath)
@@ -932,7 +875,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to join
    * @returns {URL} The constructed URL
-   * @memberof Application
    */
   makeURL(...paths: string[]): URL {
     return new URL(join(...paths), this.#appRoot)
@@ -943,7 +885,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to join
    * @returns {string} The constructed file system path
-   * @memberof Application
    */
   makePath(...paths: string[]): string {
     return fileURLToPath(this.makeURL(...paths))
@@ -954,7 +895,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to config directory
    * @returns {string} The constructed config directory path
-   * @memberof Application
    */
   configPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.config, ...paths)
@@ -965,7 +905,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to public directory
    * @returns {string} The constructed public directory path
-   * @memberof Application
    */
   publicPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.public, ...paths)
@@ -976,7 +915,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to providers directory
    * @returns {string} The constructed providers directory path
-   * @memberof Application
    */
   providersPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.providers, ...paths)
@@ -987,7 +925,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to factories directory
    * @returns {string} The constructed factories directory path
-   * @memberof Application
    */
   factoriesPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.factories, ...paths)
@@ -998,7 +935,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to migrations directory
    * @returns {string} The constructed migrations directory path
-   * @memberof Application
    */
   migrationsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.migrations, ...paths)
@@ -1009,7 +945,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to seeders directory
    * @returns {string} The constructed seeders directory path
-   * @memberof Application
    */
   seedersPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.seeders, ...paths)
@@ -1020,7 +955,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to language files directory
    * @returns {string} The constructed language files directory path
-   * @memberof Application
    */
   languageFilesPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.languageFiles, ...paths)
@@ -1031,7 +965,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to views directory
    * @returns {string} The constructed views directory path
-   * @memberof Application
    */
   viewsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.views, ...paths)
@@ -1042,7 +975,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to start directory
    * @returns {string} The constructed start directory path
-   * @memberof Application
    */
   startPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.start, ...paths)
@@ -1053,7 +985,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to tmp directory
    * @returns {string} The constructed tmp directory path
-   * @memberof Application
    */
   tmpPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.tmp, ...paths)
@@ -1065,7 +996,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {...string} paths - Path segments to append to contracts directory
    * @returns {string} The constructed contracts directory path
    * @deprecated Use "types" directory instead
-   * @memberof Application
    */
   contractsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.contracts, ...paths)
@@ -1076,7 +1006,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to http controllers directory
    * @returns {string} The constructed http controllers directory path
-   * @memberof Application
    */
   httpControllersPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.httpControllers, ...paths)
@@ -1087,7 +1016,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to models directory
    * @returns {string} The constructed models directory path
-   * @memberof Application
    */
   modelsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.models, ...paths)
@@ -1098,7 +1026,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to services directory
    * @returns {string} The constructed services directory path
-   * @memberof Application
    */
   servicesPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.services, ...paths)
@@ -1109,7 +1036,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to exceptions directory
    * @returns {string} The constructed exceptions directory path
-   * @memberof Application
    */
   exceptionsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.exceptions, ...paths)
@@ -1120,7 +1046,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to mailers directory
    * @returns {string} The constructed mailers directory path
-   * @memberof Application
    */
   mailersPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.mailers, ...paths)
@@ -1131,7 +1056,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to mails directory
    * @returns {string} The constructed mails directory path
-   * @memberof Application
    */
   mailsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.mails, ...paths)
@@ -1142,7 +1066,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to middleware directory
    * @returns {string} The constructed middleware directory path
-   * @memberof Application
    */
   middlewarePath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.middleware, ...paths)
@@ -1153,7 +1076,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to policies directory
    * @returns {string} The constructed policies directory path
-   * @memberof Application
    */
   policiesPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.policies, ...paths)
@@ -1164,7 +1086,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to validators directory
    * @returns {string} The constructed validators directory path
-   * @memberof Application
    */
   validatorsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.validators, ...paths)
@@ -1175,7 +1096,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to commands directory
    * @returns {string} The constructed commands directory path
-   * @memberof Application
    */
   commandsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.commands, ...paths)
@@ -1186,7 +1106,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to events directory
    * @returns {string} The constructed events directory path
-   * @memberof Application
    */
   eventsPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.events, ...paths)
@@ -1197,7 +1116,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to listeners directory
    * @returns {string} The constructed listeners directory path
-   * @memberof Application
    */
   listenersPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.listeners, ...paths)
@@ -1209,7 +1127,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to events directory
    * @returns {string} The constructed directory path
-   * @memberof Application
    */
   generatedClientPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.generatedClient, ...paths)
@@ -1221,7 +1138,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    *
    * @param {...string} paths - Path segments to append to events directory
    * @returns {string} The constructed directory path
-   * @memberof Application
    */
   generatedServerPath(...paths: string[]): string {
     return this.makePath(this.rcFile.directories.generatedServer, ...paths)
@@ -1235,7 +1151,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {string} moduleIdentifier - The module identifier to import
    * @returns {any} The imported module
    * @throws {RuntimeException} When no importer function is defined
-   * @memberof Application
    */
   import(moduleIdentifier: string) {
     if (!this.#importer) {
@@ -1255,7 +1170,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {string} moduleIdentifier - The module identifier to import
    * @returns The default export of the imported module
    * @throws {RuntimeException} When no importer function is defined
-   * @memberof Application
    */
   importDefault<T extends object>(moduleIdentifier: string) {
     if (!this.#importer) {
@@ -1271,7 +1185,6 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * JSON representation of the application
    *
    * @returns The application state as a JSON object
-   * @memberof Application
    */
   toJSON() {
     return {
