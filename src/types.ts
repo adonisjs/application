@@ -416,4 +416,4 @@ export type Importer = (moduleIdentifier: string, options?: ImportCallOptions) =
  *   rcFile.preloads.push(routesPreload)
  * }
  */
-export type PresetFn = (options: { rcFile: RcFile }) => void
+export type PresetFn = (options: { rcFile: Required<RcFileInput> }) => void

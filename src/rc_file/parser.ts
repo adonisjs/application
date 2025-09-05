@@ -13,15 +13,19 @@ import globParent from 'glob-parent'
 import * as errors from '../errors.ts'
 import { directories } from '../directories.ts'
 import type {
-  AppEnvironments,
-  MetaFileNode,
-  PreloadNode,
-  PresetFn,
-  ProviderNode,
   RcFile,
+  RcFileInput,
+  PreloadNode,
+  ProviderNode,
+  MetaFileNode,
+  AppEnvironments,
 } from '../types.ts'
 
-const KNOWN_ASSEMBLER_HOOKS = [
+const KNOWN_ASSEMBLER_HOOKS: (keyof NonNullable<RcFile['hooks']>)[] = [
+  'init',
+  'routesCommitted',
+  'routesScanning',
+  'routesCommitted',
   'buildStarting',
   'buildFinished',
   'devServerStarting',
@@ -31,7 +35,7 @@ const KNOWN_ASSEMBLER_HOOKS = [
   'fileAdded',
   'fileChanged',
   'fileRemoved',
-] satisfies (keyof NonNullable<RcFile['hooks']>)[]
+]
 
 /**
  * RcFileParser is responsible for parsing and validating the contents of `adonisrc.js` file.
@@ -45,10 +49,11 @@ export class RcFileParser {
    *
    * @private
    */
-  #defaults: RcFile = {
+  #defaults: Required<RcFileInput> = {
     typescript: true,
     preloads: [],
     metaFiles: [],
+    presets: [],
     commandsAliases: {},
     commands: [],
     providers: [],
@@ -58,7 +63,6 @@ export class RcFileParser {
       timeout: 2000,
       forceExit: true,
     },
-    raw: {},
     hooks: {},
     experimental: {},
   }
@@ -69,7 +73,12 @@ export class RcFileParser {
    *
    * @private
    */
-  #rcFile: RcFile
+  #rcFile: Required<RcFileInput>
+
+  /**
+   * Reference to the raw property
+   */
+  #raw: Record<string, any>
 
   /**
    * Creates a new RcFileParser instance.
@@ -78,7 +87,7 @@ export class RcFileParser {
    */
   constructor(rcFile: Record<string, any>) {
     this.#rcFile = Object.assign(this.#defaults, rcFile)
-    this.#rcFile.raw = rcFile
+    this.#raw = rcFile
   }
 
   /**
@@ -130,7 +139,7 @@ export class RcFileParser {
    * @private
    */
   #getPreloads(): PreloadNode[] {
-    return this.#rcFile.preloads.map((preload: PreloadNode | PreloadNode['file']) => {
+    return this.#rcFile.preloads.map((preload) => {
       const normalizedPreload =
         typeof preload === 'function'
           ? {
@@ -163,7 +172,7 @@ export class RcFileParser {
    * @private
    */
   #getProviders(): ProviderNode[] {
-    return this.#rcFile.providers.map((provider: ProviderNode | ProviderNode['file']) => {
+    return this.#rcFile.providers.map((provider) => {
       const normalizedProvider =
         typeof provider === 'function'
           ? {
@@ -195,7 +204,7 @@ export class RcFileParser {
    * @private
    */
   #getMetaFiles(): MetaFileNode[] {
-    return this.#rcFile.metaFiles.map((pattern: MetaFileNode | string) => {
+    return this.#rcFile.metaFiles.map((pattern) => {
       const normalizeMetaFile =
         typeof pattern === 'string'
           ? {
@@ -257,14 +266,15 @@ export class RcFileParser {
    * @private
    */
   #applyPresets(): void {
-    const presets: PresetFn[] = this.#rcFile.raw?.presets || []
-    if (presets.length === 0) return
-
-    if (!Array.isArray(presets)) {
-      throw new errors.E_INVALID_PRESETS_VALUE([inspect(presets)])
+    if (this.#rcFile.presets.length === 0) {
+      return
     }
 
-    presets.forEach((preset, index) => {
+    if (!Array.isArray(this.#rcFile.presets)) {
+      throw new errors.E_INVALID_PRESETS_VALUE([inspect(this.#rcFile.presets)])
+    }
+
+    this.#rcFile.presets.forEach((preset, index) => {
       if (typeof preset !== 'function') {
         throw new errors.E_INVALID_PRESET_FUNCTION([index, inspect(preset)])
       }
@@ -305,7 +315,7 @@ export class RcFileParser {
       },
       hooks: this.#getHooks(),
       experimental: this.#rcFile.experimental,
-      raw: this.#rcFile.raw,
+      raw: this.#raw,
     }
 
     return rcFile
