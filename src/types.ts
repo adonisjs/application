@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { type AsyncOrSync } from '@poppinss/utils/types'
+import { type Prettify, type AsyncOrSync } from '@poppinss/utils/types'
 import { type AssemblerRcFile } from '@adonisjs/assembler/types'
 import type { Application } from './application.ts'
 
@@ -339,6 +339,18 @@ export interface RcFileInput {
 }
 
 /**
+ * RCFile after has been normalized by the RCManager. This file is
+ * shared with the presets
+ */
+export type NormalizedRcFileInput = Prettify<
+  Required<
+    Omit<RcFileInput, 'directories'> & {
+      directories: RcFile['directories']
+    }
+  >
+>
+
+/**
  * Contract for service provider classes.
  * Service providers are used to register bindings in the IoC container
  * and boot application services during different lifecycle phases.
@@ -416,4 +428,4 @@ export type Importer = (moduleIdentifier: string, options?: ImportCallOptions) =
  *   rcFile.preloads.push(routesPreload)
  * }
  */
-export type PresetFn = (options: { rcFile: Required<RcFileInput> }) => void
+export type PresetFn = (options: { rcFile: NormalizedRcFileInput }) => void

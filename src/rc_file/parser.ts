@@ -14,11 +14,11 @@ import * as errors from '../errors.ts'
 import { directories } from '../directories.ts'
 import type {
   RcFile,
-  RcFileInput,
   PreloadNode,
   ProviderNode,
   MetaFileNode,
   AppEnvironments,
+  NormalizedRcFileInput,
 } from '../types.ts'
 
 const KNOWN_ASSEMBLER_HOOKS: (keyof NonNullable<RcFile['hooks']>)[] = [
@@ -49,7 +49,7 @@ export class RcFileParser {
    *
    * @private
    */
-  #defaults: Required<RcFileInput> = {
+  #defaults: NormalizedRcFileInput = {
     typescript: true,
     preloads: [],
     metaFiles: [],
@@ -73,7 +73,7 @@ export class RcFileParser {
    *
    * @private
    */
-  #rcFile: Required<RcFileInput>
+  #rcFile: NormalizedRcFileInput
 
   /**
    * Reference to the raw property
