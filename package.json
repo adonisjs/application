@@ -27,6 +27,7 @@
     "precompile": "npm run lint && npm run clean",
     "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
     "build": "npm run compile",
+    "docs": "typedoc",
     "version": "npm run build",
     "prepublishOnly": "npm run build",
     "release": "release-it",
@@ -59,6 +60,7 @@
     "semver": "^7.7.2",
     "ts-dedent": "^2.2.0",
     "tsup": "^8.5.0",
+    "typedoc": "^0.28.12",
     "typescript": "^5.9.2"
   },
   "dependencies": {
