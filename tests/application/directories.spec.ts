@@ -105,6 +105,12 @@ test.group('Application | directories', () => {
     assert.equal(app.listenersPath(), join(BASE_PATH, 'app/listeners'))
     assert.equal(app.listenersPath('user.ts'), join(BASE_PATH, 'app/listeners/user.ts'))
 
+    assert.equal(app.transformersPath(), join(BASE_PATH, 'app/transformers'))
+    assert.equal(
+      app.transformersPath('user_transformer.ts'),
+      join(BASE_PATH, 'app/transformers/user_transformer.ts')
+    )
+
     assert.equal(app.relativePath(app.eventsPath('user.ts')), join('app/events/user.ts'))
 
     assert.equal(app.generatedClientPath(), join(BASE_PATH, '.adonisjs/client'))

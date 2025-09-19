@@ -1122,6 +1122,16 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
   }
 
   /**
+   * Makes path to the transformers directory
+   *
+   * @param {...string} paths - Path segments to append to transformers directory
+   * @returns {string} The constructed transformers directory path
+   */
+  transformersPath(...paths: string[]): string {
+    return this.makePath(this.rcFile.directories.transformers, ...paths)
+  }
+
+  /**
    * Makes path to the client directory for writing generated
    * output
    *

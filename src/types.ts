@@ -107,6 +107,7 @@ export interface DirectoriesNode {
   commands: string
   events: string
   listeners: string
+  transformers: string
   stubs: string
   generatedClient: string
   generatedServer: string
