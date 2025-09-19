@@ -11,43 +11,66 @@ import { Config, ConfigLoader } from '@adonisjs/config'
 import debug from '../debug.ts'
 
 /**
- * ConfigManager is used to load, parse, validate and set configuration
- * values. Can load config from directories or use explicitly provided
- * config values.
+ * ConfigManager handles loading, parsing, and managing application configuration.
+ * It can load configuration from file system directories or use explicitly
+ * provided configuration objects (useful for testing).
+ * 
+ * The manager creates a Config instance that provides type-safe access to
+ * configuration values throughout the application.
+ * 
+ * @example
+ * const manager = new ConfigManager(new URL('file:///app/'))
+ * await manager.process('config')
+ * const dbConfig = manager.config.get('database')
+ * 
+ * @example
+ * // Using explicit config for testing
+ * const manager = new ConfigManager(appRoot)
+ * manager.useConfig({ database: { connection: 'sqlite' } })
+ * await manager.process('config')
  */
 export class ConfigManager {
   /**
-   * The application root directory URL
+   * The application root directory URL used to resolve the config directory path.
+   * 
+   * @private
+   * @type {URL}
    */
   #appRoot: URL
 
   /**
-   * Config tree set explicitly
+   * Configuration values set explicitly via useConfig() method.
+   * When provided, prevents loading config files from the file system.
+   * 
+   * @private
+   * @type {Record<any, any> | undefined}
    */
   #configValues?: Record<any, any>
 
   /**
-   * Reference to the config class. The value is defined
-   * after the "init" method call
+   * Reference to the Config instance that provides access to
+   * all configuration values. Available after process() method has been called.
+   * 
+   * @type {Config}
    */
   config!: Config
 
   /**
-   * Creates a new ConfigManager instance
+   * Creates a new ConfigManager instance.
    *
-   * @param appRoot - The application root directory URL
+   * @param {URL} appRoot - The application root directory URL
    */
   constructor(appRoot: URL) {
     this.#appRoot = appRoot
   }
 
   /**
-   * Define the config values to use when booting the
-   * config provider. Calling this method disables
-   * reading files from the config directory.
+   * Provides configuration values programmatically instead of loading from files.
+   * Useful for testing or when configuration needs to be generated dynamically.
+   * Calling this method disables reading config files from the file system.
    *
-   * @param values - The configuration values to use
-   * @returns this - Returns the ConfigManager instance for method chaining
+   * @param {Record<any, any>} values - The configuration values to use
+   * @returns {this} Returns the ConfigManager instance for method chaining
    */
   useConfig(values: Record<any, any>): this {
     this.#configValues = values
@@ -55,10 +78,12 @@ export class ConfigManager {
   }
 
   /**
-   * Process config values.
+   * Loads and processes configuration values. If useConfig() was called,
+   * uses those values; otherwise loads config files from the specified directory.
+   * Creates a Config instance accessible via the config property.
    *
-   * @param configDirectory - The directory path containing config files
-   * @returns Promise that resolves when config processing is complete
+   * @param {string} configDirectory - The directory path containing config files (relative to appRoot)
+   * @returns {Promise<void>} Promise that resolves when config processing is complete
    */
   async process(configDirectory: string) {
     if (this.#configValues) {

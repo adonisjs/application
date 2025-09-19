@@ -18,26 +18,44 @@ import { type Application } from '../application.ts'
 import { readFileFromSources } from '../utils.ts'
 
 /**
- * Stub Manager is used to read and copy stubs from different sources. Also
- * allows creating resources from pre-existing stubs
+ * StubsManager handles reading, copying, and building stubs from various sources.
+ * Stubs are template files used for code generation in AdonisJS applications.
+ * 
+ * The manager can source stubs from:
+ * - Application's local stubs directory (publishTarget)
+ * - Custom file system paths
+ * - Package exports with stubsRoot
+ * 
+ * @example
+ * const stubsManager = new StubsManager(app, '/path/to/stubs')
+ * const stub = await stubsManager.build('controller.stub')
+ * const files = await stubsManager.copy('models', { pkg: '@adonisjs/lucid' })
  */
 export class StubsManager {
   /**
-   * Reference to the application instance
+   * Reference to the application instance for importing packages
+   * and accessing application context.
+   * 
+   * @private
+   * @type {Application<any>}
    */
   #app: Application<any>
 
   /**
-   * Absolute path to the directory where stubs should
-   * be published or read from with priority
+   * Absolute path to the directory where stubs should be published
+   * or read from with highest priority. This is typically the
+   * application's stubs directory.
+   * 
+   * @private
+   * @type {string}
    */
   #publishTarget: string
 
   /**
-   * Creates a new StubsManager instance
+   * Creates a new StubsManager instance.
    *
-   * @param app - The application instance
-   * @param publishTarget - Directory path where stubs should be published
+   * @param {Application<any>} app - The application instance
+   * @param {string} publishTarget - Absolute directory path where stubs should be published
    */
   constructor(app: Application<any>, publishTarget: string) {
     this.#app = app
@@ -45,10 +63,13 @@ export class StubsManager {
   }
 
   /**
-   * Returns the path to the stubs source directory of a package
+   * Resolves the stubs directory path from a package's main export.
+   * The package must export a 'stubsRoot' variable pointing to its stubs directory.
    *
-   * @param packageName - The name of the package to get stubs from
-   * @returns Promise that resolves to the package's stubs directory path
+   * @private
+   * @param {string} packageName - The name of the package to get stubs from
+   * @returns {Promise<string>} Promise that resolves to the package's stubs directory path
+   * @throws {RuntimeException} When package doesn't export stubsRoot
    */
   async #getPackageSource(packageName: string) {
     const pkgMainExports = await this.#app.import(packageName)
@@ -62,12 +83,15 @@ export class StubsManager {
   }
 
   /**
-   * Creates an instance of stub by its name. The lookup is performed inside
-   * the publishTarget and the optional source or pkg destination.
+   * Creates a Stub instance by locating and loading a stub file.
+   * Searches in publishTarget first, then optional source or package locations.
    *
-   * @param stubName - Name of the stub file to build
-   * @param options - Optional configuration for stub source
-   * @returns Promise that resolves to a Stub instance
+   * @param {string} stubName - Name of the stub file to build (e.g., 'controller.stub')
+   * @param {Object} [options] - Optional configuration for stub source
+   * @param {string} [options.source] - Custom file system path to search for stubs
+   * @param {string} [options.pkg] - Package name to source stubs from
+   * @returns {Promise<Stub>} Promise that resolves to a Stub instance
+   * @throws {RuntimeException} When stub file cannot be found in any source
    */
   async build(stubName: string, options?: { source?: string; pkg?: string }) {
     const sources: string[] = [this.#publishTarget]
@@ -103,12 +127,16 @@ export class StubsManager {
   }
 
   /**
-   * Copy one or more stub files from a custom location to publish
-   * target.
+   * Copies stub files from a source location to the publish target directory.
+   * Can copy individual files or entire directories recursively.
    *
-   * @param stubPath - Path to the stub file or directory to copy
-   * @param options - Copy options including source/package and overwrite settings
-   * @returns Promise that resolves to an array of copied file paths
+   * @param {string} stubPath - Relative path to the stub file or directory to copy
+   * @param {Object} options - Copy configuration options
+   * @param {boolean} [options.overwrite] - Whether to overwrite existing files
+   * @param {string} [options.source] - Source file system path (mutually exclusive with pkg)
+   * @param {string} [options.pkg] - Package name to copy from (mutually exclusive with source)
+   * @returns {Promise<string[]>} Promise that resolves to an array of copied file paths
+   * @throws {Error} When source path cannot be found
    */
   async copy(
     stubPath: string,

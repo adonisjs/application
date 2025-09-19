@@ -793,6 +793,18 @@ const generators = {
     return new StringBuilder(entityName).removeExtension().snakeCase().ext('.edge').toString()
   },
 
+  /**
+   * Converts an entity name to a transformer class name.
+   * Removes file extension, 'transformer' and 'model' suffixes, singularizes,
+   * then converts to PascalCase with 'Transformer' suffix.
+   *
+   * @param entityName - The entity name to convert
+   * @returns Transformer class name in PascalCase with 'Transformer' suffix
+   *
+   * @example
+   * transformerName('users') // 'UserTransformer'
+   * transformerName('blog-post.transformer.ts') // 'BlogPostTransformer'
+   */
   transformerName(entityName: string) {
     return new StringBuilder(entityName)
       .removeExtension()
@@ -804,6 +816,16 @@ const generators = {
       .toString()
   },
 
+  /**
+   * Converts an entity name to a transformer file name.
+   * Uses the transformer name and converts to snake_case with .ts extension.
+   *
+   * @param entityName - The entity name to convert
+   * @returns Transformer file name in snake_case with .ts extension
+   *
+   * @example
+   * transformerFileName('User') // 'user_transformer.ts'
+   */
   transformerFileName(entityName: string) {
     return new StringBuilder(this.transformerName(entityName)).snakeCase().ext('.ts').toString()
   },

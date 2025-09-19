@@ -20,7 +20,11 @@ import type { Application } from '../application.ts'
 import { parseStubExports, pathExists } from '../utils.ts'
 
 /**
- * String builder function + object shared with the stubs
+ * Enhanced string builder function that combines StringBuilder functionality
+ * with string utility helpers, available as 'string' in stub templates.
+ * 
+ * @param {string | StringBuilder} value - Initial value for the string builder
+ * @returns {StringBuilder} A StringBuilder instance with utility methods
  */
 function stubStringBuilder(value: string | StringBuilder) {
   return new StringBuilder(value)
@@ -28,35 +32,58 @@ function stubStringBuilder(value: string | StringBuilder) {
 Object.assign(stubStringBuilder, stringHelpers)
 
 /**
- * The stub class uses tempura template engine to process
- * a stub template and generate a resource file.
- *
- * Finding the correct stub to use is outside of the scope
- * of this class.
+ * The Stub class processes template files using the Tempura template engine
+ * to generate code files. Stubs are template files that contain placeholders
+ * and logic for generating application resources like controllers, models, etc.
+ * 
+ * Features:
+ * - Tempura template processing with data binding
+ * - Automatic file writing with directory creation
+ * - Force overwrite support
+ * - Export metadata parsing from template output
+ * - Enhanced error reporting with stub file locations
+ * 
+ * @example
+ * const stub = new Stub(app, stubContent, '/path/to/controller.stub')
+ * const result = await stub.generate({ 
+ *   name: 'UserController',
+ *   to: app.httpControllersPath('user_controller.ts')
+ * })
  */
 export class Stub {
   /**
-   * The absolute path to the stub file. Need it for reporting
-   * errors
+   * The absolute path to the stub file, used for error reporting
+   * and debugging to provide accurate stack traces.
+   * 
+   * @private
+   * @type {string}
    */
   #stubPath: string
 
   /**
-   * The contents of the stub to process
+   * The raw template contents of the stub file to be processed
+   * by the Tempura template engine.
+   * 
+   * @private
+   * @type {string}
    */
   #stubContents: string
 
   /**
-   * Application class reference
+   * Reference to the application instance, providing access to
+   * app context, generators, and utility methods for stub processing.
+   * 
+   * @private
+   * @type {Application<any>}
    */
   #app: Application<any>
 
   /**
-   * Creates a new Stub instance
+   * Creates a new Stub instance for processing template files.
    *
-   * @param app - The application instance
-   * @param stubContents - The raw contents of the stub template
-   * @param stubPath - The absolute path to the stub file
+   * @param {Application<any>} app - The application instance
+   * @param {string} stubContents - The raw contents of the stub template
+   * @param {string} stubPath - The absolute path to the stub file
    */
   constructor(app: Application<any>, stubContents: string, stubPath: string) {
     this.#app = app
@@ -65,10 +92,11 @@ export class Stub {
   }
 
   /**
-   * Patch error stack and point it to the stub file
+   * Patches error stack traces to include stub file location,
+   * making debugging easier by pointing to the actual template file.
    *
-   * @param error - The error object to patch
-   * @returns Modifies the error stack in place
+   * @private
+   * @param {Error} error - The error object to patch
    */
   #patchErrorStack(error: Error) {
     const stack = error.stack!.split('\n')
@@ -77,10 +105,11 @@ export class Stub {
   }
 
   /**
-   * Patch tempura error stack and point it to the stub file
+   * Patches Tempura template engine error stacks to show the correct
+   * line numbers and file paths in the original stub template.
    *
-   * @param error - The tempura error object to patch
-   * @returns Modifies the tempura error stack in place
+   * @private
+   * @param {Error} error - The tempura error object to patch
    */
   #patchTempuraStack(error: Error) {
     const stack = error.stack!.split('\n')
@@ -100,10 +129,12 @@ export class Stub {
   }
 
   /**
-   * Validates the "to" attribute
+   * Validates that the 'to' attribute is present and contains
+   * an absolute file path for the generated file destination.
    *
-   * @param attributes - The attributes object to validate
-   * @returns Validates the 'to' attribute and throws if invalid
+   * @private
+   * @param {Record<string, any>} attributes - The attributes object to validate
+   * @throws {RuntimeException} When 'to' attribute is missing or invalid
    */
   #validateToAttribute(attributes: Record<string, any>) {
     if (!attributes.to) {
@@ -120,9 +151,11 @@ export class Stub {
   }
 
   /**
-   * Returns the default state for the stub
+   * Creates the default state object available to all stub templates,
+   * including app reference, string utilities, and helper functions.
    *
-   * @returns The default state object for stub processing
+   * @private
+   * @returns {Object} The default state object for stub processing
    */
   #getStubDefaults() {
     return {
@@ -137,10 +170,13 @@ export class Stub {
   }
 
   /**
-   * Renders stub using tempura templating syntax.
+   * Processes the stub template using Tempura template engine,
+   * compiling and rendering it with the provided data context.
    *
-   * @param data - The data object to use for rendering
-   * @returns Promise that resolves to the rendered stub content
+   * @private
+   * @param {Record<string, any>} data - The data object to use for rendering
+   * @returns {Promise<string>} Promise that resolves to the rendered stub content
+   * @throws {Error} When template compilation or rendering fails
    */
   async #renderStub(data: Record<string, any>) {
     try {
@@ -155,10 +191,13 @@ export class Stub {
   }
 
   /**
-   * Parsers the stub exports
+   * Parses the rendered stub output to extract export metadata
+   * and the actual file content body.
    *
-   * @param stubOutput - The rendered stub output to parse
-   * @returns Object containing parsed attributes and body content
+   * @private
+   * @param {string} stubOutput - The rendered stub output to parse
+   * @returns {Object} Object containing parsed attributes and body content
+   * @throws {Error} When export parsing or validation fails
    */
   #parseExports(stubOutput: string) {
     try {
@@ -172,10 +211,11 @@ export class Stub {
   }
 
   /**
-   * Prepare stub to be written to the disk
+   * Prepares the stub for file generation by rendering the template
+   * and extracting all metadata, without actually writing to disk.
    *
-   * @param stubData - The data to use for stub preparation
-   * @returns Promise that resolves to the prepared stub data
+   * @param {Record<string, any>} stubData - The data to use for stub preparation
+   * @returns {Promise<Object>} Promise that resolves to the prepared stub data with contents, destination, and metadata
    */
   async prepare(stubData: Record<string, any>) {
     const data = {
@@ -196,10 +236,11 @@ export class Stub {
   }
 
   /**
-   * Generate resource for the stub. Writes file to the disk
+   * Generates the final resource file by processing the stub template
+   * and writing the result to disk, with support for force overwrite.
    *
-   * @param stubData - The data to use for stub generation
-   * @returns Promise that resolves to generation result with status
+   * @param {Record<string, any>} stubData - The data to use for stub generation
+   * @returns {Promise<Object>} Promise that resolves to generation result with status ('created', 'force_created', or 'skipped')
    */
   async generate(stubData: Record<string, any>) {
     const { force, ...stub } = await this.prepare(stubData)

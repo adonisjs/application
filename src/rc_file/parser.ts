@@ -38,9 +38,23 @@ const KNOWN_ASSEMBLER_HOOKS: (keyof NonNullable<RcFile['hooks']>)[] = [
 ]
 
 /**
- * RcFileParser is responsible for parsing and validating the contents of `adonisrc.js` file.
- * It normalizes configuration values, applies presets, validates structure, and merges
- * user configuration with sensible defaults.
+ * RcFileParser processes and validates the adonisrc.js configuration file.
+ * It merges user configuration with defaults, applies presets, validates structure,
+ * and transforms the configuration into a normalized format.
+ * 
+ * The parser handles:
+ * - Merging user config with framework defaults
+ * - Applying configuration presets
+ * - Validating providers, preloads, and hooks
+ * - Normalizing directory paths
+ * - Processing environment-specific configurations
+ * 
+ * @example
+ * const parser = new RcFileParser({
+ *   typescript: true,
+ *   providers: [() => import('./providers/app_provider')]
+ * })
+ * const rcFile = parser.parse()
  */
 export class RcFileParser {
   /**
@@ -76,14 +90,18 @@ export class RcFileParser {
   #rcFile: NormalizedRcFileInput
 
   /**
-   * Reference to the raw property
+   * Reference to the original raw configuration object before processing.
+   * Preserved for debugging and error reporting purposes.
+   * 
+   * @private
+   * @type {Record<string, any>}
    */
   #raw: Record<string, any>
 
   /**
    * Creates a new RcFileParser instance.
    *
-   * @param rcFile - The raw RC file configuration object to parse and validate
+   * @param {Record<string, any>} rcFile - The raw RC file configuration object to parse and validate
    */
   constructor(rcFile: Record<string, any>) {
     this.#rcFile = Object.assign(this.#defaults, rcFile)
@@ -91,23 +109,24 @@ export class RcFileParser {
   }
 
   /**
-   * Returns an array of all known application environments.
-   * These are the valid environments that can be used for conditional loading
-   * of providers and preload files.
+   * Returns all valid application environments excluding 'unknown'.
+   * These environments can be used for conditional provider and preload loading.
    *
    * @private
+   * @returns {Exclude<AppEnvironments, 'unknown'>[]} Array of valid environment names
    */
   #knownEnvironments(): Exclude<AppEnvironments, 'unknown'>[] {
     return ['web', 'console', 'test', 'repl']
   }
 
   /**
-   * Extracts and validates assembler hooks from the RC file configuration.
-   * Only known hook events are allowed, and each hook must be an array of functions.
+   * Validates and extracts assembler hooks from the configuration.
+   * Hooks allow extending the build process at specific lifecycle events.
    *
+   * @private
+   * @returns {RcFile['hooks']} Validated hooks object or undefined
    * @throws {E_UNKNOWN_ASSEMBLER_HOOK} When an unknown hook event is encountered
    * @throws {E_INVALID_HOOKS_VALUE} When a hook value is not an array
-   * @private
    */
   #getHooks(): RcFile['hooks'] {
     const hooks = this.#rcFile.hooks

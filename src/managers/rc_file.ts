@@ -12,42 +12,61 @@ import type { RcFile } from '../types.ts'
 import { RcFileParser } from '../rc_file/parser.ts'
 
 /**
- * RcFileManager is used to process the raw contents or the contents
- * of "adonisrc.js" file.
+ * RcFileManager handles loading, parsing, and processing of the AdonisJS
+ * configuration file (adonisrc.js). This file contains application metadata,
+ * directory mappings, providers, preloads, and other configuration.
+ * 
+ * The manager can work with:
+ * - adonisrc.js file from disk
+ * - Explicitly provided RC contents (useful for testing)
+ * 
+ * @example
+ * const manager = new RcFileManager(new URL('file:///app/'))
+ * await manager.process()
+ * console.log(manager.rcFile.providers)
  */
 export class RcFileManager {
   /**
-   * The application root directory URL
+   * The application root directory URL used to resolve the adonisrc.js file path.
+   * 
+   * @private
+   * @type {URL}
    */
   #appRoot: URL
 
   /**
-   * RcFile contents set explicitly
+   * RC file contents set explicitly via rcContents() method.
+   * When set, prevents loading adonisrc.js from disk.
+   * 
+   * @private
+   * @type {Record<string, any> | undefined}
    */
   #rcContents?: Record<string, any>
 
   /**
-   * Reference to the parsed rc file. The value is defined
-   * after the "init" method call
+   * Reference to the parsed and validated RC file configuration.
+   * Available after the process() method has been called successfully.
+   * 
+   * @type {RcFile}
    */
   rcFile!: RcFile
 
   /**
-   * Creates a new RcFileManager instance
+   * Creates a new RcFileManager instance.
    *
-   * @param appRoot - The application root directory URL
+   * @param {URL} appRoot - The application root directory URL
    */
   constructor(appRoot: URL) {
     this.#appRoot = appRoot
   }
 
   /**
-   * Specify the contents of the "adonisrc.js" file as
-   * an object. Calling this method will disable loading
-   * the "adonisrc.js" file from the disk.
+   * Provides RC file contents programmatically instead of loading from disk.
+   * Useful for testing or when the configuration needs to be generated dynamically.
+   * Calling this method disables loading adonisrc.js from the file system.
    *
-   * @param value - The RC file contents as an object
-   * @returns this - Returns the RcFileManager instance for method chaining
+   * @param {Record<string, any>} value - The RC file contents as an object
+   * @returns {this} Returns the RcFileManager instance for method chaining
    */
   rcContents(value: Record<string, any>): this {
     this.#rcContents = value
@@ -55,9 +74,12 @@ export class RcFileManager {
   }
 
   /**
-   * Process the contents for the rcFile
+   * Loads and processes the RC file configuration. If rcContents was provided,
+   * uses that; otherwise attempts to load adonisrc.js from the application root.
+   * Parses and validates the configuration, making it available via the rcFile property.
    *
-   * @returns Promise that resolves when RC file processing is complete
+   * @returns {Promise<void>} Promise that resolves when RC file processing is complete
+   * @throws {Error} When adonisrc.js has syntax errors or invalid configuration
    */
   async process() {
     if (!this.#rcContents) {

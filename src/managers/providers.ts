@@ -20,35 +20,69 @@ import {
 } from '../tracing_channels.ts'
 
 /**
- * The ProvidersManager class is used to resolve, import and execute lifecycle
- * methods on registered providers.
- *
- * The class relies on "import.meta.resolve" to resolve the provider modules from
- * the root of the application.
- *
- * Also, a single instance of the provider is used to execute all the hooks.
+ * ProvidersManager handles the complete lifecycle of service providers in an AdonisJS application.
+ * It manages provider registration, booting, starting, readying, and shutdown phases.
+ * 
+ * Service providers are classes that register services, bind dependencies, and set up
+ * application components during different phases of the application lifecycle.
+ * 
+ * Lifecycle phases:
+ * 1. **Register**: Bind services to the IoC container
+ * 2. **Boot**: Initialize services after all providers are registered
+ * 3. **Start**: Start services (e.g., HTTP server, background jobs)
+ * 4. **Ready**: Notify services that application is ready to serve requests
+ * 5. **Shutdown**: Gracefully shutdown services during app termination
+ * 
+ * @example
+ * const manager = new ProvidersManager({ environment: 'web', providersState: [app] })
+ * manager.use([
+ *   { file: () => import('./providers/app_provider'), environment: ['web', 'console'] }
+ * ])
+ * await manager.register()
+ * await manager.boot()
+ * await manager.start()
+ * await manager.ready()
  */
 export class ProvidersManager {
   /**
-   * An array of collected providers
+   * Array of instantiated provider instances used throughout the application lifecycle.
+   * These instances are created during the register phase and reused for all subsequent phases.
+   * 
+   * @private
+   * @type {ContainerProviderContract[]}
+   * @default []
    */
   #providers: ContainerProviderContract[] = []
 
   /**
-   * An array of providers with the `shutdown` method. We release the
-   * values from the providers array and only keep the once with
-   * shutdown method
+   * Array of provider instances that implement the shutdown lifecycle method.
+   * Kept separately to enable efficient shutdown processing without scanning all providers.
+   * These providers are called during application termination for cleanup.
+   * 
+   * @private
+   * @type {ContainerProviderContract[]}
+   * @default []
    */
   #providersWithShutdownListeners: ContainerProviderContract[] = []
 
   /**
-   * An array of providers modules picked from the ".adonisrc.ts"
-   * file.
+   * Array of provider nodes from the adonisrc.js configuration.
+   * Each node contains the import function and environment restrictions.
+   * Cleared after providers are resolved and instantiated.
+   * 
+   * @private
+   * @type {ProviderNode[]}
+   * @default []
    */
   #list: ProviderNode[] = []
 
   /**
-   * The options accepted by the manager
+   * Configuration options for the providers manager.
+   * 
+   * @private
+   * @type {Object}
+   * @property {AppEnvironments} environment - Current application environment for filtering providers
+   * @property {any[]} providersState - Arguments passed to provider constructors (typically [app])
    */
   #options: {
     environment: AppEnvironments
@@ -56,19 +90,23 @@ export class ProvidersManager {
   }
 
   /**
-   * Creates a new ProvidersManager instance
+   * Creates a new ProvidersManager instance.
    *
-   * @param options - Configuration options including environment and provider state
+   * @param {Object} options - Configuration options
+   * @param {AppEnvironments} options.environment - Current application environment
+   * @param {any[]} options.providersState - Arguments to pass to provider constructors
    */
   constructor(options: { environment: AppEnvironments; providersState: any[] }) {
     this.#options = options
   }
 
   /**
-   * Filters the providers by the current environment.
+   * Filters providers based on the current application environment.
+   * Returns false for 'unknown' environments for security.
    *
-   * @param provider - The provider node to filter
-   * @returns Whether the provider should be included in the current environment
+   * @private
+   * @param {ProviderNode} provider - The provider node to filter
+   * @returns {boolean} Whether the provider should be included in the current environment
    */
   #filterByEnvironment(provider: ProviderNode) {
     if (this.#options.environment === 'unknown') {
@@ -79,22 +117,25 @@ export class ProvidersManager {
   }
 
   /**
-   * Check if value is a class
+   * Checks if a value is a class constructor by examining its string representation.
+   * Used to validate that provider exports are proper class constructors.
    *
-   * @param providerClass - The value to check
-   * @returns Whether the value is a class constructor
+   * @private
+   * @param {any} providerClass - The value to check
+   * @returns {boolean} Whether the value is a class constructor
    */
   #isAClass(providerClass: any) {
     return typeof providerClass === 'function' && providerClass.toString().startsWith('class ')
   }
 
   /**
-   * Imports all providers from the registered module path. The method relies
-   * on --experimental-import-meta-resolve flag to resolve paths from
-   * the app root.
+   * Imports and validates a provider module from its import function.
+   * Ensures the provider exports a default class constructor.
    *
-   * @param provider - The provider node to resolve
-   * @returns The provider class constructor or null
+   * @private
+   * @param {ProviderNode} provider - The provider node to resolve
+   * @returns {Promise<new (...args: any[]) => ContainerProviderContract | null>} The provider class constructor or null
+   * @throws {RuntimeException} When provider has invalid exports or non-class default export
    */
   async #resolveProvider(provider: ProviderNode): Promise<{
     new (...args: any[]): ContainerProviderContract
@@ -133,9 +174,11 @@ export class ProvidersManager {
   }
 
   /**
-   * Resolves all providers from the supplied list of module paths.
+   * Resolves all providers that match the current environment.
+   * Filters by environment and imports provider modules in parallel.
    *
-   * @returns Promise that resolves to array of provider classes
+   * @private
+   * @returns {Promise<Array<new (...args: any[]) => ContainerProviderContract | null>>} Promise that resolves to array of provider classes
    */
   #resolve() {
     const providers = this.#list.filter((provider) => this.#filterByEnvironment(provider))
@@ -145,10 +188,11 @@ export class ProvidersManager {
   }
 
   /**
-   * Pass an array of providers to use
+   * Registers an array of provider nodes to be processed later.
+   * Replaces any previously registered providers.
    *
-   * @param list - Array of provider nodes to register
-   * @returns this - Returns the ProvidersManager instance for method chaining
+   * @param {ProviderNode[]} list - Array of provider nodes to register
+   * @returns {this} Returns the ProvidersManager instance for method chaining
    */
   use(list: ProviderNode[]): this {
     this.#list = list
@@ -156,10 +200,11 @@ export class ProvidersManager {
   }
 
   /**
-   * Switch the environment in which the app is running.
+   * Changes the environment context for filtering providers.
+   * Used when the application environment changes after manager creation.
    *
-   * @param environment - The new environment to set
-   * @returns this - Returns the ProvidersManager instance for method chaining
+   * @param {AppEnvironments} environment - The new environment to set
+   * @returns {this} Returns the ProvidersManager instance for method chaining
    */
   setEnvironment(environment: AppEnvironments): this {
     debug(
@@ -172,9 +217,11 @@ export class ProvidersManager {
   }
 
   /**
-   * Invoke register method on the providers.
+   * Phase 1: Resolves, instantiates, and calls register() on all providers.
+   * Creates provider instances and invokes their register methods to bind services to the IoC container.
+   * Sets up tracking for providers with shutdown methods.
    *
-   * @returns Promise that resolves when all providers are registered
+   * @returns {Promise<void>} Promise that resolves when all providers are registered
    */
   async register() {
     const providers = await this.#resolve()
@@ -202,10 +249,11 @@ export class ProvidersManager {
   }
 
   /**
-   * Invoke boot method on the providers. The existing providers
-   * instances are used.
+   * Phase 2: Calls boot() method on all registered providers.
+   * Boot phase occurs after all providers have registered their services,
+   * allowing providers to use services from other providers.
    *
-   * @returns Promise that resolves when all providers are booted
+   * @returns {Promise<void>} Promise that resolves when all providers are booted
    */
   async boot() {
     for (let provider of this.#providers) {
@@ -221,9 +269,10 @@ export class ProvidersManager {
   }
 
   /**
-   * Invoke start method on all the providers
+   * Phase 3: Calls start() method on all providers.
+   * Start phase is for launching services like HTTP servers, background workers, etc.
    *
-   * @returns Promise that resolves when all providers are started
+   * @returns {Promise<void>} Promise that resolves when all providers are started
    */
   async start() {
     for (let provider of this.#providers) {
@@ -239,9 +288,11 @@ export class ProvidersManager {
   }
 
   /**
-   * Invoke ready method on all the providers
+   * Phase 4: Calls ready() method on all providers.
+   * Ready phase indicates the application is fully started and ready to serve requests.
+   * Clears the providers array after completion as they're no longer needed.
    *
-   * @returns Promise that resolves when all providers are ready
+   * @returns {Promise<void>} Promise that resolves when all providers are ready
    */
   async ready() {
     for (let provider of this.#providers) {
@@ -259,10 +310,12 @@ export class ProvidersManager {
   }
 
   /**
-   * Invoke shutdown method on all the providers
+   * Phase 5: Calls shutdown() method on providers that implement it.
+   * Shutdown phase allows providers to perform cleanup during graceful app termination.
+   * Only providers with shutdown methods are called.
    *
-   * @param inReverseOrder - Whether to shutdown providers in reverse order
-   * @returns Promise that resolves when all providers are shutdown
+   * @param {boolean} inReverseOrder - Whether to shutdown providers in reverse order (recommended for cleanup)
+   * @returns {Promise<void>} Promise that resolves when all providers are shutdown
    */
   async shutdown(inReverseOrder: boolean) {
     const providersWithShutdownListeners = inReverseOrder
