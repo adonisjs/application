@@ -792,6 +792,21 @@ const generators = {
   viewFileName(entityName: string) {
     return new StringBuilder(entityName).removeExtension().snakeCase().ext('.edge').toString()
   },
+
+  transformerName(entityName: string) {
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix('transformer')
+      .removeSuffix('model')
+      .singular()
+      .pascalCase()
+      .suffix('Transformer')
+      .toString()
+  },
+
+  transformerFileName(entityName: string) {
+    return new StringBuilder(this.transformerName(entityName)).snakeCase().ext('.ts').toString()
+  },
 }
 
 export default generators

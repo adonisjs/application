@@ -390,4 +390,20 @@ test.group('Generator', () => {
     assert.equal(generators.mailFileName('verify_email', 'provision'), 'verify_email_provision.ts')
     assert.equal(generators.mailFileName('verifyEmail', 'provision'), 'verify_email_provision.ts')
   })
+
+  test('convert entity name to transformer name', ({ assert }) => {
+    assert.equal(generators.transformerName('user'), 'UserTransformer')
+    assert.equal(generators.transformerName('users'), 'UserTransformer')
+    assert.equal(generators.transformerName('userstransformer'), 'UserTransformer')
+    assert.equal(generators.transformerName('user_transformer'), 'UserTransformer')
+    assert.equal(generators.transformerName('user_model_transformer'), 'UserTransformer')
+  })
+
+  test('convert entity name to transformer filename', ({ assert }) => {
+    assert.equal(generators.transformerFileName('user'), 'user_transformer.ts')
+    assert.equal(generators.transformerFileName('users'), 'user_transformer.ts')
+    assert.equal(generators.transformerFileName('userstransformer'), 'user_transformer.ts')
+    assert.equal(generators.transformerFileName('user_transformer'), 'user_transformer.ts')
+    assert.equal(generators.transformerFileName('user_model_transformer'), 'user_transformer.ts')
+  })
 })
