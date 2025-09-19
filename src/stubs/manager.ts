@@ -20,12 +20,12 @@ import { readFileFromSources } from '../utils.ts'
 /**
  * StubsManager handles reading, copying, and building stubs from various sources.
  * Stubs are template files used for code generation in AdonisJS applications.
- * 
+ *
  * The manager can source stubs from:
  * - Application's local stubs directory (publishTarget)
  * - Custom file system paths
  * - Package exports with stubsRoot
- * 
+ *
  * @example
  * const stubsManager = new StubsManager(app, '/path/to/stubs')
  * const stub = await stubsManager.build('controller.stub')
@@ -35,7 +35,7 @@ export class StubsManager {
   /**
    * Reference to the application instance for importing packages
    * and accessing application context.
-   * 
+   *
    * @private
    * @type {Application<any>}
    */
@@ -45,7 +45,7 @@ export class StubsManager {
    * Absolute path to the directory where stubs should be published
    * or read from with highest priority. This is typically the
    * application's stubs directory.
-   * 
+   *
    * @private
    * @type {string}
    */

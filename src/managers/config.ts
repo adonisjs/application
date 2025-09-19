@@ -14,15 +14,15 @@ import debug from '../debug.ts'
  * ConfigManager handles loading, parsing, and managing application configuration.
  * It can load configuration from file system directories or use explicitly
  * provided configuration objects (useful for testing).
- * 
+ *
  * The manager creates a Config instance that provides type-safe access to
  * configuration values throughout the application.
- * 
+ *
  * @example
  * const manager = new ConfigManager(new URL('file:///app/'))
  * await manager.process('config')
  * const dbConfig = manager.config.get('database')
- * 
+ *
  * @example
  * // Using explicit config for testing
  * const manager = new ConfigManager(appRoot)
@@ -32,7 +32,7 @@ import debug from '../debug.ts'
 export class ConfigManager {
   /**
    * The application root directory URL used to resolve the config directory path.
-   * 
+   *
    * @private
    * @type {URL}
    */
@@ -41,7 +41,7 @@ export class ConfigManager {
   /**
    * Configuration values set explicitly via useConfig() method.
    * When provided, prevents loading config files from the file system.
-   * 
+   *
    * @private
    * @type {Record<any, any> | undefined}
    */
@@ -50,7 +50,7 @@ export class ConfigManager {
   /**
    * Reference to the Config instance that provides access to
    * all configuration values. Available after process() method has been called.
-   * 
+   *
    * @type {Config}
    */
   config!: Config

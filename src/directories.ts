@@ -13,9 +13,9 @@ import type { DirectoriesNode } from './types.ts'
  * Default directory structure for AdonisJS applications.
  * These paths are relative to the application root and define
  * the conventional locations for different types of files.
- * 
+ *
  * Applications can override these defaults in their adonisrc.js file.
- * 
+ *
  * @example
  * // In adonisrc.js
  * export default defineConfig({

@@ -17,7 +17,7 @@ import type { AppEnvironments, PreloadNode } from '../types.ts'
  *
  * The class relies on "import.meta.resolve" to resolve the provider modules from
  * the root of the application.
- * 
+ *
  * @example
  * const manager = new PreloadsManager({ environment: 'web' })
  * manager.use([{ file: () => import('./preloads/routes'), environment: ['web'] }])
@@ -27,7 +27,7 @@ export class PreloadsManager {
   /**
    * List of registered preload modules to be imported.
    * Each preload node contains the import function and environment restrictions.
-   * 
+   *
    * @private
    * @type {PreloadNode[]}
    * @default []
@@ -37,7 +37,7 @@ export class PreloadsManager {
   /**
    * Configuration options for the preloads manager.
    * Contains the current application environment used for filtering preloads.
-   * 
+   *
    * @private
    * @type {Object}
    * @property {AppEnvironments} environment - The current application environment

@@ -15,11 +15,11 @@ import { RcFileParser } from '../rc_file/parser.ts'
  * RcFileManager handles loading, parsing, and processing of the AdonisJS
  * configuration file (adonisrc.js). This file contains application metadata,
  * directory mappings, providers, preloads, and other configuration.
- * 
+ *
  * The manager can work with:
  * - adonisrc.js file from disk
  * - Explicitly provided RC contents (useful for testing)
- * 
+ *
  * @example
  * const manager = new RcFileManager(new URL('file:///app/'))
  * await manager.process()
@@ -28,7 +28,7 @@ import { RcFileParser } from '../rc_file/parser.ts'
 export class RcFileManager {
   /**
    * The application root directory URL used to resolve the adonisrc.js file path.
-   * 
+   *
    * @private
    * @type {URL}
    */
@@ -37,7 +37,7 @@ export class RcFileManager {
   /**
    * RC file contents set explicitly via rcContents() method.
    * When set, prevents loading adonisrc.js from disk.
-   * 
+   *
    * @private
    * @type {Record<string, any> | undefined}
    */
@@ -46,7 +46,7 @@ export class RcFileManager {
   /**
    * Reference to the parsed and validated RC file configuration.
    * Available after the process() method has been called successfully.
-   * 
+   *
    * @type {RcFile}
    */
   rcFile!: RcFile

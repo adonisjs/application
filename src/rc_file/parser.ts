@@ -41,14 +41,14 @@ const KNOWN_ASSEMBLER_HOOKS: (keyof NonNullable<RcFile['hooks']>)[] = [
  * RcFileParser processes and validates the adonisrc.js configuration file.
  * It merges user configuration with defaults, applies presets, validates structure,
  * and transforms the configuration into a normalized format.
- * 
+ *
  * The parser handles:
  * - Merging user config with framework defaults
  * - Applying configuration presets
  * - Validating providers, preloads, and hooks
  * - Normalizing directory paths
  * - Processing environment-specific configurations
- * 
+ *
  * @example
  * const parser = new RcFileParser({
  *   typescript: true,
@@ -92,7 +92,7 @@ export class RcFileParser {
   /**
    * Reference to the original raw configuration object before processing.
    * Preserved for debugging and error reporting purposes.
-   * 
+   *
    * @private
    * @type {Record<string, any>}
    */

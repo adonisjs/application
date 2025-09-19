@@ -10,19 +10,19 @@
 /**
  * A light weight implementation of feature flags to conditionally enable
  * experimental and legacy features.
- * 
+ *
  * @template FlagsList - Type definition for the feature flags object
- * 
+ *
  * @example
  * const flags = new FeatureFlags({ newUI: true, betaFeature: false })
  * if (flags.enabled('newUI')) {
  *   // Enable new UI
  * }
- * 
+ *
  * @example
  * const dynamicFlags = new FeatureFlags(() => getConfigFlags())
- * flags.when('betaFeature', 
- *   () => console.log('Beta enabled'), 
+ * flags.when('betaFeature',
+ *   () => console.log('Beta enabled'),
  *   () => console.log('Beta disabled')
  * )
  */
@@ -30,7 +30,7 @@ export class FeatureFlags<FlagsList extends Record<any, any>> {
   /**
    * Static flags object containing feature flag values.
    * Used when flags are provided as a static object during construction.
-   * 
+   *
    * @private
    * @type {FlagsList | undefined}
    */
@@ -39,7 +39,7 @@ export class FeatureFlags<FlagsList extends Record<any, any>> {
   /**
    * Factory function to generate flags dynamically.
    * Used when flags need to be computed at runtime.
-   * 
+   *
    * @private
    * @type {(() => FlagsList) | undefined}
    */

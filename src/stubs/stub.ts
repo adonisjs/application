@@ -22,7 +22,7 @@ import { parseStubExports, pathExists } from '../utils.ts'
 /**
  * Enhanced string builder function that combines StringBuilder functionality
  * with string utility helpers, available as 'string' in stub templates.
- * 
+ *
  * @param {string | StringBuilder} value - Initial value for the string builder
  * @returns {StringBuilder} A StringBuilder instance with utility methods
  */
@@ -35,17 +35,17 @@ Object.assign(stubStringBuilder, stringHelpers)
  * The Stub class processes template files using the Tempura template engine
  * to generate code files. Stubs are template files that contain placeholders
  * and logic for generating application resources like controllers, models, etc.
- * 
+ *
  * Features:
  * - Tempura template processing with data binding
  * - Automatic file writing with directory creation
  * - Force overwrite support
  * - Export metadata parsing from template output
  * - Enhanced error reporting with stub file locations
- * 
+ *
  * @example
  * const stub = new Stub(app, stubContent, '/path/to/controller.stub')
- * const result = await stub.generate({ 
+ * const result = await stub.generate({
  *   name: 'UserController',
  *   to: app.httpControllersPath('user_controller.ts')
  * })
@@ -54,7 +54,7 @@ export class Stub {
   /**
    * The absolute path to the stub file, used for error reporting
    * and debugging to provide accurate stack traces.
-   * 
+   *
    * @private
    * @type {string}
    */
@@ -63,7 +63,7 @@ export class Stub {
   /**
    * The raw template contents of the stub file to be processed
    * by the Tempura template engine.
-   * 
+   *
    * @private
    * @type {string}
    */
@@ -72,7 +72,7 @@ export class Stub {
   /**
    * Reference to the application instance, providing access to
    * app context, generators, and utility methods for stub processing.
-   * 
+   *
    * @private
    * @type {Application<any>}
    */

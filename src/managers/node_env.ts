@@ -30,7 +30,7 @@ const DEV_ENVS = ['dev', 'develop', 'development']
  * - The "prod" and "production" envs are normalized to "production"
  * - The "dev", "develop", and "development" envs are normalized to "development"
  * - Unknown or invalid environments remain as-is
- * 
+ *
  * @example
  * const manager = new NodeEnvManager()
  * manager.process()
@@ -39,7 +39,7 @@ const DEV_ENVS = ['dev', 'develop', 'development']
 export class NodeEnvManager {
   /**
    * The normalized node environment value. Defaults to 'unknown' until process() is called.
-   * 
+   *
    * @type {'unknown' | 'development' | 'production' | 'test' | string}
    * @default 'unknown'
    */
@@ -47,7 +47,7 @@ export class NodeEnvManager {
 
   /**
    * Normalizes the NODE_ENV value to standard environment names.
-   * 
+   *
    * @private
    * @param {string} [env] - The environment string to normalize
    * @returns {string} The normalized environment string

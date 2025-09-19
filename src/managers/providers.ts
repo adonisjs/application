@@ -22,17 +22,17 @@ import {
 /**
  * ProvidersManager handles the complete lifecycle of service providers in an AdonisJS application.
  * It manages provider registration, booting, starting, readying, and shutdown phases.
- * 
+ *
  * Service providers are classes that register services, bind dependencies, and set up
  * application components during different phases of the application lifecycle.
- * 
+ *
  * Lifecycle phases:
  * 1. **Register**: Bind services to the IoC container
  * 2. **Boot**: Initialize services after all providers are registered
  * 3. **Start**: Start services (e.g., HTTP server, background jobs)
  * 4. **Ready**: Notify services that application is ready to serve requests
  * 5. **Shutdown**: Gracefully shutdown services during app termination
- * 
+ *
  * @example
  * const manager = new ProvidersManager({ environment: 'web', providersState: [app] })
  * manager.use([
@@ -47,7 +47,7 @@ export class ProvidersManager {
   /**
    * Array of instantiated provider instances used throughout the application lifecycle.
    * These instances are created during the register phase and reused for all subsequent phases.
-   * 
+   *
    * @private
    * @type {ContainerProviderContract[]}
    * @default []
@@ -58,7 +58,7 @@ export class ProvidersManager {
    * Array of provider instances that implement the shutdown lifecycle method.
    * Kept separately to enable efficient shutdown processing without scanning all providers.
    * These providers are called during application termination for cleanup.
-   * 
+   *
    * @private
    * @type {ContainerProviderContract[]}
    * @default []
@@ -69,7 +69,7 @@ export class ProvidersManager {
    * Array of provider nodes from the adonisrc.js configuration.
    * Each node contains the import function and environment restrictions.
    * Cleared after providers are resolved and instantiated.
-   * 
+   *
    * @private
    * @type {ProviderNode[]}
    * @default []
@@ -78,7 +78,7 @@ export class ProvidersManager {
 
   /**
    * Configuration options for the providers manager.
-   * 
+   *
    * @private
    * @type {Object}
    * @property {AppEnvironments} environment - Current application environment for filtering providers
