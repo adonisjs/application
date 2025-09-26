@@ -7,9 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { type Prettify, type AsyncOrSync } from '@poppinss/utils/types'
 import { type AssemblerRcFile } from '@adonisjs/assembler/types'
+import { type Prettify, type AsyncOrSync } from '@poppinss/utils/types'
 import type { Application } from './application.ts'
+
+export type { AllHooks } from '@adonisjs/assembler/types'
 
 /**
  * Known application environments. The list is strictly limited to
