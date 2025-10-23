@@ -25,6 +25,7 @@ const KNOWN_ASSEMBLER_HOOKS: (keyof NonNullable<RcFile['hooks']>)[] = [
   'init',
   'routesCommitted',
   'routesScanning',
+  'routesScanned',
   'routesCommitted',
   'buildStarting',
   'buildFinished',
