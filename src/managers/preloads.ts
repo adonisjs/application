@@ -63,7 +63,7 @@ export class PreloadsManager {
    * @param {PreloadNode} provider - The preload node to filter
    * @returns {boolean} Whether the preload should be included in the current environment
    */
-  #filterByEnvironment(provider: PreloadNode) {
+  #filterByEnvironment(provider: PreloadNode): boolean {
     if (this.#options.environment === 'unknown') {
       return false
     }
@@ -106,7 +106,7 @@ export class PreloadsManager {
    *
    * @returns {Promise<void>} Promise that resolves when all preload modules have been imported
    */
-  async import() {
+  async import(): Promise<void> {
     const preloads = this.#list.filter((preload) => this.#filterByEnvironment(preload))
     debug('preloading modules %O', preloads)
 

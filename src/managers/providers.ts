@@ -108,7 +108,7 @@ export class ProvidersManager {
    * @param {ProviderNode} provider - The provider node to filter
    * @returns {boolean} Whether the provider should be included in the current environment
    */
-  #filterByEnvironment(provider: ProviderNode) {
+  #filterByEnvironment(provider: ProviderNode): boolean {
     if (this.#options.environment === 'unknown') {
       return false
     }
@@ -124,7 +124,7 @@ export class ProvidersManager {
    * @param {any} providerClass - The value to check
    * @returns {boolean} Whether the value is a class constructor
    */
-  #isAClass(providerClass: any) {
+  #isAClass(providerClass: any): boolean {
     return typeof providerClass === 'function' && providerClass.toString().startsWith('class ')
   }
 
