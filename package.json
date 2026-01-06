@@ -34,10 +34,10 @@
     "quick:test": "node --import=@poppinss/ts-exec --enable-source-maps bin/test.ts"
   },
   "devDependencies": {
-    "@adonisjs/assembler": "^8.0.0-next.22",
+    "@adonisjs/assembler": "^8.0.0-next.28",
     "@adonisjs/config": "^6.1.0-next.0",
-    "@adonisjs/eslint-config": "^3.0.0-next.5",
-    "@adonisjs/fold": "^11.0.0-next.3",
+    "@adonisjs/eslint-config": "^3.0.0-next.9",
+    "@adonisjs/fold": "^11.0.0-next.4",
     "@adonisjs/prettier-config": "^1.4.5",
     "@adonisjs/tsconfig": "^2.0.0-next.3",
     "@japa/assert": "^4.2.0",
@@ -66,7 +66,7 @@
   "dependencies": {
     "@poppinss/hooks": "^7.3.0",
     "@poppinss/macroable": "^1.1.0",
-    "@poppinss/utils": "^7.0.0-next.4",
+    "@poppinss/utils": "^7.0.0-next.5",
     "glob-parent": "^6.0.2",
     "tempura": "^0.4.1"
   },
