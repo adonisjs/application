@@ -203,4 +203,69 @@ test.group('Application', () => {
       'Cannot import "foo". Register a module importer with the application first.'
     )
   })
+
+  test('detect Claude Code AI agent', async ({ assert, cleanup }) => {
+    cleanup(() => {
+      delete process.env.CLAUDECODE
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.isNull(app.detectedAIAgent)
+    assert.isFalse(app.runningInAIAgent)
+
+    process.env.CLAUDECODE = '1'
+    const app1 = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.equal(app1.detectedAIAgent, 'claude')
+    assert.isTrue(app1.runningInAIAgent)
+  })
+
+  test('detect Cursor AI agent', async ({ assert, cleanup }) => {
+    cleanup(() => {
+      delete process.env.CURSOR_AGENT
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.isNull(app.detectedAIAgent)
+    assert.isFalse(app.runningInAIAgent)
+
+    process.env.CURSOR_AGENT = '1'
+    const app1 = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.equal(app1.detectedAIAgent, 'cursor')
+    assert.isTrue(app1.runningInAIAgent)
+  })
+
+  test('detect OpenCode AI agent', async ({ assert, cleanup }) => {
+    cleanup(() => {
+      delete process.env.OPENCODE
+    })
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.isNull(app.detectedAIAgent)
+    assert.isFalse(app.runningInAIAgent)
+
+    process.env.OPENCODE = '1'
+    const app1 = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.equal(app1.detectedAIAgent, 'opencode')
+    assert.isTrue(app1.runningInAIAgent)
+  })
+
+  test('return null when no AI agent is detected', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    assert.isNull(app.detectedAIAgent)
+    assert.isFalse(app.runningInAIAgent)
+  })
 })

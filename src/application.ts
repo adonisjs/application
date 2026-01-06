@@ -395,6 +395,42 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
   usingEdgeJS: boolean = false
 
   /**
+   * Detects which AI coding agent the application is running under.
+   * Checks for environment variables set by different AI coding assistants:
+   * - CLAUDECODE='1' for Claude Code
+   * - CURSOR_AGENT='1' for Cursor
+   * - OPENCODE='1' for OpenCode
+   *
+   * @readonly
+   * @type {'claude' | 'cursor' | 'opencode' | null}
+   * @returns The name of the detected AI agent, or null if none detected
+   */
+  get detectedAIAgent(): 'claude' | 'cursor' | 'opencode' | null {
+    if (process.env.CLAUDECODE === '1') {
+      return 'claude'
+    }
+    if (process.env.OPENCODE === '1') {
+      return 'opencode'
+    }
+    if (process.env.CURSOR_AGENT === '1') {
+      return 'cursor'
+    }
+    return null
+  }
+
+  /**
+   * Returns true if the application is running within any AI coding agent.
+   * This is a convenience getter that checks if detectedAIAgent is not null.
+   *
+   * @readonly
+   * @type {boolean}
+   * @returns True when running under an AI coding agent, false otherwise
+   */
+  get runningInAIAgent(): boolean {
+    return this.detectedAIAgent !== null
+  }
+
+  /**
    * Reference to the AdonisJS IoC container. The container manages
    * dependency injection and service binding throughout the application.
    * Available after the "init" method has been called.
