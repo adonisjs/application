@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url'
 import { join, relative } from 'node:path'
 import { Container } from '@adonisjs/fold'
 import Macroable from '@poppinss/macroable'
-import { importDefault } from '@poppinss/utils'
+import { importDefault, detectAIAgent, isRunningInAIAgent } from '@poppinss/utils'
 import type { HookHandler } from '@poppinss/hooks/types'
 import { RuntimeException } from '@poppinss/utils/exception'
 
@@ -398,24 +398,19 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * Detects which AI coding agent the application is running under.
    * Checks for environment variables set by different AI coding assistants:
    * - CLAUDECODE='1' for Claude Code
-   * - CURSOR_AGENT='1' for Cursor
+   * - GEMINI_CLI='1' for Gemini
+   * - GITHUB_COPILOT_CLI_MODE='1' for GitHub Copilot
+   * - WINDSURF_SESSION='1' or TERM_PROGRAM='windsurf' for Windsurf
+   * - CODEX_CLI='1' or CODEX_SANDBOX='1' for Codex
    * - OPENCODE='1' for OpenCode
+   * - CURSOR_AGENT='1' for Cursor
    *
    * @readonly
-   * @type {'claude' | 'cursor' | 'opencode' | null}
+   * @type {'claude' | 'gemini' | 'copilot' | 'windsurf' | 'codex' | 'opencode' | 'cursor' | null}
    * @returns The name of the detected AI agent, or null if none detected
    */
-  get detectedAIAgent(): 'claude' | 'cursor' | 'opencode' | null {
-    if (process.env.CLAUDECODE === '1') {
-      return 'claude'
-    }
-    if (process.env.OPENCODE === '1') {
-      return 'opencode'
-    }
-    if (process.env.CURSOR_AGENT === '1') {
-      return 'cursor'
-    }
-    return null
+  get detectedAIAgent() {
+    return detectAIAgent()
   }
 
   /**
@@ -427,7 +422,7 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @returns True when running under an AI coding agent, false otherwise
    */
   get runningInAIAgent(): boolean {
-    return this.detectedAIAgent !== null
+    return isRunningInAIAgent()
   }
 
   /**
