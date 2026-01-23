@@ -69,6 +69,8 @@ export class Stub {
    */
   #stubContents: string
 
+  #rawContent?: string
+
   /**
    * Reference to the application instance, providing access to
    * app context, generators, and utility methods for stub processing.
@@ -175,10 +177,9 @@ export class Stub {
    *
    * @private
    * @param {Record<string, any>} data - The data object to use for rendering
-   * @returns {Promise<string>} Promise that resolves to the rendered stub content
    * @throws {Error} When template compilation or rendering fails
    */
-  async #renderStub(data: Record<string, any>) {
+  #renderStub(data: Record<string, any>) {
     try {
       const render = tempura.compile(this.#stubContents, {
         props: Object.keys(data),
@@ -203,11 +204,16 @@ export class Stub {
     try {
       const { body, attributes } = parseStubExports(stubOutput)
       this.#validateToAttribute(attributes)
-      return { attributes, body }
+      return { attributes, body: this.#rawContent ?? body }
     } catch (error) {
       this.#patchErrorStack(error)
       throw error
     }
+  }
+
+  replaceWith(rawContent: string) {
+    this.#rawContent = rawContent
+    return this
   }
 
   /**
@@ -215,15 +221,19 @@ export class Stub {
    * and extracting all metadata, without actually writing to disk.
    *
    * @param {Record<string, any>} stubData - The data to use for stub preparation
-   * @returns {Promise<Object>} Promise that resolves to the prepared stub data with contents, destination, and metadata
    */
-  async prepare(stubData: Record<string, any>) {
+  async prepare(stubData: Record<string, any>): Promise<{
+    contents: string
+    destination: string
+    force: boolean
+    attributes: Record<string, any>
+  }> {
     const data = {
       ...this.#getStubDefaults(),
       ...stubData,
     }
 
-    const { attributes, body } = this.#parseExports(await this.#renderStub(data))
+    const { attributes, body } = this.#parseExports(this.#renderStub(data))
     debug('prepared stub %s', body)
     debug('stub attributes %O', attributes)
 
@@ -240,7 +250,6 @@ export class Stub {
    * and writing the result to disk, with support for force overwrite.
    *
    * @param {Record<string, any>} stubData - The data to use for stub generation
-   * @returns {Promise<Object>} Promise that resolves to generation result with status ('created', 'force_created', or 'skipped')
    */
   async generate(stubData: Record<string, any>) {
     const { force, ...stub } = await this.prepare(stubData)

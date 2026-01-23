@@ -499,4 +499,46 @@ test.group('Stubs', (group) => {
       to: app.makePath('resources/credentials', 'foo'),
     })
   })
+
+  test('overwrite stub output with raw contents', async ({ assert }) => {
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+    await app.init()
+
+    const stubContents = dedent`{{#var middlewareName = generators.middlewareName(entity.name)}}
+    {{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
+    {{{
+      exports({
+        to: app.middlewarePath(entity.path, middlewareFileName)
+      })
+    }}}
+    import { HttpContext } from '@adonisjs/core/http'
+    import { NextFn } from '@adonisjs/core/types/http'
+
+    export default class {{ middlewareName }} {
+      handle(ctx: HttpContext, next: NextFn) {
+        /**
+         * Middleware logic goes here (before the next call)
+         */
+        console.log(ctx)
+
+        /**
+         * Call next method in the pipeline and return its output
+         */
+        const output = await next()
+        return output
+      }
+    }`
+
+    const stub = new Stub(app, stubContents, './make/middleware.stub')
+    stub.replaceWith(`export default class MyCustomMiddleware {}`)
+    const { status, destination, contents } = await stub.generate({
+      entity: generators.createEntity('user'),
+    })
+
+    assert.equal(status, 'created')
+    assert.equal(contents, `export default class MyCustomMiddleware {}`)
+    assert.equal(await readFile(destination, 'utf-8'), `export default class MyCustomMiddleware {}`)
+  })
 })
