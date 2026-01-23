@@ -16,7 +16,6 @@ import { type AllHooks, type HookParams } from '@adonisjs/assembler/types'
  * at specific points in the development server, build process, and testing.
  *
  * @example
- * ```js
  * const { hooks } = await import('@adonisjs/application')
  *
  * hooks.init((app) => {
@@ -26,7 +25,6 @@ import { type AllHooks, type HookParams } from '@adonisjs/assembler/types'
  * hooks.devServerStarted((server) => {
  *   console.log('Dev server started on port', server.port)
  * })
- * ```
  */
 export const hooks: {
   [K in keyof AllHooks]: (
@@ -40,12 +38,10 @@ export const hooks: {
    * @param callback - Function to execute when the init event occurs
    *
    * @example
-   * ```js
    * hooks.init((app) => {
    *   console.log('Application is initializing')
    *   // Setup global configurations
    * })
-   * ```
    */
   init(callback) {
     return callback
@@ -57,12 +53,10 @@ export const hooks: {
    * @param callback - Function to execute when routes are committed
    *
    * @example
-   * ```js
    * hooks.routesCommitted((router) => {
    *   console.log('All routes have been committed to the router')
    *   // Perform route-based setup
    * })
-   * ```
    */
   routesCommitted(callback) {
     return callback
@@ -74,12 +68,10 @@ export const hooks: {
    * @param callback - Function to execute when route scanning begins
    *
    * @example
-   * ```js
    * hooks.routesScanning(() => {
    *   console.log('Starting to scan for route files')
    *   // Setup route scanning configurations
    * })
-   * ```
    */
   routesScanning(callback) {
     return callback
@@ -91,12 +83,10 @@ export const hooks: {
    * @param callback - Function to execute when route scanning is finished
    *
    * @example
-   * ```js
    * hooks.routesScanned((scannedRoutes) => {
    *   console.log('Route scanning completed')
    *   // Process scanned route information
    * })
-   * ```
    */
   routesScanned(callback) {
     return callback
@@ -108,12 +98,10 @@ export const hooks: {
    * @param callback - Function to execute when a file changes
    *
    * @example
-   * ```js
    * hooks.fileChanged((filePath, stats) => {
    *   console.log(`File changed: ${filePath}`)
    *   // Handle file change logic
    * })
-   * ```
    */
   fileChanged(callback) {
     return callback
@@ -125,12 +113,10 @@ export const hooks: {
    * @param callback - Function to execute when a file is added
    *
    * @example
-   * ```js
    * hooks.fileAdded((filePath, stats) => {
    *   console.log(`New file added: ${filePath}`)
    *   // Handle new file logic
    * })
-   * ```
    */
   fileAdded(callback) {
     return callback
@@ -142,12 +128,10 @@ export const hooks: {
    * @param callback - Function to execute when a file is removed
    *
    * @example
-   * ```js
    * hooks.fileRemoved((filePath) => {
    *   console.log(`File removed: ${filePath}`)
    *   // Handle file removal logic
    * })
-   * ```
    */
   fileRemoved(callback) {
     return callback
@@ -159,12 +143,10 @@ export const hooks: {
    * @param callback - Function to execute when dev server is starting
    *
    * @example
-   * ```js
    * hooks.devServerStarting((server) => {
    *   console.log('Development server is starting')
    *   // Setup server configurations
    * })
-   * ```
    */
   devServerStarting(callback) {
     return callback
@@ -176,12 +158,10 @@ export const hooks: {
    * @param callback - Function to execute when dev server has started
    *
    * @example
-   * ```js
    * hooks.devServerStarted((server) => {
    *   console.log(`Development server started on port ${server.port}`)
    *   // Notify external services or open browser
    * })
-   * ```
    */
   devServerStarted(callback) {
     return callback
@@ -193,12 +173,10 @@ export const hooks: {
    * @param callback - Function to execute when build is starting
    *
    * @example
-   * ```js
    * hooks.buildStarting((buildConfig) => {
    *   console.log('Build process is starting')
    *   // Setup build configurations or clean directories
    * })
-   * ```
    */
   buildStarting(callback) {
     return callback
@@ -210,12 +188,10 @@ export const hooks: {
    * @param callback - Function to execute when build is finished
    *
    * @example
-   * ```js
    * hooks.buildFinished((buildResult) => {
    *   console.log('Build process completed')
    *   // Deploy artifacts or notify build completion
    * })
-   * ```
    */
   buildFinished(callback) {
     return callback
@@ -227,12 +203,10 @@ export const hooks: {
    * @param callback - Function to execute when tests are starting
    *
    * @example
-   * ```js
    * hooks.testsStarting((testConfig) => {
    *   console.log('Test suite is starting')
    *   // Setup test database or mock services
    * })
-   * ```
    */
   testsStarting(callback) {
     return callback
@@ -244,12 +218,10 @@ export const hooks: {
    * @param callback - Function to execute when tests are finished
    *
    * @example
-   * ```js
    * hooks.testsFinished((testResults) => {
    *   console.log('Test suite completed')
    *   // Generate test reports or cleanup test resources
    * })
-   * ```
    */
   testsFinished(callback) {
     return callback

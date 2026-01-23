@@ -18,6 +18,7 @@ import { RuntimeException } from '@poppinss/utils/exception'
 import debug from '../debug.ts'
 import type { Application } from '../application.ts'
 import { parseStubExports, pathExists } from '../utils.ts'
+import { type GeneratedStub, type PreparedStub } from '../types.ts'
 
 /**
  * Enhanced string builder function that combines StringBuilder functionality
@@ -69,6 +70,13 @@ export class Stub {
    */
   #stubContents: string
 
+  /**
+   * Optional raw content to replace the rendered stub output.
+   * When set via replaceWith(), this content is used instead of the rendered template body.
+   *
+   * @private
+   * @type {string | undefined}
+   */
   #rawContent?: string
 
   /**
@@ -211,6 +219,14 @@ export class Stub {
     }
   }
 
+  /**
+   * Replaces the rendered stub output with raw content.
+   * When called, the provided content will be used as the final output
+   * instead of processing the stub template.
+   *
+   * @param rawContent - The raw content to use instead of rendering the stub
+   * @returns {this} Returns the Stub instance for method chaining
+   */
   replaceWith(rawContent: string) {
     this.#rawContent = rawContent
     return this
@@ -222,12 +238,7 @@ export class Stub {
    *
    * @param {Record<string, any>} stubData - The data to use for stub preparation
    */
-  async prepare(stubData: Record<string, any>): Promise<{
-    contents: string
-    destination: string
-    force: boolean
-    attributes: Record<string, any>
-  }> {
+  async prepare(stubData: Record<string, any>): Promise<PreparedStub> {
     const data = {
       ...this.#getStubDefaults(),
       ...stubData,
@@ -251,7 +262,7 @@ export class Stub {
    *
    * @param {Record<string, any>} stubData - The data to use for stub generation
    */
-  async generate(stubData: Record<string, any>) {
+  async generate(stubData: Record<string, any>): Promise<GeneratedStub> {
     const { force, ...stub } = await this.prepare(stubData)
     const hasFile = await pathExists(stub.destination)
     const directory = dirname(stub.destination)

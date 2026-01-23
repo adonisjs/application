@@ -432,3 +432,75 @@ export type Importer = (moduleIdentifier: string, options?: ImportCallOptions) =
  * }
  */
 export type PresetFn = (options: { rcFile: NormalizedRcFileInput }) => void
+
+/**
+ * Represents a prepared stub ready for file generation.
+ * Contains the rendered content and metadata extracted from the stub template,
+ * but has not yet been written to disk.
+ *
+ * @example
+ * const preparedStub: PreparedStub = {
+ *   contents: 'export class User {}',
+ *   destination: '/app/models/user.ts',
+ *   force: false,
+ *   attributes: { to: '/app/models/user.ts' }
+ * }
+ */
+export type PreparedStub = {
+  /** The rendered contents of the stub template */
+  contents: string
+  /** The absolute path where the file should be written */
+  destination: string
+  /** Whether to overwrite existing files */
+  force: boolean
+  /** Additional metadata exported from the stub template */
+  attributes: Record<string, any>
+}
+
+/**
+ * Base type for generated stubs, excluding the 'force' property
+ * which is only relevant during preparation phase.
+ */
+export type GeneratedStubBase = Omit<PreparedStub, 'force'>
+
+/**
+ * Represents the result of stub generation after attempting to write to disk.
+ * Indicates whether the file was created, skipped, or force-created with reasons.
+ *
+ * @example
+ * // File created successfully
+ * const result: GeneratedStub = {
+ *   status: 'created',
+ *   skipReason: null,
+ *   contents: '...',
+ *   destination: '/path/to/file.ts',
+ *   attributes: {}
+ * }
+ *
+ * @example
+ * // File already exists and force was not enabled
+ * const result: GeneratedStub = {
+ *   status: 'skipped',
+ *   skipReason: 'File already exists',
+ *   contents: '...',
+ *   destination: '/path/to/file.ts',
+ *   attributes: {}
+ * }
+ */
+export type GeneratedStub =
+  | (GeneratedStubBase & {
+      /** File generation was skipped */
+      status: 'skipped'
+      /** Reason why the file was skipped */
+      skipReason: string
+    })
+  | (GeneratedStubBase & {
+      /** File was successfully created */
+      status: 'created'
+      skipReason: null
+    })
+  | (GeneratedStubBase & {
+      /** File was overwritten because force option was enabled */
+      status: 'force_created'
+      skipReason: null
+    })
