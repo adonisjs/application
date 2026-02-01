@@ -9,6 +9,7 @@
 
 import debug from '../debug.ts'
 import type { AppEnvironments, PreloadNode } from '../types.ts'
+import { preloadImport } from '../tracing_channels.ts'
 
 /**
  * The PreloadsManager class is used to resolve and import preload modules.
@@ -110,7 +111,15 @@ export class PreloadsManager {
     const preloads = this.#list.filter((preload) => this.#filterByEnvironment(preload))
     debug('preloading modules %O', preloads)
 
-    await Promise.all(preloads.map((preload) => preload.file()))
+    await Promise.all(
+      preloads.map((preload) =>
+        preloadImport.tracePromise(
+          preload.file as () => Promise<void>,
+          preloadImport.hasSubscribers ? { file: preload.file } : undefined,
+          preload
+        )
+      )
+    )
 
     this.#list = []
   }
