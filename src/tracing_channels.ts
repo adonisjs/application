@@ -8,7 +8,7 @@
  */
 
 import diagnostics_channel from 'node:diagnostics_channel'
-import { type ContainerProviderContract } from './types.ts'
+import { type ContainerProviderContract, type PreloadNode } from './types.ts'
 
 /**
  * Tracing channel for service provider register lifecycle hook.
@@ -115,3 +115,24 @@ export const providerShutdown = diagnostics_channel.tracingChannel<
   'adonisjs.provider.shutdown',
   { provider: ContainerProviderContract }
 >('adonisjs.provider.shutdown')
+
+/**
+ * Tracing channel for preload file import.
+ * This channel traces when a preload module is imported during
+ * the application start phase.
+ *
+ * @example
+ * // Monitor preload imports
+ * preloadImport.subscribe({
+ *   asyncStart(data) {
+ *     console.log('Importing preload:', data.file.toString())
+ *   },
+ *   asyncEnd(data) {
+ *     console.log('Preload imported:', data.file.toString())
+ *   }
+ * })
+ */
+export const preloadImport = diagnostics_channel.tracingChannel<
+  'adonisjs.preload.import',
+  { file: PreloadNode['file'] }
+>('adonisjs.preload.import')

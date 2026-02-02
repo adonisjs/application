@@ -12,6 +12,7 @@ import { test } from '@japa/runner'
 import { fileURLToPath } from 'node:url'
 import { outputFile, remove } from 'fs-extra'
 import { Application } from '../../src/application.ts'
+import { preloadImport } from '../../src/tracing_channels.ts'
 
 const BASE_URL = new URL('./app/', import.meta.url)
 const BASE_PATH = fileURLToPath(BASE_URL)
@@ -221,6 +222,52 @@ test.group('Application | preloads', (group) => {
     await app.boot()
     await app.start(() => {})
 
+    assert.equal(process.env.HAS_ROUTES, 'true')
+  })
+
+  test('trace preload imports', async ({ assert, cleanup }) => {
+    cleanup(() => {
+      delete process.env.HAS_ROUTES
+    })
+
+    await outputFile(
+      join(BASE_PATH, './routes.ts'),
+      `
+      process.env.HAS_ROUTES = 'true'
+      `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    app.rcContents({
+      preloads: [
+        {
+          file: () => import(new URL('./routes.js?v=30', BASE_URL).href),
+          environment: ['web'],
+          optional: false,
+        },
+      ],
+    })
+
+    const spans: any[] = []
+    preloadImport.subscribe({
+      asyncStart(message: any) {
+        spans.push({ file: message.file, startTime: process.hrtime() })
+      },
+      asyncEnd() {
+        const span = spans[spans.length - 1]
+        span.duration = process.hrtime(span.startTime)
+      },
+    } as any)
+
+    await app.init()
+    await app.boot()
+    await app.start(() => {})
+
+    assert.lengthOf(spans, 1)
+    assert.properties(spans[0], ['file', 'startTime', 'duration'])
     assert.equal(process.env.HAS_ROUTES, 'true')
   })
 })
