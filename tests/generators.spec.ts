@@ -406,4 +406,23 @@ test.group('Generator', () => {
     assert.equal(generators.transformerFileName('user_transformer'), 'user_transformer.ts')
     assert.equal(generators.transformerFileName('user_model_transformer'), 'user_transformer.ts')
   })
+
+  test('convert entity name to inertia page name', ({ assert }) => {
+    assert.equal(generators.inertiaPageName('user_profile'), 'UserProfile')
+    assert.equal(generators.inertiaPageName('admin_dashboard_page'), 'AdminDashboard')
+    assert.equal(generators.inertiaPageName('user-profile'), 'UserProfile')
+    assert.equal(generators.inertiaPageName('home'), 'Home')
+    assert.equal(generators.inertiaPageName('settings_page.tsx'), 'Settings')
+  })
+
+  test('convert entity name to inertia page filename', ({ assert }) => {
+    assert.equal(generators.inertiaPageFileName('user_profile', '.tsx'), 'user_profile.tsx')
+    assert.equal(
+      generators.inertiaPageFileName('admin_dashboard_page', '.vue'),
+      'admin_dashboard.vue'
+    )
+    assert.equal(generators.inertiaPageFileName('UserProfile', '.tsx'), 'user_profile.tsx')
+    assert.equal(generators.inertiaPageFileName('home', '.vue'), 'home.vue')
+    assert.equal(generators.inertiaPageFileName('settings_page.tsx', '.tsx'), 'settings.tsx')
+  })
 })

@@ -829,6 +829,41 @@ const generators = {
   transformerFileName(entityName: string) {
     return new StringBuilder(this.transformerName(entityName)).snakeCase().ext('.ts').toString()
   },
+
+  /**
+   * Converts an entity name to an Inertia page name.
+   * Removes file extension and 'page' suffix, then converts to PascalCase.
+   *
+   * @param entityName - The entity name to convert
+   * @returns Inertia page name in PascalCase
+   *
+   * @example
+   * inertiaPageName('user-profile') // 'UserProfile'
+   * inertiaPageName('admin_dashboard_page') // 'AdminDashboard'
+   */
+  inertiaPageName(entityName: string) {
+    return new StringBuilder(entityName)
+      .removeExtension()
+      .removeSuffix('page')
+      .pascalCase()
+      .toString()
+  },
+
+  /**
+   * Converts an entity name to an Inertia page file name.
+   * Uses the inertia page name and converts to snake_case with the given extension.
+   *
+   * @param entityName - The entity name to convert
+   * @param extension - The file extension to use (e.g., '.tsx', '.vue')
+   * @returns Inertia page file name in snake_case with the specified extension
+   *
+   * @example
+   * inertiaPageFileName('UserProfile', '.tsx') // 'user_profile.tsx'
+   * inertiaPageFileName('admin_dashboard_page', '.vue') // 'admin_dashboard.vue'
+   */
+  inertiaPageFileName(entityName: string, extension: string) {
+    return new StringBuilder(this.inertiaPageName(entityName)).snakeCase().ext(extension).toString()
+  },
 }
 
 export default generators
