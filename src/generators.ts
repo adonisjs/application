@@ -57,9 +57,25 @@ const generators = {
   ],
 
   /**
+   * Converts an entity path segment to snake_case. Override this
+   * method to customize how path segments are formatted.
+   *
+   * @param segmentName - The path segment to convert
+   * @returns Formatted path segment
+   *
+   * @example
+   * entityPathSegment('UserProfile') // 'user_profile'
+   * entityPathSegment('blog-posts') // 'blog_posts'
+   */
+  entityPathSegment(segmentName: string) {
+    return new StringBuilder(segmentName).snakeCase().toString()
+  },
+
+  /**
    * Creates the entity path and name from user input.
    * Parses the entity name to separate directory path from the actual name,
-   * handling file extensions and nested paths.
+   * handling file extensions and nested paths. Each path segment is formatted
+   * using the {@link entityPathSegment} method.
    *
    * @param entityName - The entity name which may include path and extension
    * @returns Object containing the parsed path and name
@@ -90,7 +106,7 @@ const generators = {
      */
     if (parts.length) {
       return {
-        path: parts.join('/'),
+        path: parts.map((part) => this.entityPathSegment(part)).join('/'),
         name,
       }
     }

@@ -21,6 +21,14 @@ test.group('Generator', () => {
 
   test('parse relative paths from user input', ({ assert }) => {
     assert.deepEqual(generators.createEntity('invoicing/user'), { path: 'invoicing', name: 'user' })
+    assert.deepEqual(generators.createEntity('UserProfile/BlogPosts'), {
+      path: 'user_profile',
+      name: 'BlogPosts',
+    })
+    assert.deepEqual(generators.createEntity('admin-panel/user-settings/index'), {
+      path: 'admin_panel/user_settings',
+      name: 'index',
+    })
   })
 
   test('make import path', ({ assert }) => {
