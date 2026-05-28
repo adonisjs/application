@@ -332,7 +332,7 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
 
   /**
    * Returns true if the process is managed and running under PM2.
-   * Detected by checking for the pm2_id environment variable.
+   * Detected by checking for the pm_id environment variable.
    *
    * @readonly
    * @type {boolean}
@@ -458,7 +458,7 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
     this.#preloadsManager = new PreloadsManager({
       environment: this.#environment,
     })
-    this.#surroundedEnvironment.pm2 = !!process.env.pm2_id
+    this.#surroundedEnvironment.pm2 = !!process.env.pm_id
 
     if (debug.enabled) {
       debug('app environment :%O', {

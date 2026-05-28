@@ -143,7 +143,7 @@ test.group('Application', () => {
 
   test('find if app is managed by pm2', async ({ assert, cleanup }) => {
     cleanup(() => {
-      process.env.pm2_id
+      process.env.pm_id
     })
 
     const app = new Application(BASE_URL, {
@@ -151,7 +151,7 @@ test.group('Application', () => {
     })
     assert.isFalse(app.managedByPm2)
 
-    process.env.pm2_id = '1'
+    process.env.pm_id = '1'
     const app1 = new Application(BASE_URL, {
       environment: 'web',
     })
