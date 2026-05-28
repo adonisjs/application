@@ -63,7 +63,7 @@ export async function readFileFromSources(fileName: string, sources: string[]) {
 export async function readFileOptional(filePath: URL | string): Promise<string | null> {
   try {
     return await readFile(filePath, 'utf-8')
-  } catch (error) {
+  } catch (error: any) {
     /* c8 ignore next 3 */
     if (error.code !== 'ENOENT') {
       throw error

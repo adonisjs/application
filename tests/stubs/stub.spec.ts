@@ -103,7 +103,7 @@ test.group('Stubs', (group) => {
       await stub.prepare({
         entity: generators.createEntity('user'),
       })
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.stack.split('\n')[1], `    at anonymous (./make/middleware.stub:0:0)`)
       assert.equal(error.message, 'Missing "to" attribute in stub exports')
     }
@@ -130,7 +130,7 @@ test.group('Stubs', (group) => {
       await stub.prepare({
         entity: generators.createEntity('user'),
       })
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.stack.split('\n')[1], `    at anonymous (./make/middleware.stub:0:0)`)
       assert.equal(error.message, 'The value for "to" attribute must be an absolute file path')
     }
@@ -152,7 +152,7 @@ test.group('Stubs', (group) => {
       await stub.prepare({
         entity: generators.createEntity('user'),
       })
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.stack.split('\n')[1], `    at anonymous (./make/middleware.stub:0:0)`)
       assert.equal(error.message, 'Missing "to" attribute in stub exports')
     }
@@ -173,7 +173,7 @@ test.group('Stubs', (group) => {
       await stub.prepare({
         entity: generators.createEntity('user'),
       })
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.stack.split('\n')[1], '    at anonymous (./make/middleware.stub:3:0)')
       assert.equal(error.message, 'middlewareName is not a function')
     }
@@ -194,7 +194,7 @@ test.group('Stubs', (group) => {
       await stub.prepare({
         entity: generators.createEntity('user'),
       })
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.stack.split('\n')[1], '    at anonymous (./make/middleware.stub:3:0)')
       assert.equal(error.message, 'generators.foo is not a function')
     }
@@ -215,7 +215,7 @@ test.group('Stubs', (group) => {
       await stub.prepare({
         entity: generators.createEntity('user'),
       })
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.stack.split('\n')[1], '    at anonymous (./make/middleware.stub:0:0)')
       assert.equal(error.message, 'Unknown "vr" block')
     }

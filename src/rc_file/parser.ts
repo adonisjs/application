@@ -301,7 +301,7 @@ export class RcFileParser {
 
       try {
         preset({ rcFile: this.#rcFile })
-      } catch (error) {
+      } catch (error: any) {
         throw new errors.E_PRESET_EXECUTION_ERROR([index, error.message])
       }
     })

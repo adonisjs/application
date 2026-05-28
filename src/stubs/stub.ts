@@ -193,7 +193,7 @@ export class Stub {
         props: Object.keys(data),
       })
       return render(data).trim()
-    } catch (error) {
+    } catch (error: any) {
       this.#patchTempuraStack(error)
       throw error
     }
@@ -213,7 +213,7 @@ export class Stub {
       const { body, attributes } = parseStubExports(stubOutput)
       this.#validateToAttribute(attributes)
       return { attributes, body: this.#rawContent ?? body }
-    } catch (error) {
+    } catch (error: any) {
       this.#patchErrorStack(error)
       throw error
     }

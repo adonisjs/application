@@ -89,7 +89,7 @@ export class RcFileManager {
         const rcExports = await import(rcTSFile.href)
         this.#rcContents = rcExports.default
         debug('adonisrc.ts file contents: %O', this.#rcContents)
-      } catch (error) {
+      } catch (error: any) {
         if (!/Cannot find module/.test(error.message)) {
           throw error
         }

@@ -183,7 +183,7 @@ export class StubsManager {
       }
 
       return filesCopied
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'ENOENT') {
         const readingSource = 'source' in options ? options.source : options.pkg
         throw new Error(`Cannot find "${stubPath}" stub in "${readingSource}" destination`)

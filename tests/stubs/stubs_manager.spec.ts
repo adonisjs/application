@@ -94,7 +94,7 @@ test.group('Stubs Manager | build', (group) => {
 
     try {
       await stubs.build('middleware/middleware.stub', { source: originalSource })
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.message, 'Unable to find stub "middleware/middleware.stub"')
       assert.deepEqual(error.cause.split('\n'), [
         'Scanned locations: ',
@@ -116,7 +116,7 @@ test.group('Stubs Manager | build', (group) => {
 
     try {
       await stubs.build('middleware/middleware.stub')
-    } catch (error) {
+    } catch (error: any) {
       assert.equal(error.message, 'Unable to find stub "middleware/middleware.stub"')
       assert.deepEqual(error.cause.split('\n'), ['Scanned locations: ', publishTarget])
     }
