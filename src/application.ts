@@ -28,6 +28,7 @@ import type {
   SemverNode,
   HooksState,
   AppEnvironments,
+  ApplicationModes,
   ApplicationStates,
   ExperimentalFlagsList,
 } from './types.ts'
@@ -103,8 +104,20 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
   #environment: AppEnvironments
 
   /**
-   * Current state of the application lifecycle. Tracks the progression
-   * through states: created → initiated → booted → ready → terminated.
+   * The mode in which the application has been created. It defines how far
+   * the app intends to travel within its lifecycle.
+   *
+   * @private
+   * @type {ApplicationModes}
+   * @default 'run'
+   */
+  #mode: ApplicationModes
+
+  /**
+   * Current state of the application lifecycle. Tracks the progression through
+   * states: created → initiated → booted → warming → warmed → ready → terminated.
+   *
+   * An app created with the "warmup" mode stops at the 'warmed' state.
    *
    * @private
    * @type {ApplicationStates}
@@ -229,6 +242,21 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    */
   get isBooted() {
     return this.#state !== 'created' && this.#state !== 'initiated'
+  }
+
+  /**
+   * A boolean to know if the application has been warmed up. Returns true
+   * once every provider has been started and the preload files have been
+   * imported.
+   *
+   * Also returns true for an app in the 'ready' state, since a running app
+   * is warmed up before it is started.
+   *
+   * @readonly
+   * @type {boolean}
+   */
+  get isWarmedUp() {
+    return this.#state === 'warmed' || this.#state === 'ready'
   }
 
   /**
@@ -440,13 +468,19 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * @param {URL} appRoot - The root URL of the application
    * @param {Object} options - Configuration options
    * @param {AppEnvironments} options.environment - The application environment
+   * @param {ApplicationModes} [options.mode] - How far the app intends to travel
+   *   within its lifecycle. Defaults to 'run'
    * @param {Importer} [options.importer] - Optional module importer function
    */
-  constructor(appRoot: URL, options: { environment: AppEnvironments; importer?: Importer }) {
+  constructor(
+    appRoot: URL,
+    options: { environment: AppEnvironments; mode?: ApplicationModes; importer?: Importer }
+  ) {
     super()
 
     this.#appRoot = appRoot
     this.#importer = options.importer
+    this.#mode = options.mode ?? 'run'
     this.#environment = options.environment
     this.#nodeEnvManager = new NodeEnvManager()
     this.#configManager = new ConfigManager(this.appRoot)
@@ -464,6 +498,7 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
       debug('app environment :%O', {
         pm2: this.#surroundedEnvironment.pm2,
         environment: this.#environment,
+        mode: this.#mode,
         nodeEnv: this.#nodeEnvManager.nodeEnvironment,
       })
     }
@@ -504,6 +539,46 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
     this.#environment = environment
     this.#preloadsManager.setEnvironment(environment)
     this.#providersManager.setEnvironment(environment)
+    return this
+  }
+
+  /**
+   * The mode in which the application has been created. The mode tells how far
+   * the app intends to travel within its lifecycle.
+   *
+   * Providers must use the mode to skip their side-effects and never to register
+   * different bindings, since the app being inspected has to match the app that
+   * runs.
+   *
+   * @returns {ApplicationModes} The current application mode
+   *
+   * @example
+   * async start() {
+   *   if (this.app.getMode() !== 'run') {
+   *     return
+   *   }
+   *   await startQueueWorkers()
+   * }
+   */
+  getMode(): ApplicationModes {
+    return this.#mode
+  }
+
+  /**
+   * Switch the mode in which the app has been created. The mode can
+   * only be changed before the app is booted.
+   *
+   * @param {ApplicationModes} mode - The new mode to set
+   * @returns {this} Returns the application instance for method chaining
+   * @throws {RuntimeException} When called after the app has been booted
+   */
+  setMode(mode: ApplicationModes): this {
+    if (this.#state !== 'created' && this.#state !== 'initiated') {
+      throw new RuntimeException('Cannot switch mode once the app has been booted')
+    }
+
+    debug('switching mode { from:"%s", to: "%s" }', this.#mode, mode)
+    this.#mode = mode
     return this
   }
 
@@ -779,33 +854,82 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
   }
 
   /**
-   * Start the application. Calling this method performs the following
+   * Warm up the application. Calling this method performs the following
    * operations:
    *
    * - Run the "start" lifecycle hooks on all the providers
-   * - Start the application by invoking the supplied callback
-   * - Run the "ready" lifecycle hooks on all the providers
-   * - Run the "ready" application hooks
+   * - Run the "starting" application hooks
+   * - Import the preload files
    *
-   * @param {function} callback - The callback function to invoke when starting the app
-   * @returns {Promise<void>} Promise that resolves when start is complete
+   * At the end of this method the app is fully assembled. Every provider has
+   * been registered, booted and started and every preload file has been
+   * imported. However, nothing has been asked to run yet.
+   *
+   * The method is a no-op when the app has already been warmed up, therefore
+   * `app.start` may be called on a warmed up app to take it all the way to
+   * the 'ready' state.
+   *
+   * @returns {Promise<void>} Promise that resolves when warm up is complete
+   *
+   * @example
+   * // Assemble the app to inspect it, without running it
+   * const app = ignitor.createApp('web', { mode: 'warmup' })
+   * await app.init()
+   * await app.boot()
+   * await app.warmUp()
    */
-  async start(callback: (app: this) => void | Promise<void>): Promise<void> {
+  async warmUp(): Promise<void> {
     if (this.#state !== 'booted') {
-      debug('cannot start app from state "%s"', this.#state)
+      debug('cannot warm up app from state "%s"', this.#state)
       return
     }
 
-    debug('starting app')
+    debug('warming up app')
+    this.#state = 'warming'
 
-    /**
-     * Pre start phase
-     */
     await this.#providersManager.start()
     await this.#hooks.runner('starting').run(this)
     this.#hooks.clear('starting')
 
     await this.#preloadsManager.use(this.rcFile.preloads).import()
+
+    this.#state = 'warmed'
+    debug('application warmed up')
+  }
+
+  /**
+   * Start the application. Calling this method performs the following
+   * operations:
+   *
+   * - Warm up the app, unless it has already been warmed up
+   * - Start the application by invoking the supplied callback
+   * - Run the "ready" lifecycle hooks on all the providers
+   * - Run the "ready" application hooks
+   *
+   * The method may not be called on an app created with the "warmup" mode,
+   * since such an app is meant to stop at the 'warmed' state.
+   *
+   * @param {function} callback - The callback function to invoke when starting the app
+   * @returns {Promise<void>} Promise that resolves when start is complete
+   * @throws {RuntimeException} When the app has been created with the "warmup" mode
+   */
+  async start(callback: (app: this) => void | Promise<void>): Promise<void> {
+    if (this.#mode !== 'run') {
+      throw new RuntimeException(`Cannot start an application created in "${this.#mode}" mode`)
+    }
+
+    if (this.#state !== 'booted' && this.#state !== 'warmed') {
+      debug('cannot start app from state "%s"', this.#state)
+      return
+    }
+
+    /**
+     * Pre start phase. The app is warmed up first, unless someone has
+     * already warmed it up by hand.
+     */
+    await this.warmUp()
+
+    debug('starting app')
 
     /**
      * Callback to perform start of the application
@@ -866,8 +990,14 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
    * Terminate application gracefully. Calling this method performs
    * the following operations:
    *
-   * - Run "shutdown" hooks on all the providers
    * - Run "terminating" app lifecycle hooks
+   * - Run "shutdown" hooks on all the providers
+   *
+   * The providers shutdown hooks are skipped for an app created in the "warmup"
+   * mode. Such an app never gets started and therefore it has nothing to tear
+   * down. Since every shutdown hook begins by resolving its manager from the
+   * container, invoking them would construct the very resources the warmed up
+   * app has avoided creating.
    *
    * @returns {Promise<void>} Promise that resolves when termination is complete
    */
@@ -886,7 +1016,13 @@ export class Application<ContainerBindings extends Record<any, any>> extends Mac
 
     this.#terminating = true
     await this.#hooks.runner('terminating').runReverse(this)
-    await this.#providersManager.shutdown(true)
+
+    if (this.#mode === 'run') {
+      await this.#providersManager.shutdown(true)
+    } else {
+      debug('skipping providers shutdown in "%s" mode', this.#mode)
+    }
+
     this.#hooks.clear('terminating')
     this.#state = 'terminated'
   }
