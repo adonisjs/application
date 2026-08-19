@@ -34,7 +34,7 @@
     "quick:test": "node --import=@poppinss/ts-exec --enable-source-maps bin/test.ts"
   },
   "devDependencies": {
-    "@adonisjs/assembler": "^8.4.0",
+    "@adonisjs/assembler": "^8.5.0",
     "@adonisjs/config": "^6.1.0",
     "@adonisjs/eslint-config": "^3.1.0",
     "@adonisjs/fold": "^11.0.0",
