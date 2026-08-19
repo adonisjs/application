@@ -65,13 +65,7 @@ export type AppEnvironments = 'web' | 'console' | 'test' | 'repl' | 'unknown'
  *                  providers shutdown methods are called in this state.
  */
 export type ApplicationStates =
-  | 'created'
-  | 'initiated'
-  | 'booted'
-  | 'warming'
-  | 'warmed'
-  | 'ready'
-  | 'terminated'
+  'created' | 'initiated' | 'booted' | 'warming' | 'warmed' | 'ready' | 'terminated'
 
 /**
  * Known application modes. The mode defines how far the application intends to
