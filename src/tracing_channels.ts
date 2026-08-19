@@ -26,9 +26,9 @@ import { type ContainerProviderContract, type PreloadNode } from './types.ts'
  *   }
  * })
  */
-export const providerRegister = diagnostics_channel.tracingChannel<
-  { provider: ContainerProviderContract }
->('adonisjs.provider.register')
+export const providerRegister = diagnostics_channel.tracingChannel<{
+  provider: ContainerProviderContract
+}>('adonisjs.provider.register')
 
 /**
  * Tracing channel for service provider boot lifecycle hook.
@@ -46,9 +46,9 @@ export const providerRegister = diagnostics_channel.tracingChannel<
  *   }
  * })
  */
-export const providerBoot = diagnostics_channel.tracingChannel<
-  { provider: ContainerProviderContract }
->('adonisjs.provider.boot')
+export const providerBoot = diagnostics_channel.tracingChannel<{
+  provider: ContainerProviderContract
+}>('adonisjs.provider.boot')
 
 /**
  * Tracing channel for service provider start lifecycle hook.
@@ -64,9 +64,9 @@ export const providerBoot = diagnostics_channel.tracingChannel<
  *   }
  * })
  */
-export const providerStart = diagnostics_channel.tracingChannel<
-  { provider: ContainerProviderContract }
->('adonisjs.provider.start')
+export const providerStart = diagnostics_channel.tracingChannel<{
+  provider: ContainerProviderContract
+}>('adonisjs.provider.start')
 
 /**
  * Tracing channel for service provider ready lifecycle hook.
@@ -84,9 +84,9 @@ export const providerStart = diagnostics_channel.tracingChannel<
  *   }
  * })
  */
-export const providerReady = diagnostics_channel.tracingChannel<
-  { provider: ContainerProviderContract }
->('adonisjs.provider.ready')
+export const providerReady = diagnostics_channel.tracingChannel<{
+  provider: ContainerProviderContract
+}>('adonisjs.provider.ready')
 
 /**
  * Tracing channel for service provider shutdown lifecycle hook.
@@ -107,9 +107,9 @@ export const providerReady = diagnostics_channel.tracingChannel<
  *   }
  * })
  */
-export const providerShutdown = diagnostics_channel.tracingChannel<
-  { provider: ContainerProviderContract }
->('adonisjs.provider.shutdown')
+export const providerShutdown = diagnostics_channel.tracingChannel<{
+  provider: ContainerProviderContract
+}>('adonisjs.provider.shutdown')
 
 /**
  * Tracing channel for preload file import.
@@ -127,6 +127,6 @@ export const providerShutdown = diagnostics_channel.tracingChannel<
  *   }
  * })
  */
-export const preloadImport = diagnostics_channel.tracingChannel<
-  { file: PreloadNode['file'] }
->('adonisjs.preload.import')
+export const preloadImport = diagnostics_channel.tracingChannel<{ file: PreloadNode['file'] }>(
+  'adonisjs.preload.import'
+)
