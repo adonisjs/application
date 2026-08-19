@@ -27,7 +27,6 @@ import { type ContainerProviderContract, type PreloadNode } from './types.ts'
  * })
  */
 export const providerRegister = diagnostics_channel.tracingChannel<
-  'adonisjs.provider.register',
   { provider: ContainerProviderContract }
 >('adonisjs.provider.register')
 
@@ -48,7 +47,6 @@ export const providerRegister = diagnostics_channel.tracingChannel<
  * })
  */
 export const providerBoot = diagnostics_channel.tracingChannel<
-  'adonisjs.provider.boot',
   { provider: ContainerProviderContract }
 >('adonisjs.provider.boot')
 
@@ -67,7 +65,6 @@ export const providerBoot = diagnostics_channel.tracingChannel<
  * })
  */
 export const providerStart = diagnostics_channel.tracingChannel<
-  'adonisjs.provider.start',
   { provider: ContainerProviderContract }
 >('adonisjs.provider.start')
 
@@ -88,7 +85,6 @@ export const providerStart = diagnostics_channel.tracingChannel<
  * })
  */
 export const providerReady = diagnostics_channel.tracingChannel<
-  'adonisjs.provider.ready',
   { provider: ContainerProviderContract }
 >('adonisjs.provider.ready')
 
@@ -112,7 +108,6 @@ export const providerReady = diagnostics_channel.tracingChannel<
  * })
  */
 export const providerShutdown = diagnostics_channel.tracingChannel<
-  'adonisjs.provider.shutdown',
   { provider: ContainerProviderContract }
 >('adonisjs.provider.shutdown')
 
@@ -133,6 +128,5 @@ export const providerShutdown = diagnostics_channel.tracingChannel<
  * })
  */
 export const preloadImport = diagnostics_channel.tracingChannel<
-  'adonisjs.preload.import',
   { file: PreloadNode['file'] }
 >('adonisjs.preload.import')
