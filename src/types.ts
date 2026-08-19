@@ -44,17 +44,51 @@ export type AppEnvironments = 'web' | 'console' | 'test' | 'repl' | 'unknown'
  * - 'booted'       Calling `app.boot()` method sets the state to `booted`. The service
  *                  providers are registered and booted in this state.
  *
- * - 'ready'        Calling `app.start()` method sets the state to `ready`. A set of
- *                  pre and post start operations inside this method.
+ * - 'warming'      Calling `app.warmUp()` method sets the state to 'warming'. The service
+ *                  providers start methods are called and the preload files are imported
+ *                  during this phase.
  *
- *                  The service providers start methods are called during pre-start phase.
+ * - 'warmed'       The app has been fully assembled. Every provider has been registered,
+ *                  booted and started and all the preload files have been imported.
+ *
+ *                  This is the terminal state for an app created with the "warmup" mode.
+ *                  Otherwise the app moves to the 'ready' state.
+ *
+ * - 'ready'        Calling `app.start()` method sets the state to `ready`. The app is
+ *                  warmed up first and then a set of post start operations are performed
+ *                  inside this method.
+ *
  *                  The service providers shutdown and application terminating hooks are
  *                  called during post-start phase.
  *
  * - 'terminated'   Calling `app.terminate' method sets the state to `terminated`. The service
  *                  providers shutdown methods are called in this state.
  */
-export type ApplicationStates = 'created' | 'initiated' | 'booted' | 'ready' | 'terminated'
+export type ApplicationStates =
+  | 'created'
+  | 'initiated'
+  | 'booted'
+  | 'warming'
+  | 'warmed'
+  | 'ready'
+  | 'terminated'
+
+/**
+ * Known application modes. The mode defines how far the application intends to
+ * go within its lifecycle and is declared upfront when creating the app.
+ *
+ * - 'run'     The app is booting in order to run. It will be taken all the way to
+ *             the 'ready' state and the long running side-effects registered by the
+ *             providers (HTTP server, queue workers, and so on) are expected to kick in.
+ *
+ * - 'warmup'  The app is booting only to be assembled and inspected. It will stop at
+ *             the 'warmed' state and `app.start` may not be called on it.
+ *
+ *             Providers must use the mode to skip their side-effects. They must never
+ *             use it to register different bindings, since the inspected app has to
+ *             match the app that runs.
+ */
+export type ApplicationModes = 'run' | 'warmup'
 
 /**
  * State shared with hooks during application lifecycle.
@@ -387,6 +421,9 @@ export interface ContainerProviderContract {
    * The start method is called after all providers have been booted.
    * This is the ideal place to use existing container bindings and
    * perform startup operations that depend on other services.
+   *
+   * The method is called before the preload files are imported and therefore
+   * it must not rely upon anything registered by them.
    */
   start?(): AsyncOrSync<void>
 
@@ -394,6 +431,8 @@ export interface ContainerProviderContract {
    * The ready method is called when the application is fully ready.
    * For HTTP servers, this is called after the server starts listening.
    * Preloaded files have been imported and the app is ready to serve requests.
+   *
+   * The method is never called for an app booted in the "warmup" mode.
    */
   ready?(): AsyncOrSync<void>
 
@@ -401,6 +440,10 @@ export interface ContainerProviderContract {
    * The shutdown method is called during graceful application shutdown.
    * Use this method to clean up resources, close connections, and perform
    * other cleanup tasks. Avoid long-running operations to prevent forceful termination.
+   *
+   * The method is only called for an app that has been started. An app booted
+   * in the "warmup" mode never opens any resources and therefore terminates
+   * without invoking this method.
    */
   shutdown?(): AsyncOrSync<void>
 }
