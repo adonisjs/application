@@ -260,9 +260,8 @@ export class ProvidersManager {
       if (provider.boot) {
         debug('booting "%s"', provider.constructor.name)
         await providerBoot.tracePromise(
-          provider.boot as () => Promise<void>,
-          providerBoot.hasSubscribers ? { provider } : undefined,
-          provider
+          async () => provider.boot!(),
+          providerBoot.hasSubscribers ? { provider } : undefined
         )
       }
     }
@@ -279,9 +278,8 @@ export class ProvidersManager {
       if (provider.start) {
         debug('invoking "%s" start method', provider.constructor.name)
         await providerStart.tracePromise(
-          provider.start as () => Promise<void>,
-          providerStart.hasSubscribers ? { provider } : undefined,
-          provider
+          async () => provider.start!(),
+          providerStart.hasSubscribers ? { provider } : undefined
         )
       }
     }
@@ -299,9 +297,8 @@ export class ProvidersManager {
       if (provider.ready) {
         debug('invoking "%s" ready method', provider.constructor.name)
         await providerReady.tracePromise(
-          provider.ready as () => Promise<void>,
-          providerReady.hasSubscribers ? { provider } : undefined,
-          provider
+          async () => provider.ready!(),
+          providerReady.hasSubscribers ? { provider } : undefined
         )
       }
     }
@@ -328,9 +325,8 @@ export class ProvidersManager {
       if (provider.shutdown) {
         debug('shutting down "%s"', provider.constructor.name)
         await providerShutdown.tracePromise(
-          provider.shutdown as () => Promise<void>,
-          providerShutdown.hasSubscribers ? { provider } : undefined,
-          provider
+          async () => provider.shutdown!(),
+          providerShutdown.hasSubscribers ? { provider } : undefined
         )
       }
     }

@@ -1111,6 +1111,71 @@ test.group('Application | providers', (group) => {
     assert.isTrue('ROUTE_PROVIDER' in global)
   })
 
+  test('trace sync provider hooks without emitting tracePromise warnings', async ({
+    assert,
+    cleanup,
+  }) => {
+    await outputFile(
+      join(BASE_PATH, './route_provider.ts'),
+      `
+      export default class RouteProvider {
+        constructor(private app) {}
+        boot() {}
+        start() {}
+        ready() {}
+        shutdown() {}
+      }
+    `
+    )
+
+    const app = new Application(BASE_URL, {
+      environment: 'web',
+    })
+
+    app.rcContents({
+      providers: [
+        {
+          file: () => import(new URL('./route_provider.js?v=22', BASE_URL).href),
+          environment: ['web'],
+        },
+      ],
+    })
+
+    const warnings: string[] = []
+    const onWarning = (warning: Error) => warnings.push(warning.message)
+    process.on('warning', onWarning)
+    cleanup(() => {
+      process.off('warning', onWarning)
+    })
+
+    const tracedProviders: string[] = []
+    const subscriber = {
+      asyncEnd(message: any) {
+        tracedProviders.push(message.provider.constructor.name)
+      },
+    } as any
+    providerBoot.subscribe(subscriber)
+    cleanup(() => {
+      providerBoot.unsubscribe(subscriber)
+    })
+
+    await app.init()
+    await app.boot()
+    await app.start(() => {})
+    await app.terminate()
+
+    /**
+     * Node emits process warnings on the next tick
+     */
+    await new Promise((resolve) => setImmediate(resolve))
+
+    assert.deepEqual(tracedProviders, ['RouteProvider'])
+    assert.deepEqual(
+      warnings.filter((message) => message.includes('tracePromise')),
+      []
+    )
+  })
+
   test('trace booting of async providers', async ({ assert }) => {
     await outputFile(
       join(BASE_PATH, './route_provider.ts'),
