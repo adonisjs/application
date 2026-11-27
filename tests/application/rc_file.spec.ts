@@ -63,16 +63,25 @@ test.group('Application | rcFile', (group) => {
     })
   })
 
-  test('parse rc file by reading from the disk', async ({ assert }) => {
+  test('parse rc file by reading from the disk', async ({ assert, cleanup }) => {
+    /**
+     * Node.js caches the imported "adonisrc" module by its URL, even after
+     * the file is removed. Using a folder of its own keeps this module
+     * away from the other tests that create an app.
+     */
+    const appRoot = new URL('./app_with_rc_file/', import.meta.url)
+    const appRootPath = fileURLToPath(appRoot)
+    cleanup(() => remove(appRootPath))
+
     await outputFile(
-      join(BASE_PATH, 'adonisrc.ts'),
+      join(appRootPath, 'adonisrc.ts'),
       `export default {
         typescript: true,
         providers: [() => {}]
       }`
     )
 
-    const app = new Application(BASE_URL, {
+    const app = new Application(appRoot, {
       environment: 'web',
     })
 
