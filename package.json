@@ -44,7 +44,7 @@
     "@japa/expect-type": "^2.0.4",
     "@japa/file-system": "^3.0.0",
     "@japa/runner": "^5.4.0",
-    "@poppinss/ts-exec": "^1.5.2",
+    "@poppinss/ts-exec": "~1.4.4",
     "@release-it/conventional-changelog": "^12.0.2",
     "@types/fs-extra": "^11.0.4",
     "@types/glob-parent": "^5.1.3",
